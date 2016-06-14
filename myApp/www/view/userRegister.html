@@ -1,0 +1,43 @@
+  <ion-view view-title="Register">
+	<ion-content >
+  		<form name='userForm'  ng-submit="userForm.$valid && submit(userForm)" novalidate>
+  			<input ng-model="photo" type="file" id="files" />
+			<img class=" img-circle img-size text-center" id="image">
+  		   
+  			<label class="item item-input item-floating-label item-stacked-label">
+			    <span class="input-label">Nome</span>
+			    <input ng-model="userRegister.name" type="text" placeholder="Nome" required>
+			</label>
+
+			<label class="item item-input item-floating-label">
+			    <span class="input-label">Sobrenome*</span>
+			    <input ng-model="userRegister.lastName" type="text" placeholder="Sobrenome" required="required">
+			</label>
+		    
+		    <label class="item item-input item-floating-label">
+			    <span class="input-label">Email*</span>
+			    <input ng-model="userRegister.email" type="email" placeholder="Email" required>
+			</label>
+
+			<label class="item item-input item-floating-label">
+			    <span class="input-label">Senha*</span>
+			    <input ng-model="userRegister.password" ng-minlength="5" ng-maxlength="32" type="password" placeholder="Senha" required>
+			</label>
+
+			<label class="item item-input item-floating-label">
+			    <span class="input-label">Data de nascimento*</span>
+			    <input ng-model="userRegister.birth" type="date" placeholder="Data de nascimento" required>
+			</label>
+
+		    <input type="radio" ng-model="userRegister.gender" value="1" required />Masculino
+		    <input type="radio" ng-model="userRegister.gender" value="2" required />Feminino<br/>
+		    <input type="radio"  ng-model="userRegister.newsletter" value="1">Assinar nosso newsletter?</br>
+
+		    <div> User Form is valid? {{userForm.$valid}}</div>
+		    <input class="button button-block button-positive" type="submit" ng-disabled="userForm.$invalid" value="Register" />
+		</form>
+		  <pre>user = {{userRegister | json}}</pre>
+		  <pre>master = {{master | json}}</pre>
+    </ion-content>
+</ion-view>
+

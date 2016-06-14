@@ -1,0 +1,47 @@
+<ion-view view-title="Dashboard" >
+	<ion-content>
+		<div ng-if="isAuthenticated()">
+
+			<header class="image-background-profile">
+				<img ng-src="img/profile.jpg" class="img-circle user-image">
+			</header>
+				
+			<div class="button-bar no-padding">
+			  <a class="button button-block button-positive button-outline" ng-click="slideChanged(0)" ng-class="{'active' : slide==0}">Perfil</a>
+			  <a class="button button-block button-positive button-outline" ng-click="slideChanged(1)" ng-class="{'active' : slide==1}">Histórico</a>
+			  <a class="button button-block button-positive button-outline" ng-click="slideChanged(2)" ng-class="{'active' : slide==2}">Dados</a>
+			</div>
+			<div>
+				<ion-slide-box on-slide-changed="slideHasChanged($index)">
+				  <ion-slide>
+				    <div><h3>Primeira aba</h3>
+				    	<p>Coisas...</p>
+				    	</br>
+				    	</br>
+				    	</br>
+				    	</br>
+				    	</br>
+				    	</br>
+				    </div>
+				  </ion-slide>
+				  <ion-slide>
+				    <div><h3>Segunda aba</h3>
+				    	<p>Coisas...</p></div>
+				  </ion-slide>
+				  <ion-slide>
+				    <div>
+				    	<div class = "row">
+						   <div style="border:1px solid black;" class = "col text-center">Nome</div>
+						   <div style="border:1px solid black;" class = "col text-center">Daniel Rodrigues Nunes e Silva</div>
+						</div>
+				    </div>
+				  </ion-slide>
+				</ion-slide-box>
+		    </div>
+
+
+			<button class="button button-block button-assertive button-outline" ng-click="logout()"> Logout</button>
+		</div>
+	</ion-content>
+</ion-view>
+

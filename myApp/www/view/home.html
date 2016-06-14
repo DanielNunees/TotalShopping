@@ -1,0 +1,38 @@
+  <ion-view view-title="Home">
+	<ion-content >
+        <ion-slide-box>
+            <ion-slide>
+            	<img class="no-padding img-size" ng-src='img/banner1.jpg'>
+            </ion-slide>
+            <ion-slide>
+            	<img class="no-padding img-size" ng-src='img/banner2.jpg'>
+            </ion-slide>
+        </ion-slide-box>
+        <div class="padding-horizontal" >
+        	<div class="container">
+			    <div class="row" ng-repeat="products in product" ng-if="$index % 2 === 0">
+			        <div class="col col-50 box-shadow--3dp margin-left--4dp" ng-if="$index < product.length">
+				        <a ng-href="#/product/{{products.id_product}}">
+				            <img class="img-size" ng-src='http://127.0.1.1/prestashop{{product[$index].product_image.image}}' />
+				            <h4 class="css-selector truncate">{{product[$index].name}}</h4>
+		                    <h4 class="css-selector">{{products.product_price.price | currency:"R$ ":2}}</h4>
+		                    <h4 class="css-selector">3x {{products.product_price.price/3 | currency:"R$ ":2}}</h4>
+		                    <!--ngcart-addtocart class="button-small no-padding" id="{{products.id_product}}" name="{{products.name}}" price="{{products.product_price.price}}" quantity="1" data="item">Adicionar</ngcart-addtocart-->
+		                </a>
+			        </div>
+			        <div class="col col-50 box-shadow--3dp" ng-if="$index +1 < product.length">
+				        <a ng-href="#/product/{{product[$index+1].id_product}}">
+				            <img class="img-size" ng-src='http://127.0.1.1/prestashop{{product[$index+1].product_image.image}}' />
+				            <h4 class="css-selector truncate">{{product[$index+1].name}}</h4>
+		                    <h4 class="css-selector">{{product[$index+1].product_price.price | currency:"R$ ":2}}</h4>
+		                    <h4 class="css-selector">3x {{product[$index+1].product_price.price/3 | currency:"R$ ":2}}</h4>
+		                    <!--ngcart-addtocart class="button-small no-padding" id="{{product[$index+1].id_product}}" name="{{product[$index+1].name}}" price="{{product[$index+1].product_price.price}}" quantity="1" data="item">Adicionar</ngcart-addtocart-->
+				        </a>
+			        </div>
+			   
+			    </div>
+			</div>
+        </div>
+    </ion-content>
+</ion-view >
+
