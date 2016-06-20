@@ -19,7 +19,7 @@ class ProductController extends Controller
             $description_name = ProductLang::where('id_product',$id_product)->where('id_lang',2)->select('name','description','id_product')->get();
 
             if($description_name->isEmpty()){
-                return response()->json(['error' => 'page_not_found'], 404);
+                return response()->json(['error' => 'is_empty'], 404);
             }
             
             $productAttributes = ProductStock::findOrFail($id_product)->where('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute')->get();

@@ -24,7 +24,9 @@ Route::group(['middleware' => 'cors'], function () {
 	
 	Route::post('/user/register','userController@register');
 	Route::post('/user/auth','myAuthController@auth');
-	Route::get('/user/userData','userController@loadUserData');
+	Route::post('/user/createAddress','userController@createAddress');
+	Route::post('/user/updateAddress','userController@updateAddress');
+	Route::post('/user/loadData','userController@loadData');
 	Route::post('/createWishlist','WishlistController@addProduct');
 	Route::post('/wishlist','WishlistController@listProducts');
 	Route::post('/removeWishlistProduct','WishlistController@removeProducts');

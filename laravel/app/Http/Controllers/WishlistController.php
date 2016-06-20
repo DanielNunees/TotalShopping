@@ -21,7 +21,7 @@ class WishlistController extends Controller
 
     	$wishlist = Wishlist::select('id_wishlist')->where('id_customer',$request->id_customer)->get();
         if($wishlist->isEmpty()){
-            return response()->json(['error' => 'page_not_found'], 404);
+            return response()->json(['error' => 'Wishlist not created'],400);
         }
 
     	$new_wishlist = new WishlistProducts;
@@ -37,15 +37,21 @@ class WishlistController extends Controller
     public function listProducts(Request $request){
 
         $this->validate($request, [
-          'id_customer' => 'bail|required'
+          'id_customer' => 'bail|required|numeric'
         ]);
-    	$wishlistProducts = Wishlist::select('id_wishlist')->where('id_customer',$request->id_customer)->get();
+
+    	$wishlistProducts = Wishlist::where('id_customer',$request->id_customer)->select('id_wishlist')->get();
+        
 
         if($wishlistProducts->isEmpty()){
-            return response()->json(['error' => 'page_not_found'], 200);
+            return response()->json(['error' => 'Wishlist not created'],400);
         }
 
     	foreach ($wishlistProducts as $key => $value) {
+            
+            if($value->ProductsName->isEmpty()||$value->ProductsName->isEmpty()||$value->ProductsName->isEmpty()){
+                return response()->json(['error' => 'Wishlist is empty'],404);
+            }
     		$value->ProductsName;
             $value->ProductsPrice;
             $value->ProductsImage;
@@ -71,6 +77,7 @@ class WishlistController extends Controller
             $a++;
         }
         $final = array('name'=>$name,'price'=>$price1,'image'=>$images,'id_product'=>$id_product);
+
         return $final;
     }
 
@@ -79,7 +86,7 @@ class WishlistController extends Controller
           'id_product' => 'bail|required',
           'id_customer' => 'bail|required'
         ]);
-        $wishlistProducts = Wishlist::select('id_wishlist')->where('id_customer',34)->get();
+        $wishlistProducts = Wishlist::select('id_wishlist')->where('id_customer',$request->id_customer)->get();
 
         if($wishlistProducts->isEmpty()){
             return response()->json(['error' => 'page_not_found'], 404);
