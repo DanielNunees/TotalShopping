@@ -68,8 +68,8 @@ a{
 }
 
 .image-background-profile{
-  height: 220px;
-  background: url('../img/profile-background.jpg') center center no-repeat scroll;
+  height: 150px;
+  background: url('../img/cover2.jpg') center center no-repeat scroll;
   -webkit-background-size:cover;
   -moz-background-size:cover;
   background-size: cover;

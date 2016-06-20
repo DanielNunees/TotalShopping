@@ -1,5 +1,7 @@
-app.controller('userLoginController', ['$scope', '$http','$auth','$location','$ionicHistory','$ionicPopup', function($scope,$http,$auth,$location,$ionicHistory,$ionicPopup){
-    console.log($ionicHistory.viewHistory());
+app.controller('userLoginController', ['$scope', '$http','$auth','$location','$ionicHistory','$ionicPopup','$ionicNavBarDelegate', function($scope,$http,$auth,$location,$ionicHistory,$ionicPopup,$ionicNavBarDelegate){
+    $scope.$on("$ionicView.beforeEnter", function(event, data){
+      $ionicNavBarDelegate.showBackButton(true);
+    });
     $scope.loginData = {};
 
     $scope.isAuthenticated = function() {

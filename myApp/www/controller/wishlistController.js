@@ -1,8 +1,8 @@
 (function () {
-app.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSerializerJQLike','$ionicPopup','$location','$ionicHistory', function($scope,$http,$auth,$httpParamSerializerJQLike,$ionicPopup,$location,$ionicHistory){
-  $scope.$on("$ionicView.afterEnter", function(event, data){
-     //
-    
+app.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSerializerJQLike','$ionicPopup','$location','$ionicHistory','$ionicNavBarDelegate', function($scope,$http,$auth,$httpParamSerializerJQLike,$ionicPopup,$location,$ionicHistory,$ionicNavBarDelegate){
+  $scope.$on("$ionicView.beforeEnter", function(event, data){
+    $ionicNavBarDelegate.showBackButton(true);
+    $scope.loadWishlist();
   });
   
   $scope.product = [];
@@ -25,7 +25,7 @@ app.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSeria
           cache: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           data: $httpParamSerializerJQLike({'id_customer':localStorage.id})
-        }).then(function successCallback(response) {
+        }).then(function successCallback(response) {          
             $scope.product = [];
             for(var i=0;i<response.data.image.length;i++){
               var item={};
@@ -36,18 +36,30 @@ app.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSeria
 
               $scope.product.push(item);
             }
-
           },function errorCallback(response) {
-            var alertPopup = $ionicPopup.alert({
-              title: 'Error 500',
-              template: 'Algum coisa de errado aconteceu',
+            /* Tratamento de erros*/
+            //error 204 - No content
+            console.log(response.data);
+            if(response.status == 404){
+              var alertPopup = $ionicPopup.alert({
+                title: 'Error 404',
+                template: 'Sua lista está vazia',
+              });
+            }else if(response.status == 400){
+              var alertPopup = $ionicPopup.alert({
+              title: 'Error 400',
+              template: 'Whislist not created',
             });
+            }
+            /* Tratamento de erros*/
+            
             //$location.url('/user/home');
           });
       }
     }
     
     $scope.remove = function(index,id_product){
+      console.log(id_product);
       if($auth.isAuthenticated()){
       $http({
           method: 'POST',
@@ -56,6 +68,7 @@ app.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSeria
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           data: $httpParamSerializerJQLike({'id_customer':localStorage.id,'id_product':id_product})
         }).then(function successCallback(response) {
+            console.log(response.data);
             $scope.product.splice(index,1);
           },function errorCallback(response) {
             var alertPopup = $ionicPopup.alert({
@@ -66,8 +79,7 @@ app.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSeria
           });
       }
     }
-$scope.loadWishlist();
-   
+    
 }])
 })();
 

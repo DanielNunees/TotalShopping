@@ -1,10 +1,10 @@
 app.controller('homeController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate', function($scope,$http,$ionicHistory,$ionicNavBarDelegate){
-  $scope.$on("$ionicView.afterEnter", function(event, data){
-    $ionicNavBarDelegate.showBackButton([false]);
-    //$ionicHistory.clearCache();
-    //$ionicHistory.clearHistory();
+  $scope.$on("$ionicView.beforeEnter", function(event, data){
     
-    console.log($ionicHistory.viewHistory());
+    $ionicHistory.clearCache();
+    $ionicHistory.clearHistory();
+    $ionicNavBarDelegate.showBackButton(false);
+    //console.log($ionicHistory.viewHistory());
   });
 
   $scope.loadProducts= function(){

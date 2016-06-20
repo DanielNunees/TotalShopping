@@ -1,5 +1,9 @@
 
-app.controller('productController', ['$scope', '$http','$stateParams','$location','$ionicHistory','$httpParamSerializerJQLike','$ionicPopup','$auth', function($scope,$http,$stateParams,$location,$ionicHistory,$httpParamSerializerJQLike,$ionicPopup,$auth){
+app.controller('productController', ['$scope', '$http','$stateParams','$location','$ionicHistory','$httpParamSerializerJQLike','$ionicPopup','$auth','$ionicNavBarDelegate', function($scope,$http,$stateParams,$location,$ionicHistory,$httpParamSerializerJQLike,$ionicPopup,$auth,$ionicNavBarDelegate){
+  $scope.$on("$ionicView.beforeEnter", function(event, data){
+    $ionicNavBarDelegate.showBackButton(true);
+  });
+
   $scope.product = {};
   $scope.added = false;
   
@@ -22,7 +26,9 @@ app.controller('productController', ['$scope', '$http','$stateParams','$location
             })
           }
         })
+        size.sort();
         $scope.sizes = size;
+        $scope.firstSize = size[0];
       },
       function(err){
         $location.path('/home');
@@ -52,9 +58,13 @@ app.controller('productController', ['$scope', '$http','$stateParams','$location
         
 
         }, function errorCallback(response) {
-          var alertPopup = $ionicPopup.alert({
-            template: 'Algo de errado aconteceu!'
-          });
+          console.log(response.data);
+          if(response.status == 400){
+              var alertPopup = $ionicPopup.alert({
+              title: 'Error 400',
+              template: 'Whislist not created',
+            });
+            }
           
         });
     }else{console.log('Nao disponivel');}

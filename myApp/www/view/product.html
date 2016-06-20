@@ -1,36 +1,27 @@
-  <ion-view view-title="Product">
-          <ion-content class="padding-horizontal has-footer">
-          <div ng-repeat="products in product.description" >
-                  <ion-slide-box >
-                    <ion-slide ng-repeat="products in product.images" >
-                      <img ng-model="product.images[0].image" class="img-size" ng-src='http://127.0.1.1/prestashop{{products.image}}'>
-                    </ion-slide>
-                  </ion-slide-box>
-                    
-                    <h2 ng-model="products.name" class="css-selector text-center">{{products.name}}</h2>
-                    <h3 class="css-selector text-center">{{products.product_price.price | currency:"R$ "}}</h3>
-                    <h4 class="css-selector">3x {{products.product_price.price/3 | currency:"R$ ":2}}</h4>
+<ion-view view-title="Product">
+  <ion-content class="padding-horizontal has-footer">
+    <div ng-repeat="products in product.description" >
+      <ion-slide-box >
+        <ion-slide ng-repeat="products in product.images" >
+          <img ng-model="product.images[0].image" class="img-size" ng-src='http://127.0.1.1/prestashop{{products.image}}'>
+        </ion-slide>
+      </ion-slide-box>
 
-                    <label class="item item-input item-select">
-                      <div class="input-label">
-                        Tamanho
-                      </div>
-                     <select ng-model="selectedSize">
-                         <option ng-init="size" selected ng-repeat="size in sizes" value='{{size}}'>{{size}}</option>
-                      </select>
-                    </label>
+      <h2 ng-model="products.name" class="css-selector text-center">{{products.name}}</h2>
+      <h3 class="css-selector text-center">{{products.product_price.price | currency:"R$ "}}</h3>
+      <h4 class="css-selector">3x {{products.product_price.price/3 | currency:"R$ ":2}}</h4>
 
-                    <div class="text-center">
-                      <!--div ng-repeat='products in products.product_stock_complete'>{{products}}</div-->
-                      <!--button ng-repeat="size in sizes" model={{size}} class=" button button-outline button-positive img-circle" >
-                        {{size}}
-                      </button-->
-                    </div>
-                    <ngcart-addtocart id="{{products.id_product}}" name="{{products.name}}" price="{{products.product_price.price}}" quantity="1" quantity-max="5" data="{'image':product.images[0].image,size:selectedSize}">Adicionar ao carrinho</ngcart-addtocart>
+       <label class="item item-input item-select">
+        <div class="input-label">
+          Tamanho
+        </div>
+        <select required ng-model="firstSize" ng-options='size for size in sizes'>
+        </select>
+      </label>
 
-                    <button ng-disabled='added' ng-click="favoriteProduct()" class="button button-block button-assertive button-outline"><i class="icon ion-ios-heart-outline"></i>Adicionar aos Favoritos</button>
-
-                <p class="css-selector" ng-bind-html="products.description"></p>
-               </div> 
-          </ion-content>
-        </ion-view>
+      <ngcart-addtocart id="{{products.id_product}}" name="{{products.name}}" price="{{products.product_price.price}}" quantity="1" quantity-max="5" data="{'image':product.images[0].image,size:firstSize}">Adicionar ao carrinho</ngcart-addtocart>
+      <button ng-disabled='added' ng-click="favoriteProduct()" class="button button-block button-assertive button-outline"><i class="icon ion-ios-heart-outline"></i>Adicionar aos Favoritos</button>
+      <p class="css-selector" ng-bind-html="products.description"></p>
+    </div> 
+  </ion-content>
+</ion-view>
