@@ -30,14 +30,9 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::post('/createWishlist','WishlistController@addProduct');
 	Route::post('/wishlist','WishlistController@listProducts');
 	Route::post('/removeWishlistProduct','WishlistController@removeProducts');
+	Route::get('/checkout','CheckoutController@checkout');
 	
 
 	Route::get('home', ['as' => 'home', 'uses' => 'ProductHomeController@index']);
 	Route::get('/product/{id_product}','ProductController@index')->where('id_product', '[0-9]+');
-	
-
-
-	
-
-
 });

@@ -36,8 +36,6 @@ app.controller('productController', ['$scope', '$http','$stateParams','$location
     )
   }
 
-  
-
   $scope.favoriteProduct = function(){
     if($scope.isAuthenticated()){
       $http({
@@ -57,17 +55,19 @@ app.controller('productController', ['$scope', '$http','$stateParams','$location
         });
         
 
-        }, function errorCallback(response) {
+        },function errorCallback(response) {
           console.log(response.data);
           if(response.status == 400){
               var alertPopup = $ionicPopup.alert({
               title: 'Error 400',
               template: 'Whislist not created',
             });
-            }
+          }
           
         });
-    }else{console.log('Nao disponivel');}
+    }else{var alertPopup = $ionicPopup.alert({
+          template: 'Faça Login Primeiro'
+        })}
   }
     
   $scope.loadProducts();

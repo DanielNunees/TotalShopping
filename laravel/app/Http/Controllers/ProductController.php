@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers;
+namespace  App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Models\ProductStock;
@@ -8,11 +8,13 @@ use Illuminate\Http\attributes_names;
 use App\Models\Product;
 use App\Models\ProductImages;
 use App\Models\Attributes;
+use App\Exceptions\Handler;
+use Exception;
 
 class ProductController extends Controller
 {
+
     public function index($id_product){
-        
             /* Validate if a product id exceed the quantity on DB */
             if($id_product==0 || $id_product>Product::max('id_product')) return response()->json(['error' => 'page_not_found'], 404);
 

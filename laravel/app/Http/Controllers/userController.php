@@ -16,16 +16,16 @@ class userController extends Controller
 {
 	public function register(Request $request)
   {
-
     $this->validate($request, [
       'email' => 'bail|required|max:128',
       'password' => 'bail|required|max:32',
       'name' => 'required|max:32',
       'birth' => 'required|date',
       'lastName' => 'required|max:32',
-      'gender' => 'required|boolean',
+      'gender' => 'required|numeric',
       'newsletter' => 'boolean'
       ]);
+
 
     $user = UserRegister::where('email',$request->input('email'))->get();
 
@@ -79,16 +79,24 @@ class userController extends Controller
 
     $this->validate($request, [
       'id_customer' => 'bail|required',
+      'key_id_customer_retrieving' =>'bail|required',
     ]);
 
+    if(strcmp($request->key_id_customer_retrieving,'DHC7BB2K3FGJPHQ87VFJ7MDJD')!=0){
+      return response()->json(['error' => 'Retriving error'], 400);
+    }
+
     $address = Address::where('id_customer',$request->id_customer)->where('active','1')->select('id_state','lastname','firstname','address1','address2','postcode','city','phone','phone_mobile')->get();
+
+    $user = User::where('id_customer',$request->id_customer)->select('birthday')->get();
 
     if($address->isEmpty()){
       return response()->json(['error' => 'is_empty'], 400);
     }
 
+    $array = array('address' => $address,'user'=>$user);
 
-    return $address;
+    return $array;
   }
 
   public function createAddress(Request $request){
@@ -143,30 +151,7 @@ class userController extends Controller
     $today = date("Y-m-d H:i:s");
     $user = User::where('id_customer',$request->id_customer)->select('lastname','firstname')->get();
 
-    $address = Address::where('id_customer',$request->id_customer)->update(['address1' => $request->address1,'address2'=>$request->address2,
-                                                           'postcode'=>$request->postcode,'city'=>$request->city,'phone'=>$request->phone,'phone_mobile'=>$request->phone_mobile,'id_customer'=>$request->id_customer,'date_add'=>$today,'date_upd'=>$today,'id_country'=>'58','id_state'=>$request->id_state,'firstname'=>$user[0]->firstname,'lastname'=>$user[0]->lastname]);
-
-
-    //$address = new Address;
-    //eturn $user[0]->lastname;
-
-    //$address->address1 = 'fudeu95';
-
-    /*$address->address2 = $request->address2;
-    $address->postcode = $request->postcode;
-    $address->city = $request->city;
-    $address->phone = $request->phone;
-    $address->phone_mobile = $request->phone_mobile;
-    $address->firstname = $user[0]->firstname;
-    $address->lastname = $user[0]->lastname;
-    $address->id_state = $request->id_state;
-    $address->id_customer = $request->id_customer;
-    $address->id_country = 58;
-    
-    $address->date_add = $today;
-    $address->date_upd = $today;*/
-
-    //$address->save();
+    $address = Address::where('id_customer',$request->id_customer)->update(['address1' => $request->address1,'address2'=>$request->address2,'postcode'=>$request->postcode,'city'=>$request->city,'phone'=>$request->phone,'phone_mobile'=>$request->phone_mobile,'id_customer'=>$request->id_customer,'date_add'=>$today,'date_upd'=>$today,'id_country'=>'58','id_state'=>$request->id_state,'firstname'=>$user[0]->firstname,'lastname'=>$user[0]->lastname]);
 
     return $address;
   }

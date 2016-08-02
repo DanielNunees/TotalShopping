@@ -1,8 +1,7 @@
 <ion-view view-title="Login">
 	<ion-content  > <!-- loginForm.$valid && -->
   		<form ng-if="!isAuthenticated()" name='loginForm' ng-submit="login(loginForm)" novalidate>
-  			
-		    
+  		    
 		    <label class="item item-input item-stacked-label">
 			    <span class="input-label">Email*</span>
 			    <input ng-model="loginData.email" type="email" ng-maxlength="128" placeholder="john@suhr.com" required/>
@@ -13,13 +12,10 @@
 			    <input ng-model="loginData.password" ng-minlength="5" ng-maxlength="32" type="password" placeholder="" required/>
 			</label>
 
-
 		    <input class="button button-block button-positive" type="submit" ng-disabled="loginForm.$invalid" value="Login" />
-		    <p class="text-center"><a href="#/user/register">Register Now</a></p>
-		</form>
-		  
-		  
-    </ion-content>
 
+		    <p class="text-center"><a class="button" ng-click="openModal()">Register Now</a></p>
+		</form>
+    </ion-content>
 </ion-view>
 

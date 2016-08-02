@@ -1,6 +1,10 @@
-  <ion-view view-title="Register">
+<ion-modal-view>
+    <ion-header-bar class="bar bar-header bar-positive">
+    	<h1 class="title">Cadastro</h1>
+        <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+    </ion-header-bar>
 	<ion-content >
-  		<form name='userForm'  ng-submit="userForm.$valid && submit(userForm)" novalidate>
+  		<form name='userForm' class="css-form" ng-submit="userForm.$valid && register()" novalidate>
   			<input ng-model="photo" type="file" id="files" />
 			<img class=" img-circle img-size text-center" id="image">
   		   
@@ -36,8 +40,7 @@
 		    <div> User Form is valid? {{userForm.$valid}}</div>
 		    <input class="button button-block button-positive" type="submit" ng-disabled="userForm.$invalid" value="Register" />
 		</form>
-		  <pre>user = {{userRegister | json}}</pre>
-		  <pre>master = {{master | json}}</pre>
+		<pre>user = {{userRegister | json}}</pre>
+		<pre>master = {{master | json}}</pre>
     </ion-content>
-</ion-view>
-
+</ion-modal-view>

@@ -43,14 +43,16 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
         url: 'http://127.0.1.1/laravel/public/user/loadData',
         dataType: 'json',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        data: $httpParamSerializerJQLike({'id_customer':localStorage.id})
+        data: $httpParamSerializerJQLike({'id_customer':localStorage.id,'key_id_customer_retrieving':'DHC7BB2K3FGJPHQ87VFJ7MDJD'})
         
       }).then(function successCallback(response) {
+      	console.log(response.data.user[0]);
       	$scope.isEmpty = false;
       	//console.log(response.data[0]);
-      	$scope.userData = response.data[0];
+      	$scope.userData = response.data.address[0];
+      	$scope.userBirth = response.data.user[0];
       	angular.forEach($scope.states2,function(value,key){
-      		if(response.data[0].id_state==value.value){
+      		if(response.data.address[0].id_state==value.value){
       			$scope.userData.state = value.state;
       		}
       	});
@@ -116,23 +118,22 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 	         	console.log(response.data);
         });
 	}
-	
 
-
-	$ionicModal.fromTemplateUrl('my-modal.html', {
+	$ionicModal.fromTemplateUrl('view/userRegisterModal.html', {
       scope: $scope,
       animation: 'slide-in-up',
 
 	  }).then(function(modal) {
 	    $scope.modal = modal;
 	  });
+
 	  $scope.openModal = function() {
 	    $scope.modal.show();
 	  };
+
 	  $scope.closeModal = function() {
 	    $scope.modal.hide();
 	    $scope.loadData();
-	    console.log('close');
 	  };
 	  // Cleanup the modal when we're done with it!
 	  $scope.$on('$destroy', function() {
@@ -142,7 +143,8 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 	  $scope.$on('modal.hidden', function() {
 	    // Execute action
 	    console.log('hidden');
-	    //$scope.loadData();
+	    $scope.loadData();
+	    $scope.address = {};
 	  });
 	  // Execute action on remove modal
 	  $scope.$on('modal.removed', function() {
