@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-require_once "../app/Libraries/PagSeguroLibrary/PagSeguroLibrary.class.php";
 
 use Illuminate\Http\Request;
 
@@ -11,14 +10,31 @@ use App\Libraries\PagSeguroLibrary\domain\PagSeguroPaymentRequest;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroShippingType;
 use App\Libraries\PagSeguroLibrary\config\PagSeguroConfig;
 use App\Libraries\PagSeguroLibrary\service\PagSeguroSessionService;
+use Exception;
 
 
 
 
 class CheckoutController extends Controller
 {
-    public function checkout(){
-    	$pagseguro = PagSeguroLibrary::init();
+
+
+	public function getSession(){
+		try {
+			$pagseguro = PagSeguroLibrary::init();  
+      		$credentials = PagSeguroConfig::getAccountCredentials(); // getApplicationCredentials()
+     		//$checkoutUrl = $paymentRequest->register($credentials);
+			$sessionId = PagSeguroSessionService::getSession($credentials);
+      		return $sessionId;   
+    	}catch (PagSeguroServiceException $e) {  
+        	die($e->getMessage());  
+    	}
+	}
+
+    public function checkout(Request $request){
+
+
+    	//$pagseguro = PagSeguroLibrary::init();
     	$paymentRequest = new PagSeguroPaymentRequest();
     	$paymentRequest->addItem('0001', 'Notebook', 1, 2430.00);
     	$paymentRequest->addItem('0002', 'Mochila',  1, 150.99);
@@ -51,18 +67,5 @@ class CheckoutController extends Controller
 		$paymentRequest->addPaymentMethodConfig('BOLETO', 10.00, 'DISCOUNT_PERCENT');  
 		$paymentRequest->addPaymentMethodConfig('DEPOSIT', 3.45, 'DISCOUNT_PERCENT');  
 		$paymentRequest->addPaymentMethodConfig('BALANCE', 0.01, 'DISCOUNT_PERCENT');
-
-
-    try {  
-      
-      $credentials = PagSeguroConfig::getAccountCredentials(); // getApplicationCredentials()
-     // $checkoutUrl = $paymentRequest->register($credentials);
-
-      $sessionId = PagSeguroSessionService::getSession($credentials);   
-      dd($sessionId);     
-    } catch (PagSeguroServiceException $e) {  
-        die($e->getMessage());  
-    }
-    	dd($paymentRequest);
     }
 }

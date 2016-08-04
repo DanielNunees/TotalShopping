@@ -28,7 +28,7 @@ class PagSeguroConfigWrapper
     /**
      * production or sandbox
      */
-    const PAGSEGURO_ENV = "production";
+    const PAGSEGURO_ENV = "sandbox";
     /**
      *
      */
@@ -40,7 +40,7 @@ class PagSeguroConfigWrapper
     /**
      *
      */
-    const PAGSEGURO_TOKEN_SANDBOX = "your_sandbox_token";
+    const PAGSEGURO_TOKEN_SANDBOX = "20602F0F32D5407FB66B49B50C94E389";
     /**
      *
      */

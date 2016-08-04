@@ -56,6 +56,12 @@ app.config(function($stateProvider, $urlRouterProvider,$authProvider) {
       templateUrl: "view/wishlist.html"
     })
 
+    .state('userDataCheckout', {
+      url: "/user/dataCheckout",
+      controller: 'userDataCheckoutController',
+      templateUrl: "view/userDataCheckout.html"
+    })
+
 });
 
 app.run(function($ionicPlatform) {

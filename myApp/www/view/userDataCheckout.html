@@ -1,0 +1,55 @@
+<ion-view view-title="Checkout">
+	<div ng-if="isAuthenticated()" ng-controller="userDashboardController">
+    	<ion-content class="padding-horizontal" >
+        	<h4>Checkout</h4>
+        	<div ng-if="!isEmpty" class="list">
+            <div class="item item-divider text-center">
+              Dados Pessoais
+            </div>
+            <span class="item item-icon-left">
+              <i class="icon ion-person"></i>
+              {{userData.firstname}} {{userData.lastname}}
+            </span>
+
+            <span class="item item-icon-left ">
+              <i class="icon ion-calendar"></i>
+              {{userBirth.birthday}}
+            </span>
+            <div class="item item-divider text-center">
+              Endereço de Entrega
+            </div>
+            <span class="item item-icon-left">
+              <i class="icon ion-location"></i>
+              <p>{{userData.city}}, {{userData.state}}</p>
+            </span>
+
+            <span class="item item-icon-left">
+              <i class="icon ion-map"></i>
+              <p>{{userData.address1}}, {{userData.address2}}</p>
+            </span>
+
+            <span class="item item-icon-left">
+              <i class="icon ion-pound"></i>
+              {{userData.postcode}}
+            </span>
+
+            <span class="item item-icon-left">
+              <i class="icon ion-ios-telephone"></i>
+              {{userData.phone_mobile}}
+            </span>
+          </div>
+          <div class="button button-outline button-positive button-block" ng-click='checkout()'>Continuar Checkout</div>
+          <button ng-if="!isEmpty" class="button button-block button-positive button-outline" ng-click="openModal()">Editar</button>
+          <button ng-if="isEmpty" class="button button-block button-positive button-outline" ng-click="openModal()">Cadastrar Novo Endereço</button>
+		</ion-content>
+	</div>
+	<div ng-if='!isAuthenticated()'>
+		<ion-content>
+      <h1>Faça login primeiro</h1>
+
+    </ion-content>
+		
+	</div>
+
+</ion-view >
+

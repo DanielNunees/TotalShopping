@@ -28,6 +28,7 @@ namespace App\Libraries\PagSeguroLibrary\config;
 use App\Libraries\PagSeguroLibrary\PagSeguroLibrary;
 use App\Libraries\PagSeguroLibrary\config\PagSeguroConfigWrapper;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroAccountCredentials;
+use Exception;
 
 class PagSeguroConfig
 {
