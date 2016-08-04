@@ -1,5 +1,8 @@
 app.factory('userDataFactory', function($http,$httpParamSerializerJQLike){
+	
+	
 	return {
+
 	 	loadUserData: function(){
 			return $http({
 		        method: 'POST',
@@ -12,15 +15,25 @@ app.factory('userDataFactory', function($http,$httpParamSerializerJQLike){
 		},
 
 		updateAddress: function(address){
+			console.log(address);
 			return $http({
 		        method: 'POST',
 		        url: 'http://127.0.1.1/laravel/public/user/updateAddress',
 		        dataType: 'json',
 		        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 		        data: $httpParamSerializerJQLike(address)
-		      	});
-		}
+		    });
+		},
 
+		createAddress: function(address){
+			$http({
+		        method: 'POST',
+		        url: 'http://127.0.1.1/laravel/public/user/createAddress',
+		        dataType: 'json',
+		        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		        data: $httpParamSerializerJQLike(address) 
+		    });
+		}
 	}
 
 });

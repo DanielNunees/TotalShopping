@@ -74,7 +74,7 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 	}
 
 	$scope.updateAddress = function(){
-		$scope.modal.hide();
+		
 		$scope.address.id_customer = localStorage.id;
 		$http({
         method: 'POST',
@@ -84,7 +84,7 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
         data: $httpParamSerializerJQLike($scope.address)
         
       }).then(function successCallback(response) {
-
+      	$scope.modal.hide();
       	console.log(response.data);
       	$scope.userData = response.data[0];
       	angular.forEach($scope.states2,function(value,key){
@@ -105,7 +105,7 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
         });
 	}
 
-	$ionicModal.fromTemplateUrl('view/userRegisterModal.html', {
+	$ionicModal.fromTemplateUrl('view/userAddressRegisterModal.html', {
       scope: $scope,
       animation: 'slide-in-up',
 

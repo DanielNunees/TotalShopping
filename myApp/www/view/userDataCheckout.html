@@ -1,5 +1,5 @@
 <ion-view view-title="Checkout">
-	<div ng-if="isAuthenticated()" ng-controller="userDashboardController">
+	<div ng-if="isAuthenticated()">
     	<ion-content class="padding-horizontal" >
         	<h4>Checkout</h4>
         	<div ng-if="!isEmpty" class="list">
@@ -41,7 +41,7 @@
           <div class="button button-outline button-positive button-block" ng-click='checkout()'>Continuar Checkout</div>
           <button ng-if="!isEmpty" class="button button-block button-positive button-outline" ng-click="openModal()">Editar</button>
           <button ng-if="isEmpty" class="button button-block button-positive button-outline" ng-click="openModal()">Cadastrar Novo Endereço</button>
-		</ion-content>
+		  </ion-content>
 	</div>
 	<div ng-if='!isAuthenticated()'>
 		<ion-content>
