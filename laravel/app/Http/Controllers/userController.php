@@ -86,12 +86,22 @@ class userController extends Controller
       return response()->json(['error' => 'Retriving error'], 400);
     }
 
-    $address = Address::where('id_customer',$request->id_customer)->where('active','1')->select('id_state','lastname','firstname','address1','address2','postcode','city','phone','phone_mobile')->get();
+    $address = Address::where('id_customer',$request->id_customer)->where('active','1')->select('id_state','lastname','firstname','address1','address2','postcode','city','phone','phone_mobile','other')->get();
 
     $user = User::where('id_customer',$request->id_customer)->select('birthday')->get();
 
     if($address->isEmpty()){
       return response()->json(['error' => 'is_empty'], 400);
+    }
+
+    $states = array('Acre'=>313,'Alagoas'=>314,'Amapá'=>315,'Amazonas'=>316,'Bahia'=>317,'Ceará'=>318,'Distrito Federal'=>319,'Espírito Santo'=>320,'Goiás'=>321,'Maranhão'=>322,'Mato Grosso'=>323,'Mato Grosso do Sul'=>324,'Minas Gerais'=>325,'Pará'=>326,'Paraíba'=>327,'Paraná'=>328,'Pernanbuco'=>329,'Piauí'=>330,'Rio de Janeiro'=>331,'Rio Grande do Norte'=>332,'Rio Grande do Sul'=>333,'Rondônia'=>334,'Roraima'=>335,'Santa Catarina'=>336,'São Paulo'=>337,'Sergipe'=>338,'Tocantins'=>339);
+
+    $state = $address[0]->id_state;
+
+    foreach ($states as $key => $value) {
+      if($state==$value){
+        $address[0]->state = $key;
+      }
     }
 
     $array = array('address' => $address,'user'=>$user);
@@ -150,7 +160,6 @@ class userController extends Controller
 
     $today = date("Y-m-d H:i:s");
     $user = User::where('id_customer',$request->id_customer)->select('lastname','firstname')->get();
-    //if($request->other)
 
     $address = Address::where('id_customer',$request->id_customer)->update(['address1' => $request->address1,'address2'=>$request->address2,'postcode'=>$request->postcode,'other'=>$request->other,'city'=>$request->city,'phone'=>$request->phone,'phone_mobile'=>$request->phone_mobile,'id_customer'=>$request->id_customer,'date_add'=>$today,'date_upd'=>$today,'id_country'=>'58','id_state'=>$request->id_state,'firstname'=>$user[0]->firstname,'lastname'=>$user[0]->lastname]);
 

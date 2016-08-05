@@ -7,12 +7,6 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
   	});
 
 	$scope.address = {};
-	$scope.states2 = [{state:'Acre',value:'313'},{state:'Alagoas',value:'314'},{state:'Amapá',value:'315'},{state:'Amazonas',value:'316'},{state:'Bahia',value:'317'},
-					  {state:'Ceará',value:'318'},{state:'Distrito Federal',value:'319'},{state:'Espírito Santo',value:'320'},{state:'Goiás',value:'321'},{state:'Maranhão',value:'322'},
-					  {state:'Mato Grosso',value:'323'},{state:'Mato Grosso do Sul',value:'324'},{state:'Minas Gerais',value:'325'},{state:'Pará',value:'326'},{state:'Paraíba',value:'327'},
-					  {state:'Paraná',value:'328'},{state:'Pernanbuco',value:'329'},{state:'Piauí',value:'330'},{state:'Rio de Janeiro',value:'331'},{state:'Rio Grande do Norte',value:'332'},
-					  {state:'Rio Grande do Sul',value:'333'},{state:'Rondônia',value:'334'},{state:'Roraima',value:'335'},{state:'Santa Catarina',value:'336'},{state:'São Paulo',value:'337'},
-					  {state:'Sergipe',value:'338'},{state:'Tocantins',value:'339'}]
 
 	$scope.isAuthenticated = function() {
 	  return $auth.isAuthenticated();
@@ -37,11 +31,6 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
       	$scope.isEmpty = false;
       	$scope.userData = response.data.address[0];
       	$scope.userBirth = response.data.user[0];
-      	angular.forEach($scope.states2,function(value,key){
-      		if(response.data.address[0].id_state==value.value){
-      			$scope.userData.state = value.state;
-      		}
-      	});
 
         }, function errorCallback(response) {
         	/* Tratamento de erros*/
@@ -79,11 +68,7 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 	      	$scope.modal.hide();
 	      	$scope.address = {};
 	      	$scope.userData = response.data[0];
-	      	angular.forEach($scope.states2,function(value,key){
-	      		if(response.data[0].id_state==value.value){
-	      			$scope.userData.state = value.state;
-	      		}
-	      	});
+
 	        }, function errorCallback(response) {
 		       	/* Tratamento de erros*/
 		      	//error 400 - No content
