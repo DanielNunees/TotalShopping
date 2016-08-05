@@ -1,6 +1,6 @@
 app.directive('userAddress',function(){
 	return {
 		restrict:'E',
-		templateUrl: '../view/userAddress.html'
+		templateUrl: '../templates/userAddress.html'
 	};
 });

@@ -74,6 +74,7 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 
 	$scope.updateAddress = function(){
 		$scope.address.id_customer = localStorage.id;
+		$scope.address.address1 =$scope.address.address1+','+$scope.address.number;
 		userDataFactory.updateAddress($scope.address).then(function successCallback(response) {
 	      	$scope.modal.hide();
 	      	$scope.address = {};

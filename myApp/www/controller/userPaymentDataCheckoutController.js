@@ -1,5 +1,9 @@
-app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActionSheet', '$timeout','paymentCheckout',function($scope,$http,$ionicActionSheet, $timeout,paymentCheckout){
-	
+app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActionSheet', '$timeout','paymentCheckout','userDataFactory','$ionicNavBarDelegate',function($scope,$http,$ionicActionSheet, $timeout,paymentCheckout,userDataFactory,$ionicNavBarDelegate){
+	$scope.$on("$ionicView.beforeEnter", function(event, data){
+    	$ionicNavBarDelegate.showBackButton(true);
+    	$scope.loadData();
+  	});
+
 	paymentCheckout.getSession().then(function successCallback(response) {
   		PagSeguroDirectPayment.setSessionId(response.data);
   		PagSeguroDirectPayment.getSenderHash();
@@ -48,17 +52,34 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 	          // add cancel code..
 	        },
 	     buttonClicked: function(index) {
-	     	console.log(index);
+	     	$scope.method = index;
 	       return true;
 	     }
 	   });
-
-	   /* For example's sake, hide the sheet after two seconds
-	   $timeout(function() {
-	     hideSheet();
-	   }, 9999);*/
-
 	 };
+	 $scope.loadData = function(){
+		userDataFactory.loadUserData().then(function successCallback(response) {
+      	$scope.isEmpty = false;
+      	$scope.userData = response.data.address[0];
+      	$scope.userBirth = response.data.user[0];
+      	angular.forEach($scope.states2,function(value,key){
+      		if(response.data.address[0].id_state==value.value){
+      			$scope.userData.state = value.state;
+      		}
+      	});
+
+        }, function errorCallback(response) {
+        	/* Tratamento de erros*/
+	      	//error 400 - No content
+	      	if(response.status==400){
+	      		$scope.isEmpty = true;
+	      	}
+	      	else{$scope.isEmpty=false;}
+	      	/* Fim Tratamento de erros*/
+         	console.log(response.data);
+        });
+	}
+
 	
 
 

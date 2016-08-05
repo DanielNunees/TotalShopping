@@ -7,8 +7,19 @@
         <form ng-if='isEmpty' name='addressForm' class="css-form" ng-submit="addressForm.$valid && createAddress(addressForm)" novalidate>
           <label class="item item-input item-stacked-label">
             <span class="input-label">Endereço</span>
-            <input ng-model="address.address1" type="text" placeholder="Endereço" required>
+            <input ng-model="address.address1" type="text" placeholder="Logradouro" required>
           </label>
+
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Número</span>
+            <input ng-model="address.number" type="numeric"  placeholder="Ex: 123" >
+          </label>
+
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Complemento</span>
+            <input ng-model="address.other" type="text" placeholder="Ex: Apto 301">
+          </label>
+
 
           <label class="item item-input item-stacked-label">
             <span class="input-label">Bairro</span>
@@ -33,7 +44,7 @@
           </label>
 
           <label class="item item-input item-stacked-label">
-            <span class="input-label">Telefone Fixo*</span>
+            <span class="input-label">Telefone Fixo</span>
             <input ng-model="address.phone" type="text" ui-mask='(99)9999-9999'>
           </label>
 
@@ -46,12 +57,28 @@
           <input class="button button-block button-positive" type="submit" ng-disabled="addressForm.$invalid" value="Registrar" >
         </form>
 
+
+
+        <!--Formulario para atulalizar endereço-->
+
+
         <form ng-if='!isEmpty' name='addressForm' class="css-form" ng-submit="addressForm.$valid && updateAddress(addressForm)" novalidate>
           Editar Endereço
           <label class="item item-input item-stacked-label">
             <span class="input-label">Endereço</span>
-            <input ng-model="address.address1" type="text" placeholder="Endereço" required>
+            <input ng-model="address.address1" type="text" placeholder="Logradouro" required>
           </label>
+
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Número</span>
+            <input ng-model="address.number" type="text" placeholder="Ex: 123" required>
+          </label>
+
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Complemento</span>
+            <input ng-model="address.other" type="text" placeholder="Ex: Apto 301">
+          </label>
+
 
           <label class="item item-input item-stacked-label">
             <span class="input-label">Bairro</span>

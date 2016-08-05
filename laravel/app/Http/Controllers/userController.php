@@ -150,8 +150,9 @@ class userController extends Controller
 
     $today = date("Y-m-d H:i:s");
     $user = User::where('id_customer',$request->id_customer)->select('lastname','firstname')->get();
+    //if($request->other)
 
-    $address = Address::where('id_customer',$request->id_customer)->update(['address1' => $request->address1,'address2'=>$request->address2,'postcode'=>$request->postcode,'city'=>$request->city,'phone'=>$request->phone,'phone_mobile'=>$request->phone_mobile,'id_customer'=>$request->id_customer,'date_add'=>$today,'date_upd'=>$today,'id_country'=>'58','id_state'=>$request->id_state,'firstname'=>$user[0]->firstname,'lastname'=>$user[0]->lastname]);
+    $address = Address::where('id_customer',$request->id_customer)->update(['address1' => $request->address1,'address2'=>$request->address2,'postcode'=>$request->postcode,'other'=>$request->other,'city'=>$request->city,'phone'=>$request->phone,'phone_mobile'=>$request->phone_mobile,'id_customer'=>$request->id_customer,'date_add'=>$today,'date_upd'=>$today,'id_country'=>'58','id_state'=>$request->id_state,'firstname'=>$user[0]->firstname,'lastname'=>$user[0]->lastname]);
 
     return $address;
   }
