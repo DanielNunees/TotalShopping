@@ -56,55 +56,44 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 	}
 
 	$scope.createAddress = function(){
-		$scope.modal.hide();
 		$scope.address.id_customer = localStorage.id;
-		$http({
-        method: 'POST',
-        url: 'http://127.0.1.1/laravel/public/user/createAddress',
-        dataType: 'json',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        data: $httpParamSerializerJQLike($scope.address)
-        
-      }).then(function successCallback(response) {
-      		$scope.address = {};
-      		console.log(response.data);
-        }, function errorCallback(response) {
-         	console.log(response);
-        });
+		userDataFactory.createAddress($scope.address).then(function successCallback(response) {
+	      		$scope.modal.hide();
+	      		$scope.address = {};
+	        }, function errorCallback(response) {
+		       	/* Tratamento de erros*/
+		      	//error 400 - No content
+		      	if(response.status==400){
+		      		$scope.isEmpty = true;
+		      	}
+		      	else{$scope.isEmpty=false;}
+		      	/* Fim Tratamento de erros*/
+		         	console.log(response.data);
+	        });
 	}
 
 	$scope.updateAddress = function(){
-		
 		$scope.address.id_customer = localStorage.id;
-		$http({
-        method: 'POST',
-        url: 'http://127.0.1.1/laravel/public/user/updateAddress',
-        dataType: 'json',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        data: $httpParamSerializerJQLike($scope.address)
-        
-      }).then(function successCallback(response) {
-      	$scope.modal.hide();
-      	console.log(response.data);
-      	$scope.userData = response.data[0];
-      	angular.forEach($scope.states2,function(value,key){
-      		if(response.data[0].id_state==value.value){
-      			$scope.userData.state = value.state;
-      		}
-      	});
-
-        }, function errorCallback(response) {
-	       	/* Tratamento de erros*/
-	      	//error 400 - No content
-	      	if(response.status==400){
-	      		$scope.isEmpty = true;
-	      	}
-	      	else{$scope.isEmpty=false;}
-	      	/* Fim Tratamento de erros*/
-	         	console.log(response.data);
-        });
+		userDataFactory.updateAddress($scope.address).then(function successCallback(response) {
+	      	$scope.modal.hide();
+	      	$scope.address = {};
+	      	$scope.userData = response.data[0];
+	      	angular.forEach($scope.states2,function(value,key){
+	      		if(response.data[0].id_state==value.value){
+	      			$scope.userData.state = value.state;
+	      		}
+	      	});
+	        }, function errorCallback(response) {
+		       	/* Tratamento de erros*/
+		      	//error 400 - No content
+		      	if(response.status==400){
+		      		$scope.isEmpty = true;
+		      	}
+		      	else{$scope.isEmpty=false;}
+		      	/* Fim Tratamento de erros*/
+		         	console.log(response.data);
+	        });
 	}
-
 	$ionicModal.fromTemplateUrl('view/userAddressRegisterModal.html', {
       scope: $scope,
       animation: 'slide-in-up',

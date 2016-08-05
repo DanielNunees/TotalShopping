@@ -1,6 +1,5 @@
 app.factory('userDataFactory', function($http,$httpParamSerializerJQLike){
 	
-	
 	return {
 
 	 	loadUserData: function(){
@@ -15,7 +14,6 @@ app.factory('userDataFactory', function($http,$httpParamSerializerJQLike){
 		},
 
 		updateAddress: function(address){
-			console.log(address);
 			return $http({
 		        method: 'POST',
 		        url: 'http://127.0.1.1/laravel/public/user/updateAddress',

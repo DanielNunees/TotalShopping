@@ -58,8 +58,14 @@ app.config(function($stateProvider, $urlRouterProvider,$authProvider) {
 
     .state('userDataCheckout', {
       url: "/user/dataCheckout",
-      controller: 'userDataCheckoutController',
+      controller: 'userDashboardController',
       templateUrl: "view/userDataCheckout.html"
+    })
+
+    .state('userPaymentDataCheckout', {
+      url: "/user/PaymentdataCheckout",
+      controller: 'userPaymentDataCheckoutController',
+      templateUrl: "view/userPaymentDataCheckout.html"
     })
 
 });

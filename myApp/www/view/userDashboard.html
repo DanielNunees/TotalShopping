@@ -29,45 +29,7 @@
           <div ng-if="isEmpty">
             <h3>Nenhum endereço cadastrado ainda</h3>
           </div>
-
-          <div ng-if="!isEmpty" class="list">
-            <div class="item item-divider text-center">
-              Dados Pessoais
-            </div>
-            <span class="item item-icon-left">
-              <i class="icon ion-person"></i>
-              {{userData.firstname}} {{userData.lastname}}
-            </span>
-
-            <span class="item item-icon-left ">
-              <i class="icon ion-calendar"></i>
-              {{userBirth.birthday}}
-            </span>
-            <div class="item item-divider text-center">
-              Endereço de Entrega
-            </div>
-            <span class="item item-icon-left">
-              <i class="icon ion-location"></i>
-              <p>{{userData.city}}, {{userData.state}}</p>
-            </span>
-
-            <span class="item item-icon-left">
-              <i class="icon ion-map"></i>
-              <p>{{userData.address1}}, {{userData.address2}}</p>
-            </span>
-
-            <span class="item item-icon-left">
-              <i class="icon ion-pound"></i>
-              {{userData.postcode}}
-            </span>
-
-            <span class="item item-icon-left">
-              <i class="icon ion-ios-telephone"></i>
-              {{userData.phone_mobile}}
-            </span>
-          </div> <!-- List -->
-          <button ng-if="!isEmpty" class="button button-block button-positive button-outline" ng-click="openModal()">Editar</button>
-          <button ng-if="isEmpty" class="button button-block button-positive button-outline" ng-click="openModal()">Cadastrar Novo Endereço</button>
+          <user-Address></user-Address>
         </ion-slide>
       </ion-slide-box>
       <button class="button button-block button-assertive button-outline" ng-click="logout()"> Logout</button>
