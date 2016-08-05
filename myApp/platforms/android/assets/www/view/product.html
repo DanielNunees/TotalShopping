@@ -1,0 +1,33 @@
+  <ion-header-bar class="bar-positive">
+    <a class="button ion-chevron-left " href="#/home" >Back</a>
+    <h1 class="title">Product</h1>
+    <a class="button " href="#/cart" ><ngcart-summary></ngcart-summary></a>
+  </ion-header-bar>
+
+        <ion-content class="padding-horizontal">
+        <div ng-repeat="products in product.description" >
+                <ion-slide-box >
+                  <ion-slide ng-repeat="products in product.images" >
+                    <img ng-model="product.images[0].image" class="img-size" src='http://127.0.1.1/prestashop{{products.image}}'>
+                  </ion-slide>
+                </ion-slide-box>
+                
+                  
+                  <h2 ng-model="products.name" class="css-selector text-center">{{products.name}}</h2>
+                  <h3 class="css-selector text-center">{{products.product_price.price | currency:"R$ "}}</h3>
+
+                  <div class="text-center">
+                    <label>Tamanho</label>
+                    <!--div ng-repeat='products in products.product_stock_complete'>{{products}}</div-->
+                    <select ng-model="selectedSize" >
+                       <option selected ng-repeat="size in sizes" value='{{size}}'>{{size}}</option>
+                    </select></br>
+                    <button ng-repeat="size in sizes" model={{size}} class=" button button-outline button-positive img-circle" >
+                      {{size}}
+                    </button>
+                  </div>
+                  <ngcart-addtocart id="{{products.id_product}}" name="{{products.name}}" price="{{products.product_price.price}}" quantity="1" quantity-max="5" data="{'image':product.images[0].image,size:selectedSize}">Adicionar ao carrinho</ngcart-addtocart>
+
+              <p class="css-selector" ng-bind-html="products.description"></p>
+             </div> 
+        </ion-content>
