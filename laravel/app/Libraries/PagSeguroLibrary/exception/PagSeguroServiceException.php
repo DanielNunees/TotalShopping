@@ -29,6 +29,9 @@ namespace App\Libraries\PagSeguroLibrary\exception;
  * Class PagSeguroServiceException
  */
 use App\Exceptions\Handler;
+namespace App\Libraries\PagSeguroLibrary\exception;
+use App\Libraries\PagSeguroLibrary\domain\PagSeguroHttpStatus;
+use Exception;
 class PagSeguroServiceException extends Exception
 {
 

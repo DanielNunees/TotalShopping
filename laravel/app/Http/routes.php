@@ -30,7 +30,7 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::post('/createWishlist','WishlistController@addProduct');
 	Route::post('/wishlist','WishlistController@listProducts');
 	Route::post('/removeWishlistProduct','WishlistController@removeProducts');
-	Route::post('/checkout','CheckoutController@checkout');
+	Route::post('/creditCardCheckout','CheckoutController@creditCardCheckout');
 	Route::post('/getSession','CheckoutController@getSession');
 	
 

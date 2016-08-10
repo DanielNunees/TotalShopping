@@ -27,6 +27,8 @@
 namespace App\Libraries\PagSeguroLibrary\parser;
 use App\Libraries\PagSeguroLibrary\helper\PagSeguroHelper;
 use App\Libraries\PagSeguroLibrary\utils\PagSeguroXmlParser;
+
+
 class PagSeguroPaymentParser extends PagSeguroServiceParser
 {
 

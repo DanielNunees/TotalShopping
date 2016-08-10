@@ -25,6 +25,19 @@
  * Encapsulates web service calls regarding PagSeguro payment requests
  */
 namespace App\Libraries\PagSeguroLibrary\service;
+use App\Libraries\PagSeguroLibrary\domain\PagSeguroCredentials;
+use App\Libraries\PagSeguroLibrary\domain\PagSeguroDirectPaymentRequest;
+use App\Libraries\PagSeguroLibrary\log\LogPagSeguro;
+use App\Libraries\PagSeguroLibrary\utils\PagSeguroHttpConnection;
+use App\Libraries\PagSeguroLibrary\parser\PagSeguroDirectPaymentParser;
+use App\Libraries\PagSeguroLibrary\helper\PagSeguroHelper;
+use App\Libraries\PagSeguroLibrary\domain\PagSeguroHttpStatus;
+use App\Libraries\PagSeguroLibrary\exception\PagSeguroServiceException;
+
+
+
+
+
 
 class PagSeguroDirectPaymentService
 {

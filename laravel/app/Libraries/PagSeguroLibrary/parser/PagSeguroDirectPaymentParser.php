@@ -25,6 +25,8 @@
  * Class PagSeguroDirectPaymentParser
  */
 namespace App\Libraries\PagSeguroLibrary\parser;
+use App\Libraries\PagSeguroLibrary\helper\PagSeguroHelper;
+
 class PagSeguroDirectPaymentParser extends PagSeguroPaymentParser
 {
 

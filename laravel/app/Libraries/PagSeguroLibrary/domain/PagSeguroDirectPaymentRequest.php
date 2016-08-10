@@ -25,6 +25,7 @@
  * Represents a direct payment request
  */
 namespace App\Libraries\PagSeguroLibrary\domain;
+use App\Libraries\PagSeguroLibrary\service\PagSeguroDirectPaymentService;
 class PagSeguroDirectPaymentRequest extends PagSeguroRequest
 {
 

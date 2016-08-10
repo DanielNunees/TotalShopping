@@ -1,0 +1,28 @@
+<div class="item item-divider">
+	Dados do cartão de crédito
+</div>
+<label class="item item-input item-stacked-label">
+  <span class="input-label">Numero do Cartão</span>
+  <input type="text"  ng-model='user.cardnumber' ui-mask='9999-9999-9999-9999'>
+</label>
+<label class="item item-input item-stacked-label">
+  <span class="input-label">CVV</span>
+  <input type="text"  ng-model='user.cvv' ui-mask='999'>
+</label>
+<div class="row item item-input item-stacked-label">
+  <div class="col">
+  	<label class="item item-input item-stacked-label">
+	  <span class="input-label">Mês de expiração</span>
+	  <input type="text"  ng-model='user.expirationMonth' ui-mask='99'>
+	</label>
+  </div>
+  <div class="col">
+  	<label class="item item-input item-stacked-label">
+	  <span class="input-label">Ano de expiração</span>
+	  <input type="text"  ng-model='user.expirationYear' ui-mask='9999'>
+	</label>
+  </div>
+</div>
+	  <a class="button button-outline button-positive button-block" ng-click="checkout()">Finalizar</a>
+
+

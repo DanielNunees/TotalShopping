@@ -25,6 +25,7 @@
  * Represents document
  */
 namespace App\Libraries\PagSeguroLibrary\domain;
+use App\Libraries\PagSeguroLibrary\helper\PagSeguroHelper;
 class PagSeguroDocument
 {
 
