@@ -88,7 +88,7 @@ class userController extends Controller
 
     $address = Address::where('id_customer',$request->id_customer)->where('active','1')->select('id_state','lastname','firstname','address1','address2','postcode','city','phone','phone_mobile','other')->get();
 
-    $user = User::where('id_customer',$request->id_customer)->select('birthday')->get();
+    $user = User::where('id_customer',$request->id_customer)->select('birthday','email')->get();
 
     if($address->isEmpty()){
       return response()->json(['error' => 'is_empty'], 400);

@@ -2,6 +2,10 @@
 	Dados do cartão de crédito
 </div>
 <label class="item item-input item-stacked-label">
+  <span class="input-label">CPF</span>
+  <input type="text"  ng-model='user.cpf' ui-mask='999-999-999-99'>
+</label>
+<label class="item item-input item-stacked-label">
   <span class="input-label">Numero do Cartão</span>
   <input type="text"  ng-model='user.cardnumber' ui-mask='9999-9999-9999-9999'>
 </label>

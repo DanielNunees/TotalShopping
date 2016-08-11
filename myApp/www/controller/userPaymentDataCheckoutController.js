@@ -1,11 +1,8 @@
-app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActionSheet', '$timeout','paymentCheckout','userDataFactory','$ionicNavBarDelegate',function($scope,$http,$ionicActionSheet, $timeout,paymentCheckout,userDataFactory,$ionicNavBarDelegate){
+app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActionSheet', '$timeout','paymentCheckout','userDataFactory','$ionicNavBarDelegate','$window',function($scope,$http,$ionicActionSheet, $timeout,paymentCheckout,userDataFactory,$ionicNavBarDelegate,$window){
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
     	$ionicNavBarDelegate.showBackButton(true);
     	$scope.loadUserData();
-    	console.log(localStorage.cart);
-    	var cart = (angular.fromJson(localStorage.cart));
-    	var cart = JSON.stringify(cart);
-    	console.log(cart[15]);
+    	
   	});
   	var SenderHash;
   	$scope.method = 0;
@@ -96,7 +93,6 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 
  	
 	$scope.checkout = function(){
-		var creditCardToken;
 		var param = {
 			cardNumber: $scope.user.cardnumber,
 			cardBin:  $scope.user.cardnumber.slice(0,6),
@@ -105,10 +101,24 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 			expirationYear: $scope.user.expirationYear,
 			success: function(response) {
 			//token gerado, esse deve ser usado na chamada da API do Checkout Transparente
-			console.log(response.card);
-			checkoutData.cart = angular.fromJson(localStorage.cart);
+			var cart = angular.fromJson($window.localStorage ['cart']);
+			checkoutData.cart = JSON.parse(cart);
+			checkoutData.cpf = $scope.user.cpf;
 			checkoutData.creditCardToken = response.card.token;
-			console.log(checkoutData);
+			checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();
+		paymentCheckout.creditCardCheckout(checkoutData).then(function successCallback(response) {
+ 			console.log(response.data);
+
+        }, function errorCallback(response) {
+        	/* Tratamento de erros*/
+	      	//error 400 - No content
+	      	if(response.status==400){
+	      		$scope.isEmpty = true;
+	      	}
+	      	else{$scope.isEmpty=false;}
+	      	/* Fim Tratamento de erros*/
+         	console.log(response.data);
+        });
 
 			},
 			error: function(response) {
@@ -126,7 +136,8 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 		
 		
 		PagSeguroDirectPayment.createCardToken(param);
-		checkoutData.SenderHash = SenderHash;
+		
+
 
 
 

@@ -12,13 +12,13 @@ app.factory('paymentCheckout', function($http,$httpParamSerializerJQLike){
 		    })
 		},
 
-		creditCardCheckout: function(){
+		creditCardCheckout: function(checkoutData){
 			return $http({
 		        method: 'POST',
 		        url: 'http://127.0.1.1/laravel/public/creditCardCheckout',
 		        dataType: 'json',
 		        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-		        data: $httpParamSerializerJQLike({})
+		        data: $httpParamSerializerJQLike({'checkoutData':checkoutData})
 		    })
 		}
 

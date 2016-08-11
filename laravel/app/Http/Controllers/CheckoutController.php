@@ -54,21 +54,18 @@ class CheckoutController extends Controller
         $directPaymentRequest->setCurrency("BRL");
 
         // Add an item for this payment request
+        //dd($request->checkoutData['cart']);
+        
 
         $directPaymentRequest->addItem(
-            '0001',
-            'Descricao do item a ser vendido',
-            2,
-            10.00
+            $request->checkoutData['cart']['items'][0]['_id'],
+            $request->checkoutData['cart']['items'][0]['_name'].','.$request->checkoutData['cart']['items'][0]['_data']['size'],
+            $request->checkoutData['cart']['items'][0]['_quantity'],
+            $request->checkoutData['cart']['items'][0]['_price']
         );
 
-        // Add an item for this payment request
-        $directPaymentRequest->addItem(
-            '0002',
-            'Descricao do item a ser vendido',
-            2,
-            5.00
-        );
+        
+        
 
         // Set a reference code for this payment request. It is useful to identify this payment
         // in future notifications.
@@ -76,28 +73,32 @@ class CheckoutController extends Controller
 
         // Set your customer information.
         // If you using SANDBOX you must use an email @sandbox.pagseguro.com.br
+        
         $directPaymentRequest->setSender(
-            'João Comprador',
-            'email@comprador.com.br',
-            '11',
-            '56273440',
+            $request->checkoutData['userData']['firstname']." ".$request->checkoutData['userData']['lastname'],
+            $request->checkoutData['userBirth']['email'],
+            str_split($request->checkoutData['userData']['phone_mobile'], 2)[0],
+            $request->checkoutData['userData']['phone_mobile'],
             'CPF',
-            '156.009.442-76',
+            $request->checkoutData['cpf'],
             true
         );
-
-        $directPaymentRequest->setSenderHash("d94d002b6998ca9cd69092746518e50aded5a54aef64c4877ccea02573694986");
+        
+        $directPaymentRequest->setSenderHash($request->checkoutData['SenderHash']);
 
         // Set shipping information for this payment request
         $sedexCode = PagSeguroShippingType::getCodeByType('SEDEX');
         $directPaymentRequest->setShippingType($sedexCode);
+
+
+        return $request->checkoutData['userData'];
         $directPaymentRequest->setShippingAddress(
-            '01452002',
+            $request->checkoutData['userData']['postcode'],
             'Av. Brig. Faria Lima',
             '1384',
-            'apto. 114',
-            'Jardim Paulistano',
-            'São Paulo',
+            $request->checkoutData['userData']['other'],
+            $request->checkoutData['userData']['address2'],
+            $request->checkoutData['userData']['state'],
             'SP',
             'BRA'
         );
@@ -174,5 +175,7 @@ class CheckoutController extends Controller
         } catch (PagSeguroServiceException $e) {
             die($e->getMessage());
         }
+
     }
+
 }
