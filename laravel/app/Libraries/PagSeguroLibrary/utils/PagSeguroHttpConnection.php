@@ -27,6 +27,8 @@
 namespace App\Libraries\PagSeguroLibrary\utils;
 
 use App\Libraries\PagSeguroLibrary\PagSeguroLibrary;
+use Exception;
+
 class PagSeguroHttpConnection
 {
 

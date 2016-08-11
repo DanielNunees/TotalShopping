@@ -31,6 +31,7 @@ namespace App\Libraries\PagSeguroLibrary\exception;
 use App\Exceptions\Handler;
 namespace App\Libraries\PagSeguroLibrary\exception;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroHttpStatus;
+use App\Libraries\PagSeguroLibrary\domain\PagSeguroDirectPaymentService;
 use Exception;
 class PagSeguroServiceException extends Exception
 {
@@ -52,7 +53,7 @@ class PagSeguroServiceException extends Exception
      * @param PagSeguroHttpStatus $httpStatus
      * @param array $errors
      */
-    public function __construct(PagSeguroHttpStatus $httpStatus, array $errors = null)
+    public function __construct(PagSeguroHttpStatus $httpStatus, array $errors = null )
     {
         $this->httpStatus = $httpStatus;
         if ($errors) {

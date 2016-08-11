@@ -33,6 +33,8 @@ use App\Libraries\PagSeguroLibrary\parser\PagSeguroDirectPaymentParser;
 use App\Libraries\PagSeguroLibrary\helper\PagSeguroHelper;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroHttpStatus;
 use App\Libraries\PagSeguroLibrary\exception\PagSeguroServiceException;
+use App\Libraries\PagSeguroLibrary\parser\PagSeguroTransactionParser;
+
 
 
 
@@ -86,12 +88,14 @@ class PagSeguroDirectPaymentService
         PagSeguroDirectPaymentRequest $request
     ) {
 
+
         LogPagSeguro::info("PagSeguroDirectPaymentService.Register(" . $request->toString() . ") - begin");
 
         $connectionData = new PagSeguroConnectionData($credentials, self::SERVICE_NAME);
-
+        
         try {
             $connection = new PagSeguroHttpConnection();
+
             $connection->post(
                 self::buildCheckoutRequestUrl($connectionData),
                 PagSeguroDirectPaymentParser::getData($request),
@@ -117,10 +121,13 @@ class PagSeguroDirectPaymentService
      */
     private static function getResult($connection, PagSeguroDirectPaymentRequest $request)
     {
+
         $httpStatus = new PagSeguroHttpStatus($connection->getStatus());
 
         switch ($httpStatus->getType()) {
+            
             case 'OK':
+                return 'case ok';
                 $paymentReturn = PagSeguroTransactionParser::readTransaction($connection->getResponse());
 
                 LogPagSeguro::info(
@@ -130,6 +137,7 @@ class PagSeguroDirectPaymentService
                 break;
             case 'BAD_REQUEST':
                 $errors = PagSeguroTransactionParser::readErrors($connection->getResponse());
+                $errors = explode(' ',$errors);
                 $error = new PagSeguroServiceException($httpStatus, $errors);
                 LogPagSeguro::error(
                     "PagSeguroDirectPaymentService.Register(" . $request->toString() . ") - error " .
@@ -138,6 +146,7 @@ class PagSeguroDirectPaymentService
                 throw $error;
                 break;
             default:
+            return 'default';
                 $error = new PagSeguroServiceException($httpStatus);
                 LogPagSeguro::error(
                     "PagSeguroDirectPaymentService.Register(" . $request->toString() . ") - error " .

@@ -20,11 +20,13 @@
  *  @copyright 2007-2014 PagSeguro Internet Ltda.
  *  @license   http://www.apache.org/licenses/LICENSE-2.0
  */
-
+ 
 /***
  * Class PagSeguroServiceParser
  */
 namespace App\Libraries\PagSeguroLibrary\parser;
+use App\Libraries\PagSeguroLibrary\utils\PagSeguroXmlParser;
+use App\Libraries\PagSeguroLibrary\domain\PagSeguroError;
 class PagSeguroServiceParser
 {
 
@@ -34,6 +36,7 @@ class PagSeguroServiceParser
      */
     public static function readErrors($str_xml)
     {
+        return 'ok';
         $parser = new PagSeguroXmlParser($str_xml);
         $data = $parser->getResult('errors');
         $errors = array();

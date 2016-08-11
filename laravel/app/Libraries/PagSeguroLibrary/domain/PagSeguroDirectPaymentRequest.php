@@ -288,7 +288,7 @@ class PagSeguroDirectPaymentRequest extends PagSeguroRequest
      * @return String The URL to where the user needs to be redirected to in order to complete the payment process
      */
     public function register(PagSeguroCredentials $credentials)
-    {
+    {   
         return PagSeguroDirectPaymentService::checkoutRequest($credentials, $this);
     }
 }

@@ -107,7 +107,7 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 			checkoutData.creditCardToken = response.card.token;
 			checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();
 		paymentCheckout.creditCardCheckout(checkoutData).then(function successCallback(response) {
- 			console.log(response.data);
+ 			console.log(response);
 
         }, function errorCallback(response) {
         	/* Tratamento de erros*/
