@@ -289,6 +289,7 @@ class PagSeguroDirectPaymentRequest extends PagSeguroRequest
      */
     public function register(PagSeguroCredentials $credentials)
     {   
+        
         return PagSeguroDirectPaymentService::checkoutRequest($credentials, $this);
     }
 }

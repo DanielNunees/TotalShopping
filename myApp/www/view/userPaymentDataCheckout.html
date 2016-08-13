@@ -18,8 +18,8 @@
       {{userData.city}}, {{userData.state}},
       {{userData.other}}.
     </div>
-    <boleto-method ng-if="method==1"></boleto-method>
     <creditcard-method ng-if="method==0"></creditcard-method>
+    <boleto-method ng-if="method==1"></boleto-method>
   	<div class=" button button-clear button-positive button-block" ng-click="show()">Mudar Método de pagamento</div>
 
     </ion-content>

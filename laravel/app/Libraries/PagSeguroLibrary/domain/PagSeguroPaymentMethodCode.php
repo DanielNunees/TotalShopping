@@ -24,6 +24,8 @@
 /***
  * Defines a list of known payment method codes.
  */
+
+namespace App\Libraries\PagSeguroLibrary\domain;
 class PagSeguroPaymentMethodCode
 {
 

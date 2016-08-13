@@ -100,6 +100,8 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 			expirationMonth: $scope.user.expirationMonth,
 			expirationYear: $scope.user.expirationYear,
 			success: function(response) {
+				console.log(response);
+				console.log(PagSeguroDirectPayment.getSenderHash());
 			//token gerado, esse deve ser usado na chamada da API do Checkout Transparente
 			var cart = angular.fromJson($window.localStorage ['cart']);
 			checkoutData.cart = JSON.parse(cart);

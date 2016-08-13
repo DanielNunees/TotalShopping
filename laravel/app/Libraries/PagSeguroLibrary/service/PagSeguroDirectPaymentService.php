@@ -37,10 +37,6 @@ use App\Libraries\PagSeguroLibrary\parser\PagSeguroTransactionParser;
 
 
 
-
-
-
-
 class PagSeguroDirectPaymentService
 {
 
@@ -88,7 +84,6 @@ class PagSeguroDirectPaymentService
         PagSeguroDirectPaymentRequest $request
     ) {
 
-
         LogPagSeguro::info("PagSeguroDirectPaymentService.Register(" . $request->toString() . ") - begin");
 
         $connectionData = new PagSeguroConnectionData($credentials, self::SERVICE_NAME);
@@ -127,7 +122,7 @@ class PagSeguroDirectPaymentService
         switch ($httpStatus->getType()) {
             
             case 'OK':
-                return 'case ok';
+                
                 $paymentReturn = PagSeguroTransactionParser::readTransaction($connection->getResponse());
 
                 LogPagSeguro::info(
@@ -137,6 +132,8 @@ class PagSeguroDirectPaymentService
                 break;
             case 'BAD_REQUEST':
                 $errors = PagSeguroTransactionParser::readErrors($connection->getResponse());
+                echo $connection->getResponse();
+                echo "string";
                 $errors = explode(' ',$errors);
                 $error = new PagSeguroServiceException($httpStatus, $errors);
                 LogPagSeguro::error(
@@ -146,7 +143,6 @@ class PagSeguroDirectPaymentService
                 throw $error;
                 break;
             default:
-            return 'default';
                 $error = new PagSeguroServiceException($httpStatus);
                 LogPagSeguro::error(
                     "PagSeguroDirectPaymentService.Register(" . $request->toString() . ") - error " .

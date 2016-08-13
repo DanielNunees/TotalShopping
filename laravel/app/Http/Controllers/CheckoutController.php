@@ -58,7 +58,7 @@ class CheckoutController extends Controller
         // Add an item for this payment request
         //dd($request->checkoutData['cart']);
         
-
+        //return $request->checkoutData['cart']['items'][0]['_quantity'];
         $directPaymentRequest->addItem(
             $request->checkoutData['cart']['items'][0]['_id'],
             $request->checkoutData['cart']['items'][0]['_name'].','.$request->checkoutData['cart']['items'][0]['_data']['size'],
@@ -73,12 +73,12 @@ class CheckoutController extends Controller
         // Set your customer information.
         // If you using SANDBOX you must use an email @sandbox.pagseguro.com.br
         $directPaymentRequest->setSender(
-            $request->checkoutData['userData']['firstname']." ".$request->checkoutData['userData']['lastname'],
-            $request->checkoutData['userBirth']['email'],
-            str_split($request->checkoutData['userData']['phone_mobile'], 2)[0],
-            substr($request->checkoutData['userData']['phone_mobile'],2),
+            'Daniel Nunes',
+            'v30781034923906770092@sandbox.pagseguro.com.br',
+            '27',
+            '999887766',
             'CPF',
-            $request->checkoutData['cpf'],
+            '156.009.442-76',
             true
         );
         
@@ -90,66 +90,82 @@ class CheckoutController extends Controller
 
 
         
-
+        //return $request->checkoutData['userData'];
         $directPaymentRequest->setShippingAddress(
             $request->checkoutData['userData']['postcode'], //CEP
             strstr($request->checkoutData['userData']['address1'],',',true), //Logradouro
             substr(strrchr($request->checkoutData['userData']['address1'],','),1), //Numero
             $request->checkoutData['userData']['other'],//Complemento
             $request->checkoutData['userData']['address2'], //Bairro
-            $request->checkoutData['userData']['state'], //Estado
-            State::where('id_state',$request->checkoutData['userData']['id_state'])->select('iso_code')->get(),//Sigla do estado
+            $request->checkoutData['userData']['city'], //Cidade
+            $request->checkoutData['userData']['state'],//Estado
             'BRA'
         );
 
+        $state = State::where('id_state',$request->checkoutData['userData']['id_state'])->select('iso_code')->get();
+        $state=  $state[0]['iso_code'];
         //Set billing information for credit card
-        $billing = new PagSeguroBilling
-        (
-            array(
-                'postalCode' => $request->checkoutData['userData']['postcode'],
-                'street' => $request->checkoutData['userData']['address1'],
-                'number' => substr(strrchr($request->checkoutData['userData']['address1'],','),1),
-                'complement' => $request->checkoutData['userData']['other'],
-                'district' => $request->checkoutData['userData']['address2'],
-                'city' => $request->checkoutData['userData']['state'],
-                'state' => State::where('id_state',$request->checkoutData['userData']['id_state'])->select('iso_code')->get(),
-                'country' => 'BRA'
-            )
-        );
+        $billingAddress = new PagSeguroBilling(  
+            array(  
+              'postalCode' => $request->checkoutData['userData']['postcode'],  
+              'street' => strstr($request->checkoutData['userData']['address1'],',',true),  
+              'number' => substr(strrchr($request->checkoutData['userData']['address1'],','),1),  
+              'complement' => $request->checkoutData['userData']['other'],  
+              'district' => $request->checkoutData['userData']['address2'],  
+              'city' => $request->checkoutData['userData']['city'],  
+              'state' => $state,  
+              'country' => 'BRA'  
+            )  
+        );  
         
-        $token = $request->checkoutData['creditCardToken'];
+        $creditCardToken = $request->checkoutData['creditCardToken'];
+        $installments = new PagSeguroDirectPaymentInstallment(  
+          array(  
+            'quantity' => $request->checkoutData['cart']['items'][0]['_quantity'],  
+            'value' =>number_format($request->checkoutData['cart']['items'][0]['_price'],2)
+          )  
+        ); 
+        function mask($val, $mask){
+            $maskared = '';
+            $k = 0;
+            for($i = 0; $i<=strlen($mask)-1; $i++){
+                if($mask[$i] == '#'){
+                    if(isset($val[$k]))
+                        $maskared .= $val[$k++];
+                }
+                else{
+                    if(isset($mask[$i]))
+                        $maskared .= $mask[$i];
+                }
+            }
+        return $maskared;
+        }
 
-        $installment = new PagSeguroDirectPaymentInstallment(
+        $cpf = mask($request->checkoutData['cpf'],'###.###.###-##');
+        $birthday = $newDate = date("d/m/Y", strtotime($request->checkoutData['userBirth']['birthday']));
+        $creditCardData = new PagSeguroCreditCardCheckout(
             array(
-              "quantity" => $request->checkoutData['cart']['items'][0]['_quantity'],
-              "value" => $request->checkoutData['cart']['items'][0]['_price']
-              //"noInterestInstallmentQuantity" => 2
-            )
-        );
-
-
-        $cardCheckout = new PagSeguroCreditCardCheckout(
-            array(
-                'token' => $request->checkoutData['creditCardToken'],
-                'installment' => $installment,
+                'token' => $creditCardToken,
+                'installment' => $installments,
+                'billing' => $billingAddress,
                 'holder' => new PagSeguroCreditCardHolder(
                     array(
-                        'name' => $request->checkoutData['userData']['firstname'].' '.$request->checkoutData['userData']['lastname'], //Equals in Credit Card
+                        'name' => 'João Comprador', //Equals in Credit Card TO-DO
                         'documents' => array(
                             'type' => 'CPF',
-                            'value' => $request->checkoutData['cpf']
+                            'value' => $cpf
                         ),
-                        'birthDate' => date($request->checkoutData['userBirth']['birthday']),
+                        'birthDate' => date($birthday),
                         'areaCode' => str_split($request->checkoutData['userData']['phone_mobile'], 2)[0],
+                        
                         'number' => substr($request->checkoutData['userData']['phone_mobile'],2)
                     )
-                ),
-                'billing' => $billing
+                )
             )
         );
 
         //Set credit card for payment
-        $directPaymentRequest->setCreditCard($cardCheckout);
+        $directPaymentRequest->setCreditCard($creditCardData);
 
         try {
             /**
@@ -170,7 +186,8 @@ class CheckoutController extends Controller
             
             
             $response = $directPaymentRequest->register($credentials);
-            return $response;
+
+            //return $response;
         } catch (PagSeguroServiceException $e) {
             die($e->getMessage());
         }

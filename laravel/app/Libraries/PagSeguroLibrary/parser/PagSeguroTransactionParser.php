@@ -34,7 +34,6 @@ use App\Libraries\PagSeguroLibrary\domain\PagSeguroTransactionStatus;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroTransactionCancellationSource;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroPaymentMethod;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroPaymentMethodType;
-use App\Libraries\PagSeguroLibrary\domain\PagSeguroPaymentMethodCode;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroTransactionCreditorFees;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroSender;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroPhone;
@@ -43,14 +42,7 @@ use App\Libraries\PagSeguroLibrary\domain\PagSeguroShippingType;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroAddress;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroItem;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroTransactionSummary;
-
-
-
-
-
-
-
-
+use App\Libraries\PagSeguroLibrary\domain\PagSeguroPaymentMethodCode;
 
 
 class PagSeguroTransactionParser extends PagSeguroServiceParser
