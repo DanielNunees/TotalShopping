@@ -6,6 +6,8 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
     	$scope.slide = 0;
   	});
 
+	$state = {}
+
 	$scope.address = {};
 
 	$scope.isAuthenticated = function() {
@@ -28,10 +30,10 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 
 	$scope.loadData = function(){
 		userDataFactory.loadUserData().then(function successCallback(response) {
-		console.log(response.data.user[0]);
       	$scope.isEmpty = false;
       	$scope.userData = response.data.address[0];
       	$scope.userBirth = response.data.user[0];
+      	$scope.states = response.data.states;
 
         }, function errorCallback(response) {
         	/* Tratamento de erros*/
@@ -105,7 +107,6 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 	  // Execute action on hide modal
 	  $scope.$on('modal.hidden', function() {
 	    // Execute action
-	    console.log('hidden');
 	    $scope.loadData();
 	    $scope.address = {};
 	  });

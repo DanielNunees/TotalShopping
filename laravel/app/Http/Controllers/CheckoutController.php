@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Validator;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+
+
 
 
 use App\Http\Requests;
@@ -27,17 +31,29 @@ class CheckoutController extends Controller
 	public function getSession(){
 		try {
 			$pagseguro = PagSeguroLibrary::init();  
-      $credentials = PagSeguroConfig::getAccountCredentials(); // getApplicationCredentials()
-     	//$checkoutUrl = $paymentRequest->register($credentials);
-			$sessionId = PagSeguroSessionService::getSession($credentials);
-      return $sessionId;   
+            $credentials = PagSeguroConfig::getAccountCredentials(); // getApplicationCredentials()
+            //$checkoutUrl = $paymentRequest->register($credentials);
+        	$sessionId = PagSeguroSessionService::getSession($credentials);
+            return $sessionId;   
     	}catch (PagSeguroServiceException $e) {  
         	die($e->getMessage());  
     	}
 	}
 
     public static function creditCardCheckout(Request $request)
-    {
+    {       
+        //return gettype($request->checkoutData['cart']);
+        //return $request->checkoutData['cart'];
+        $validator = Validator::make($request->checkoutData, [
+            'userData' => 'bail|required|present|filled',
+            'cart.*' => 'bail|required|present|filled',
+            'userBirth.*'=> 'bail|required|present|filled',
+                       
+        ]);
+        if($validator->fails()){
+            return $validator->errors()->all();
+        }
+
         // Instantiate a new payment request
         $directPaymentRequest = new PagSeguroDirectPaymentRequest();
 
@@ -56,9 +72,7 @@ class CheckoutController extends Controller
         $directPaymentRequest->setCurrency("BRL");
 
         // Add an item for this payment request
-        //dd($request->checkoutData['cart']);
         
-        //return $request->checkoutData['cart']['items'][0]['_quantity'];
         $directPaymentRequest->addItem(
             $request->checkoutData['cart']['items'][0]['_id'],
             $request->checkoutData['cart']['items'][0]['_name'].','.$request->checkoutData['cart']['items'][0]['_data']['size'],
@@ -90,7 +104,6 @@ class CheckoutController extends Controller
 
 
         
-        //return $request->checkoutData['userData'];
         $directPaymentRequest->setShippingAddress(
             $request->checkoutData['userData']['postcode'], //CEP
             strstr($request->checkoutData['userData']['address1'],',',true), //Logradouro

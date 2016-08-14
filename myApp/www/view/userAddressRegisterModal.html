@@ -34,7 +34,7 @@
           <label class="item item-input item-select">
             <div class="input-label">Estado*</div>
             <select ng-model="address.id_state">
-              <option type="text" required ng-repeat="state in states2" value="{{state.value}}">{{state.state}}</option>
+              <option type="text" required ng-repeat="(key, value) in states" value="{{key}}">{{key}}</option>
             </select>
           </label>
 
@@ -93,7 +93,7 @@
           <label class="item item-input item-select">
             <div class="input-label">Estado*</div>
             <select ng-model="address.id_state">
-              <option type="text" required ng-repeat="state in states2" value="{{state.value}}">{{state.state}}</option>
+              <option type="text" required ng-repeat="(key, value) in states" value="{{key}}">{{key}}</option>
             </select>
           </label>
 
