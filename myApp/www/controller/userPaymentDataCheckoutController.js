@@ -93,7 +93,7 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 			//token gerado, esse deve ser usado na chamada da API do Checkout Transparente
 			var cart = angular.fromJson($window.localStorage ['cart']);
 			checkoutData.cart = JSON.parse(cart);
-			checkoutData.cpf = '156.009.442-76';
+			checkoutData.cpf = '15600944276';
 			checkoutData.creditCardToken = response.card.token;
 			checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();
 		paymentCheckout.creditCardCheckout(checkoutData).then(function successCallback(response) {
@@ -121,22 +121,6 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 		}
 		//parâmetro opcional para qualquer chamada
 		param.cardBin = $scope.user.cardnumber.slice(0,6);
-
-
-		
-		
 		PagSeguroDirectPayment.createCardToken(param);
-		
-
-
-
-
 	}
-
-	
-
-	
-
-
-
 }])

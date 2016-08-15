@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
-
-
-
 use App\Http\Requests;
 use App\Libraries\PagSeguroLibrary\PagSeguroLibrary;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroPaymentRequest;
@@ -43,17 +40,30 @@ class CheckoutController extends Controller
     public static function creditCardCheckout(Request $request)
     {       
         //return gettype($request->checkoutData['cart']);
-        //return $request->checkoutData['cart'];
+
         $validator = Validator::make($request->checkoutData, [
+            'SenderHash' => 'bail|required|present|filled',
+            'creditCardToken' => 'bail|required|present|filled',
+            'cpf' => 'bail|required|present|filled',
+            'cart.*'=> 'bail|required|present|filled',
+            'cart' => 'bail|required|present|filled',
             'userData' => 'bail|required|present|filled',
-            'cart.*' => 'bail|required|present|filled',
+            'userData.phone' => 'present',
+            'userData.address1' => 'bail|required|present',
+            'userData.address2' => 'bail|required|present',
+            'userData.city' => 'bail|required|present',
+            'userData.state' => 'bail|required|present',
+            'userData.postcode' => 'bail|required|present',
+            'userData.firstname' => 'bail|required|present',
+            'userData.lastname' => 'bail|required|present',
+            'userData.phone_mobile' => 'bail|required|present',
             'userBirth.*'=> 'bail|required|present|filled',
-                       
+            'userBirth'=> 'bail|required|present|filled',                       
         ]);
+        
         if($validator->fails()){
             return $validator->errors()->all();
         }
-
         // Instantiate a new payment request
         $directPaymentRequest = new PagSeguroDirectPaymentRequest();
 
@@ -72,12 +82,15 @@ class CheckoutController extends Controller
         $directPaymentRequest->setCurrency("BRL");
 
         // Add an item for this payment request
+        $quantity = $request->checkoutData['cart']['items'][0]['_quantity'];
+        $price = number_format($quantity * $request->checkoutData['cart']['items'][0]['_price'],2);
+
         
         $directPaymentRequest->addItem(
             $request->checkoutData['cart']['items'][0]['_id'],
             $request->checkoutData['cart']['items'][0]['_name'].','.$request->checkoutData['cart']['items'][0]['_data']['size'],
-            $request->checkoutData['cart']['items'][0]['_quantity'],
-            $request->checkoutData['cart']['items'][0]['_price']
+            $quantity,
+            $price
         );
 
         // Set a reference code for this payment request. It is useful to identify this payment
@@ -101,14 +114,20 @@ class CheckoutController extends Controller
         // Set shipping information for this payment request
         $sedexCode = PagSeguroShippingType::getCodeByType('SEDEX');
         $directPaymentRequest->setShippingType($sedexCode);
-
-
         
+         if(isset($request->checkoutData['userData']['other'])) {
+            $complement = $request->checkoutData['userData']['other'];
+        }
+        else{
+            $complement = null;
+        }
+
+
         $directPaymentRequest->setShippingAddress(
             $request->checkoutData['userData']['postcode'], //CEP
             strstr($request->checkoutData['userData']['address1'],',',true), //Logradouro
             substr(strrchr($request->checkoutData['userData']['address1'],','),1), //Numero
-            $request->checkoutData['userData']['other'],//Complemento
+            null,//Complemento
             $request->checkoutData['userData']['address2'], //Bairro
             $request->checkoutData['userData']['city'], //Cidade
             $request->checkoutData['userData']['state'],//Estado
@@ -118,12 +137,16 @@ class CheckoutController extends Controller
         $state = State::where('id_state',$request->checkoutData['userData']['id_state'])->select('iso_code')->get();
         $state=  $state[0]['iso_code'];
         //Set billing information for credit card
+
+
+
+
         $billingAddress = new PagSeguroBilling(  
             array(  
               'postalCode' => $request->checkoutData['userData']['postcode'],  
               'street' => strstr($request->checkoutData['userData']['address1'],',',true),  
               'number' => substr(strrchr($request->checkoutData['userData']['address1'],','),1),  
-              'complement' => $request->checkoutData['userData']['other'],  
+              'complement' => null,  
               'district' => $request->checkoutData['userData']['address2'],  
               'city' => $request->checkoutData['userData']['city'],  
               'state' => $state,  
@@ -132,12 +155,14 @@ class CheckoutController extends Controller
         );  
         
         $creditCardToken = $request->checkoutData['creditCardToken'];
+
         $installments = new PagSeguroDirectPaymentInstallment(  
           array(  
-            'quantity' => $request->checkoutData['cart']['items'][0]['_quantity'],  
-            'value' =>number_format($request->checkoutData['cart']['items'][0]['_price'],2)
+            'quantity' => $quantity,  
+            'value' =>400.00,
           )  
-        ); 
+        ); //return $price;
+
         function mask($val, $mask){
             $maskared = '';
             $k = 0;
@@ -156,6 +181,7 @@ class CheckoutController extends Controller
 
         $cpf = mask($request->checkoutData['cpf'],'###.###.###-##');
         $birthday = $newDate = date("d/m/Y", strtotime($request->checkoutData['userBirth']['birthday']));
+
         $creditCardData = new PagSeguroCreditCardCheckout(
             array(
                 'token' => $creditCardToken,
@@ -196,7 +222,6 @@ class CheckoutController extends Controller
             $credentials = PagSeguroConfig::getAccountCredentials();
 
             // Register this payment request in PagSeguro to obtain the payment URL to redirect your customer.
-            
             
             $response = $directPaymentRequest->register($credentials);
 
