@@ -82,16 +82,20 @@ class CheckoutController extends Controller
         $directPaymentRequest->setCurrency("BRL");
 
         // Add an item for this payment request
-        $quantity = $request->checkoutData['cart']['items'][0]['_quantity'];
-        $price = number_format($quantity * $request->checkoutData['cart']['items'][0]['_price'],2);
+        $price = 0;
+        $quantity = 0;
+        $count = count($request->checkoutData['cart']['items']);
 
-        
-        $directPaymentRequest->addItem(
-            $request->checkoutData['cart']['items'][0]['_id'],
-            $request->checkoutData['cart']['items'][0]['_name'].','.$request->checkoutData['cart']['items'][0]['_data']['size'],
-            $quantity,
-            $price
-        );
+        for($i=0;$i<$count;$i++){
+            $directPaymentRequest->addItem(
+                $request->checkoutData['cart']['items'][$i]['_id'],
+                $request->checkoutData['cart']['items'][$i]['_name'].','.$request->checkoutData['cart']['items'][$i]['_data']['size'],
+                $quantity = $request->checkoutData['cart']['items'][$i]['_quantity'],
+                number_format($request->checkoutData['cart']['items'][$i]['_price'],2)
+            );
+            $price = $price + number_format($quantity * $request->checkoutData['cart']['items'][$i]['_price'],2, '.', '');
+        }
+
 
         // Set a reference code for this payment request. It is useful to identify this payment
         // in future notifications.
@@ -135,7 +139,7 @@ class CheckoutController extends Controller
         );
 
         $state = State::where('id_state',$request->checkoutData['userData']['id_state'])->select('iso_code')->get();
-        $state=  $state[0]['iso_code'];
+        $state =  $state[0]['iso_code'];
         //Set billing information for credit card
 
 
@@ -156,10 +160,12 @@ class CheckoutController extends Controller
         
         $creditCardToken = $request->checkoutData['creditCardToken'];
 
+        
         $installments = new PagSeguroDirectPaymentInstallment(  
           array(  
-            'quantity' => $quantity,  
-            'value' =>400.00,
+            'quantity' => 1,  
+            'value' =>$price,
+            "noInterestInstallmentQuantity" => 2
           )  
         ); //return $price;
 

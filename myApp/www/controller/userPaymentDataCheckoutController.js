@@ -1,25 +1,20 @@
-app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActionSheet', '$timeout','paymentCheckout','userDataFactory','$ionicNavBarDelegate','$window','$ionicPopup',function($scope,$http,$ionicActionSheet, $timeout,paymentCheckout,userDataFactory,$ionicNavBarDelegate,$window,$ionicPopup){
+app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActionSheet', '$timeout','paymentCheckout','userDataFactory','$ionicNavBarDelegate','$window','$ionicPopup','$ionicLoading',function($scope,$http,$ionicActionSheet, $timeout,paymentCheckout,userDataFactory,$ionicNavBarDelegate,$window,$ionicPopup,$ionicLoading){
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
     	$ionicNavBarDelegate.showBackButton(true);
     	$scope.loadUserData();
-    	
-  	});
-  	var SenderHash;
-  	$scope.method = 0;
-  	$scope.user = {};
-  	var checkoutData={};
+    	$scope.showLoading();
+    	paymentCheckout.getSession().then(function successCallback(response) {
 
-	paymentCheckout.getSession().then(function successCallback(response) {
   		PagSeguroDirectPayment.setSessionId(response.data);
   		SenderHash = PagSeguroDirectPayment.getSenderHash();
-
+  		$scope.hideLoading();
         }, function errorCallback(response) {
         	/* Tratamento de erros*/
 	      	//error 400 - No content
 	      	if(response.status == 500){
 	            var alertPopup = $ionicPopup.alert({
 	            	title: 'Error 500',
-	              	template: 'Serve Error! Checkout will be not proceed!',
+	              	template: 'Serve Error! The checkout will not be processed!',
 	            });
           	}
 	      	if(response.status==400){
@@ -29,6 +24,25 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 	      	/* Fim Tratamento de erros*/
          	console.log(response);
         });
+    	
+  	});
+  	var SenderHash;
+  	$scope.method = 0;
+  	$scope.user = {};
+  	var checkoutData={};
+
+  	$scope.showLoading = function() {
+	    $ionicLoading.show({
+	      template: '<ion-spinner></ion-spinner>'
+	    }).then(function(){
+	       console.log("The loading indicator is now displayed");
+	    });
+	  };
+	  $scope.hideLoading = function(){
+	    $ionicLoading.hide().then(function(){
+	       console.log("The loading indicator is now hidden");
+	    });
+	  };	
 
 	$scope.show = function() {
 
@@ -81,6 +95,7 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 
  	
 	$scope.checkout = function(){
+		$scope.showLoading();
 		var param = {
 			cardNumber: $scope.user.cardnumber,
 			cardBin:  $scope.user.cardnumber.slice(0,6),
@@ -98,6 +113,7 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 			checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();
 		paymentCheckout.creditCardCheckout(checkoutData).then(function successCallback(response) {
  			console.log(response.data);
+ 			$scope.hideLoading();
 
         }, function errorCallback(response) {
         	/* Tratamento de erros*/
