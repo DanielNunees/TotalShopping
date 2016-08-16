@@ -1,6 +1,6 @@
 <ion-view view-title="Checkout">
 	<div ng-if="isAuthenticated()">
-    	<ion-content class="padding-horizontal" >
+    	<ion-content class="padding-horizontal has-footer" >
         	<user-Address></user-Address>
           <a ng-if='isAuthenticated()' ng-href='#user/PaymentdataCheckout' class="button button-outline button-positive button-block" ng-click='checkout()'>Continuar Checkout</a>
 		  </ion-content>

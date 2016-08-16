@@ -42,6 +42,7 @@ class CheckoutController extends Controller
         //return gettype($request->checkoutData['cart']);
 
         $validator = Validator::make($request->checkoutData, [
+            'name' => 'bail|required|present|filled',
             'SenderHash' => 'bail|required|present|filled',
             'creditCardToken' => 'bail|required|present|filled',
             'cpf' => 'bail|required|present|filled',
@@ -195,7 +196,7 @@ class CheckoutController extends Controller
                 'billing' => $billingAddress,
                 'holder' => new PagSeguroCreditCardHolder(
                     array(
-                        'name' => 'João Comprador', //Equals in Credit Card TO-DO
+                        'name' => $request->checkoutData['name'], //Equals in Credit Card
                         'documents' => array(
                             'type' => 'CPF',
                             'value' => $cpf
