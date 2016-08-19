@@ -22,6 +22,7 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 	      	}
 	      	else{$scope.isEmpty=false;}
 	      	/* Fim Tratamento de erros*/
+	      	$scope.hideLoading();
          	console.log(response);
         });
     	
@@ -105,7 +106,7 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 				//token gerado, esse deve ser usado na chamada da API do Checkout Transparente
 				var cart = angular.fromJson($window.localStorage ['cart']);
 				checkoutData.cart = JSON.parse(cart);
-				checkoutData.cpf = '15600944276';
+				checkoutData.cpf = '15600944276'; //valid teste cpf 15600944276
 				checkoutData.creditCardToken = response.card.token;
 				checkoutData.name = $scope.user.name;
 				checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();
@@ -135,13 +136,43 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 		        });
 			},
 			error: function(response) {
-			 //tratamento do erro
-			 console.log(response);
-			 $scope.hideLoading();
-        			var alertPopup = $ionicPopup.alert({
-		                title: 'Error 401',
-		                template: 'Alguma coisa deu errado!',
-		              });
+			//tratamento do erro
+			$scope.hideLoading();
+
+			//if(Object.keys(response.errors)==1000)
+			console.log(response);
+			var error = Object.keys(response.errors);
+			
+			switch(error[0]) {
+			    case '10000':
+			         alertPopup = $ionicPopup.alert({
+		                title: 'Error 10000',
+		                template: 'Numero do cartão inválido',
+		            });
+			        break;
+			    case '10001' :
+			         alertPopup = $ionicPopup.alert({
+		                title: 'Error 10001',
+		                template: 'Numero do cartão inválido',
+		            });
+			        break;
+		        case '30405' :
+		         alertPopup = $ionicPopup.alert({
+	                title: 'Error 30405',
+	                template: 'Data do cartão invalida',
+	            });
+		        break;
+			    default: 
+			         alertPopup = $ionicPopup.alert({
+		                title: 'Error 1000',
+		                template: 'Alguma coisa deu errado',
+		            });
+			}
+
+
+
+			 
+        			
 			},
 			complete: function(response) {
 			//tratamento comum para todas chamadas

@@ -4,31 +4,31 @@
   </div>
   <label class="item item-input item-stacked-label">
     <span class="input-label">CPF</span>
-    <input type="text"  ng-model='user.cpf' ui-mask='999-999-999-99' required>
+    <input type="text"  ng-model='user.cpf' mask='999-999-999-99' restrict="reject" clean="true" required>
   </label>
   <label class="item item-input item-stacked-label">
     <span class="input-label">Nome do titular</span>
-    <input type="text"  ng-model='user.name' required>
+    <input type="text"  ng-model='user.name' mask='@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?@?s?' restrict="reject" required>
   </label>
   <label class="item item-input item-stacked-label">
     <span class="input-label">Numero do Cartão</span>
-    <input type="text"  ng-model='user.cardnumber' ui-mask='9999-9999-9999-9999' required>
+    <input type="text"  ng-model='user.cardnumber' mask='9999-9999-9999-9999' restrict="reject" clean="true" required>
   </label>
   <label class="item item-input item-stacked-label">
     <span class="input-label">CVV</span>
-    <input type="text"  ng-model='user.cvv' ui-mask='999'required>
+    <input type="text"  ng-model='user.cvv' mask='999' restrict="reject" clean="true" required>
   </label>
   <div class="row item item-input item-stacked-label">
     <div class="col">
     	<label class="item item-input item-stacked-label">
   	  <span class="input-label">Mês de expiração</span>
-  	  <input type="text"  ng-model='user.expirationMonth' ui-mask='99' required>
+  	  <input type="text"  ng-model='user.expirationMonth' mask='92' restrict="reject" clean="true" required>
   	</label>
     </div>
     <div class="col">
     	<label class="item item-input item-stacked-label">
   	  <span class="input-label">Ano de expiração</span>
-  	  <input type="text"  ng-model='user.expirationYear' ui-mask='9999' required>
+  	  <input type="text"  ng-model='user.expirationYear' mask='2099' restrict="reject" clean="true" required>
   	</label>
     </div>
   </div>
