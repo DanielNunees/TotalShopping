@@ -1,4 +1,4 @@
-app.controller('userDashboardController', ['$scope','$auth','$location','$ionicHistory','$ionicSlideBoxDelegate','$http','$httpParamSerializerJQLike','$ionicModal','$ionicNavBarDelegate','userDataFactory', function($scope,$auth,$location,$ionicHistory,$ionicSlideBoxDelegate,$http,$httpParamSerializerJQLike,$ionicModal,$ionicNavBarDelegate,userDataFactory){
+app.controller('userDashboardController', ['$scope','$auth','$location','$ionicHistory','$ionicSlideBoxDelegate','$http','$httpParamSerializerJQLike','$ionicModal','$ionicNavBarDelegate','userDataFactory','factoryTest', function($scope,$auth,$location,$ionicHistory,$ionicSlideBoxDelegate,$http,$httpParamSerializerJQLike,$ionicModal,$ionicNavBarDelegate,userDataFactory,factoryTest){
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
 		$ionicNavBarDelegate.showBackButton(true);
 		$ionicSlideBoxDelegate.slide(0, [0]);
@@ -29,22 +29,17 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 	}
 
 	$scope.loadData = function(){
-		userDataFactory.loadUserData().then(function successCallback(response) {
-      	$scope.isEmpty = false;
-      	$scope.userData = response.data.address[0];
-      	$scope.userBirth = response.data.user[0];
-      	$scope.states = response.data.states;
+		factoryTest.loadUserData().then(function(response) {
+		    console.log(response);
+		    $scope.isEmpty = false;
+      		$scope.userData = response.address[0];
+      		$scope.userBirth = response.user[0];
+      		$scope.states = response.states;
+		});
 
-        }, function errorCallback(response) {
-        	/* Tratamento de erros*/
-	      	//error 400 - No content
-	      	if(response.status==400){
-	      		$scope.isEmpty = true;
-	      	}
-	      	else{$scope.isEmpty=false;}
-	      	/* Fim Tratamento de erros*/
-         	console.log(response.data);
-        });
+
+	
+
 	}
 
 	$scope.createAddress = function(){

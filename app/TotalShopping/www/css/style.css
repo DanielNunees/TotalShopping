@@ -1,0 +1,8 @@
+.images ul li img {
+	width: 400px;
+	height: 266px;
+}
+.images ul li {
+	display: inline-block;
+}
+

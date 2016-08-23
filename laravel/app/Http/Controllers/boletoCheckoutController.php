@@ -28,7 +28,6 @@ class boletoCheckoutController extends Controller
     public static function boletoCheckout(Request $request)
     {       
         $validator = Validator::make($request->checkoutData, [
-            'name' => 'bail|required|present|filled',
             'SenderHash' => 'bail|required|present|filled',
             'cpf' => 'bail|required|present|filled',
             'cart.*'=> 'bail|required|present|filled',
@@ -68,10 +67,7 @@ class boletoCheckoutController extends Controller
         $directPaymentRequest->setCurrency("BRL");
 
         // Add an item for this payment request
-        $price = 0;
-        $quantity = 0;
         $count = count($request->checkoutData['cart']['items']);
-
         for($i=0;$i<$count;$i++){
             $directPaymentRequest->addItem(
                 $request->checkoutData['cart']['items'][$i]['_id'],
@@ -79,7 +75,6 @@ class boletoCheckoutController extends Controller
                 $quantity = $request->checkoutData['cart']['items'][$i]['_quantity'],
                 number_format($request->checkoutData['cart']['items'][$i]['_price'],2)
             );
-            $price = $price + number_format($quantity * $request->checkoutData['cart']['items'][$i]['_price'],2, '.', '');
         }
 
 

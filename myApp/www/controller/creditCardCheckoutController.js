@@ -7,10 +7,13 @@ app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory
   
 
   var loadUserData = function(){
-    console.log('dados do usuario sendo carregados...');
     userDataFactory.loadUserData().then(function successCallback(response) {
-        checkoutData.userData = response.data.address[0];
-        checkoutData.userBirth = response.data.user[0];
+        checkoutData.userData = response.address[0];
+        checkoutData.userBirth = response.user[0];
+        $scope.showLoading();//Loading animation...
+
+    
+
         }, function errorCallback(response) {
           /* Tratamento de erros*/
           //error 400 - No content
@@ -24,13 +27,9 @@ app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory
           console.log(response.data);
         });
   }
-  
-  $scope.checkout = function(){
-    loadUserData();
-    $scope.showLoading();
-    console.log('ta vindo pro lugar certo man')
 
-    var param = {
+$scope.checkout = function(){
+  var param = {
       cardNumber: $scope.user.cardnumber,
       cardBin:  $scope.user.cardnumber.slice(0,6),
       cvv: $scope.user.cvv,
@@ -109,8 +108,7 @@ app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory
     //parâmetro opcional para qualquer chamada
     param.cardBin = $scope.user.cardnumber.slice(0,6);
     PagSeguroDirectPayment.createCardToken(param);
-  
-  }
+}
 
   
 

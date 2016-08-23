@@ -1,7 +1,7 @@
 app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActionSheet', '$timeout','paymentCheckout','userDataFactory','$ionicNavBarDelegate','$window','$ionicPopup','$ionicLoading',function($scope,$http,$ionicActionSheet, $timeout,paymentCheckout,userDataFactory,$ionicNavBarDelegate,$window,$ionicPopup,$ionicLoading){
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
     	$ionicNavBarDelegate.showBackButton(true);
-    	$scope.loadUserData();
+    	$scope.loadUserData1();
     	$scope.showLoading();
     	paymentCheckout.getSession().then(function successCallback(response) {
 
@@ -27,7 +27,7 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
         });
   	});
 	$scope.user_data = {};
-  	$scope.method = 0;
+  	$scope.method = 1;
 
   	$scope.showLoading = function() {
 	    $ionicLoading.show({
@@ -66,12 +66,12 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 	   });
 	 };
 
-	 $scope.loadUserData = function(){
+	 $scope.loadUserData1 = function(){
 		userDataFactory.loadUserData().then(function successCallback(response) {
       	$scope.isEmpty = false;
-      	$scope.userData = response.data.address[0];
-      	$scope.userBirth = response.data.user[0];
-      	$scope.user_data = response.data.address[0];
+      	$scope.userData = response.address[0];
+      	$scope.userBirth = response.user[0];
+      	$scope.user_data = response.address[0];
         }, function errorCallback(response) {
         	/* Tratamento de erros*/
 	      	//error 400 - No content
