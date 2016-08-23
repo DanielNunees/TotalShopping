@@ -54,7 +54,7 @@ app.controller('userLoginController', ['$scope', '$http','$auth','$location','$i
           $scope.userRegister = {};
           $scope.modal.hide();
       });
-        }
+    }
 
 
     $ionicModal.fromTemplateUrl('view/userRegister.html', {

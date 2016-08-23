@@ -1,6 +1,7 @@
-<form name='userForm' class="css-form" ng-submit="userForm.$valid && checkout()" novalidate>  
+<div ng-controller='creditCardCheckoutController' >
+<form name='userForm' class="css-form" ng-submit="userForm.$valid && checkout()" novalidate >  
   <div class="item item-divider">
-  	Dados do cartão de crédito
+  	Dados do cartão de crédito {{lixo}}
   </div>
   <label class="item item-input item-stacked-label">
     <span class="input-label">CPF</span>
@@ -32,5 +33,6 @@
   	</label>
     </div>
   </div>
-  <input class="button button-outline button-positive button-block" value="Register"  type="submit" ng-disabled="userForm.$invalid"></input>
+  <input class="button button-outline button-positive button-block" value="Finalizar"  type="submit" ng-disabled="userForm.$invalid"></input>
 </form>
+</div>

@@ -20,6 +20,16 @@ app.factory('paymentCheckout', function($http,$httpParamSerializerJQLike){
 		        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 		        data: $httpParamSerializerJQLike({'checkoutData':checkoutData})
 		    })
+		},
+
+		boletoCheckout: function(checkoutData){
+			return $http({
+		        method: 'POST',
+		        url: 'http://127.0.1.1/laravel/public/boletoCheckout',
+		        dataType: 'json',
+		        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		        data: $httpParamSerializerJQLike({'checkoutData':checkoutData})
+		    })
 		}
 
 	}
