@@ -1,8 +1,14 @@
-app.controller('boletoCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup){
+app.controller('boletoCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup','$timeout','$interval', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup,$timeout,$interval){
   var checkoutData={};
   var SenderHash;
   $scope.method = 0;
   $scope.user = {};
+
+  //var theTime = new Date().toLocaleTimeString();
+    $interval(function () {
+        paymentCheckout.resetSessionId();
+        paymentCheckout.getSession();
+    }, 108000);
 
   $scope.checkout = function(){
     $scope.showLoading(); //Loading animation...
@@ -23,6 +29,10 @@ app.controller('boletoCheckoutController', ['$scope', '$http','$ionicHistory','$
           template: 'Sua compra foi efetuada com sucesso!',
       });
       $scope.user = {};
+      paymentCheckout.resetSessionId();
+      paymentCheckout.getSession().then(function successCallback(response){
+        console.log('ok');
+      });
     },function errorCallback(response){
       console.log(response);
     });

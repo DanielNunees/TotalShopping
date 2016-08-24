@@ -1,9 +1,14 @@
-app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup){
-  $scope.lixo = 'funcionou bb! chupa';
+app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup','$interval', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup,$interval){
   var checkoutData={};
   var SenderHash;
   $scope.method = 0;
   $scope.user = {};
+
+  $interval(function () {
+        paymentCheckout.resetSessionId();
+        paymentCheckout.getSession();
+        console.log('reset session id');
+    }, 108000);
 
   var loadUserData = function(){
     userDataFactory.loadUserData().then(function successCallback(response) {
@@ -41,6 +46,7 @@ $scope.checkout = function(){
         checkoutData.name = $scope.user.name;
         checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();
         paymentCheckout.creditCardCheckout(checkoutData).then(function successCallback(response) {
+          paymentCheckout.resetSessionId();
           console.log(response.data);
           $scope.hideLoading();
                 var alertPopup = $ionicPopup.alert({

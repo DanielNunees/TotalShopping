@@ -3,12 +3,13 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
     	$ionicNavBarDelegate.showBackButton(true);
     	$scope.loadUserData1();
     	$scope.showLoading();
+
     	paymentCheckout.getSession().then(function successCallback(response) {
 
-  		PagSeguroDirectPayment.setSessionId(response.data);
-  		SenderHash = PagSeguroDirectPayment.getSenderHash();
-  		$scope.hideLoading();
-        }, function errorCallback(response) {
+	  		//PagSeguroDirectPayment.setSessionId(response.data);
+	  		SenderHash = PagSeguroDirectPayment.getSenderHash();
+	  		$scope.hideLoading();
+        },function errorCallback(response) {
         	/* Tratamento de erros*/
 	      	//error 400 - No content
 	      	if(response.status == 500){
@@ -59,7 +60,8 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
 	          // add cancel code..
 	        },
 	     buttonClicked: function(index) {
-	     	console.log(index);
+	     	paymentCheckout.resetSessionId();
+	     	paymentCheckout.getSession();
 	     	$scope.method = index;
 	       return true;
 	     }
