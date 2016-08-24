@@ -5,7 +5,6 @@ app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory
   $scope.method = 0;
   $scope.user = {};
   
-
   var loadUserData = function(){
     userDataFactory.loadUserData().then(function successCallback(response) {
         checkoutData.userData = response.address[0];
