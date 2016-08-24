@@ -18,10 +18,8 @@ app.factory('factoryTest', function($http,$httpParamSerializerJQLike,$q){
             // to us after the promise resolves
             userData = result.data;
             return userData;
-        });
-		    
+        });  
 		},
-
 		updateAddress: function(address){
 			return $http({
 		        method: 'POST',
