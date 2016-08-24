@@ -4,15 +4,12 @@ app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory
   var SenderHash;
   $scope.method = 0;
   $scope.user = {};
-  
+
   var loadUserData = function(){
     userDataFactory.loadUserData().then(function successCallback(response) {
         checkoutData.userData = response.address[0];
         checkoutData.userBirth = response.user[0];
         $scope.showLoading();//Loading animation...
-
-    
-
         }, function errorCallback(response) {
           /* Tratamento de erros*/
           //error 400 - No content
