@@ -9,7 +9,7 @@ app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory
     userDataFactory.loadUserData().then(function successCallback(response) {
         checkoutData.userData = response.address[0];
         checkoutData.userBirth = response.user[0];
-        $scope.showLoading();//Loading animation...
+        $scope.showLoading();//Loading animation... 
         }, function errorCallback(response) {
           /* Tratamento de erros*/
           //error 400 - No content
@@ -23,8 +23,6 @@ app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory
           console.log(response.data);
         });
   }
-
-
 $scope.checkout = function(){
   loadUserData();
   
