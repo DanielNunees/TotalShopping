@@ -29,6 +29,7 @@ app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory
   }
 
 $scope.checkout = function(){
+  loadUserData();
   var param = {
       cardNumber: $scope.user.cardnumber,
       cardBin:  $scope.user.cardnumber.slice(0,6),

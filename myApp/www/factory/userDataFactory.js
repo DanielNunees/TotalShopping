@@ -1,9 +1,9 @@
-app.factory('userDataFactory', function($http,$httpParamSerializerJQLike){
-	var data = {};
-	return {
+app.factory('userDataFactory', function($http,$httpParamSerializerJQLike,$q){
+	var userData;
+	return{
 
 	 	loadUserData: function(){
-			return $http({
+			return userData? $q.when(userData) : $http({
 		        method: 'POST',
 		        url: 'http://127.0.1.1/laravel/public/user/loadData',
 		        dataType: 'json',
@@ -15,14 +15,10 @@ app.factory('userDataFactory', function($http,$httpParamSerializerJQLike){
 
             // What we return here is the data that will be accessible 
             // to us after the promise resolves
-            this.data = result.data;
-            return result.data;
+            userData = result.data;
+            return userData;
         });
 		    
-		},
-
-		getData: function(){
-			return this.data;
 		},
 
 		updateAddress: function(address){
@@ -43,6 +39,10 @@ app.factory('userDataFactory', function($http,$httpParamSerializerJQLike){
 		        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 		        data: $httpParamSerializerJQLike(address) 
 		    });
+		},
+		
+		resetUserData: function(){
+			userData = undefined;
 		}
 	}
 

@@ -7,6 +7,7 @@ app.factory('paymentCheckout', function($http,$httpParamSerializerJQLike){
 		        method: 'POST',
 		        url: 'http://127.0.1.1/laravel/public/getSession',
 		        dataType: 'json',
+		        cache:true,
 		        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 		        data: $httpParamSerializerJQLike({})
 		    })

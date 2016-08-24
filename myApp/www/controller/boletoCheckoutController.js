@@ -15,30 +15,26 @@ app.controller('boletoCheckoutController', ['$scope', '$http','$ionicHistory','$
       checkoutData.cpf = '15600944276'; //valid teste cpf 15600944276
       checkoutData.name = $scope.user.name;
       checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();
-
     paymentCheckout.boletoCheckout(checkoutData).then(function successCallback(response){
       console.log(response.data);
       $scope.hideLoading();
-            var alertPopup = $ionicPopup.alert({
-              title: 'Finalizado',
-                template: 'Sua compra foi efetuada com sucesso!',
-            });
-            $scope.user = {};
+      var alertPopup = $ionicPopup.alert({
+        title: 'Finalizado',
+          template: 'Sua compra foi efetuada com sucesso!',
+      });
+      $scope.user = {};
     },function errorCallback(response){
       console.log(response);
     });
     },function errorCallback(response) {
-          /* Tratamento de erros*/
-          //error 400 - No content
-          if(response.status==400){
-            $scope.isEmpty = true;
-          }
-          else{$scope.isEmpty=false;}
-          /* Fim Tratamento de erros*/
-          console.log(response);
-        });
-
-    
+      /* Tratamento de erros*/
+      //error 400 - No content
+      if(response.status==400){
+        $scope.isEmpty = true;
+      }
+      else{$scope.isEmpty=false;}
+      /* Fim Tratamento de erros*/
+      console.log(response);
+    }); 
   }
-
 }]);

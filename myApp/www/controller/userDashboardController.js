@@ -1,4 +1,4 @@
-app.controller('userDashboardController', ['$scope','$auth','$location','$ionicHistory','$ionicSlideBoxDelegate','$http','$httpParamSerializerJQLike','$ionicModal','$ionicNavBarDelegate','userDataFactory','factoryTest', function($scope,$auth,$location,$ionicHistory,$ionicSlideBoxDelegate,$http,$httpParamSerializerJQLike,$ionicModal,$ionicNavBarDelegate,userDataFactory,factoryTest){
+app.controller('userDashboardController', ['$scope','$auth','$location','$ionicHistory','$ionicSlideBoxDelegate','$http','$httpParamSerializerJQLike','$ionicModal','$ionicNavBarDelegate','userDataFactory','factoryTest','$ionicPopup', function($scope,$auth,$location,$ionicHistory,$ionicSlideBoxDelegate,$http,$httpParamSerializerJQLike,$ionicModal,$ionicNavBarDelegate,userDataFactory,factoryTest,$ionicPopup){
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
 		$ionicNavBarDelegate.showBackButton(true);
 		$ionicSlideBoxDelegate.slide(0, [0]);
@@ -17,6 +17,7 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 	$scope.logout = function(){
 		$auth.logout();
 		$location.url('/user/home');
+		userDataFactory.resetUserData();
 		//$ionicHistory.removeBackView();
 	}
 
@@ -29,13 +30,35 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 	}
 
 	$scope.loadData = function(){
-		factoryTest.loadUserData().then(function(response) {
-		    console.log(response);
+		userDataFactory.loadUserData().then(function(response) {
 		    $scope.isEmpty = false;
       		$scope.userData = response.address[0];
       		$scope.userBirth = response.user[0];
       		$scope.states = response.states;
-		});
+		}, function errorCallback(response) {
+		       	/* Tratamento de erros*/
+		       	switch (response.status) {
+				    case 400:
+			        	alertPopup = $ionicPopup.alert({
+	                      title: 'Error 400',
+	                      template: 'Nenhum endereço cadastrado',
+	                  	});
+		                break; 
+				    case 422:
+				        alertPopup = $ionicPopup.alert({
+	                      title: 'Error 422',
+	                      template: 'Paramentros errados',
+	                  	});
+		                break; 
+				    default: 
+				        alertPopup = $ionicPopup.alert({
+	                      title: 'Error',
+	                      template: 'Algo deu errado',
+	                  	});
+		                break;
+				}
+		         	console.log(response);
+	        });
 
 
 	

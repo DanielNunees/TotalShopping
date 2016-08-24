@@ -1,8 +1,9 @@
 app.factory('factoryTest', function($http,$httpParamSerializerJQLike,$q){
 
 	var userData;
+	return{
 
-	 	function loadUserData(){
+	 	loadUserData: function(){
 			return userData? $q.when(userData) : $http({
 		        method: 'POST',
 		        url: 'http://127.0.1.1/laravel/public/user/loadData',
@@ -19,11 +20,31 @@ app.factory('factoryTest', function($http,$httpParamSerializerJQLike,$q){
             return userData;
         });
 		    
-		}
+		},
 
-		return {
-			loadUserData: loadUserData
+		updateAddress: function(address){
+			return $http({
+		        method: 'POST',
+		        url: 'http://127.0.1.1/laravel/public/user/updateAddress',
+		        dataType: 'json',
+		        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		        data: $httpParamSerializerJQLike(address)
+		    });
+		},
+
+		createAddress: function(address){
+			$http({
+		        method: 'POST',
+		        url: 'http://127.0.1.1/laravel/public/user/createAddress',
+		        dataType: 'json',
+		        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		        data: $httpParamSerializerJQLike(address) 
+		    });
+		},
+		
+		resetUserData: function(){
+			userData = undefined;
 		}
-	
+	}
 
 });
