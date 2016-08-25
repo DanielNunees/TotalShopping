@@ -18,7 +18,6 @@ app.factory('userDataFactory', function($http,$httpParamSerializerJQLike,$q){
             userData = result.data;
             return userData;
         });
-		    
 		},
 
 		updateAddress: function(address){

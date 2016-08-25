@@ -25,6 +25,7 @@ class ProductHomeController extends Controller
     		    $product->ProductImage->image= $image;
             }   
     	}
+        
     	return $products;
     }
 }

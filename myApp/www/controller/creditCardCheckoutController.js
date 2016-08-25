@@ -1,14 +1,8 @@
-app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup','$interval', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup,$interval){
+app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup){
   var checkoutData={};
   var SenderHash;
   $scope.method = 0;
   $scope.user = {};
-
-  $interval(function () {
-        paymentCheckout.resetSessionId();
-        paymentCheckout.getSession();
-        console.log('reset session id');
-    }, 108000);
 
   var loadUserData = function(){
     userDataFactory.loadUserData().then(function successCallback(response) {
@@ -28,10 +22,9 @@ app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory
           console.log(response.data);
         });
   }
-$scope.checkout = function(){
-  loadUserData();
-  
-  var param = {
+  $scope.checkout = function(){
+    loadUserData();
+    var param = {
       cardNumber: $scope.user.cardnumber,
       cardBin:  $scope.user.cardnumber.slice(0,6),
       cvv: $scope.user.cvv,
@@ -45,30 +38,32 @@ $scope.checkout = function(){
         checkoutData.creditCardToken = response.card.token;
         checkoutData.name = $scope.user.name;
         checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();
+
         paymentCheckout.creditCardCheckout(checkoutData).then(function successCallback(response) {
           paymentCheckout.resetSessionId();
           console.log(response.data);
           $scope.hideLoading();
-                var alertPopup = $ionicPopup.alert({
-                  title: 'Finalizado',
-                    template: 'Sua compra foi efetuada com sucesso!',
-                });
-                $scope.user = {};          
-            }, function errorCallback(response) {
-              $scope.hideLoading();
-              var alertPopup = $ionicPopup.alert({
-                    title: 'Error 401',
-                    template: 'Alguma coisa deu errado!',
-                  });
-              // Tratamento de erros
-              //error 400 - No content
-              if(response.status==400){
-                $scope.isEmpty = true;
-              }
-              else{$scope.isEmpty=false;}
-              //Fim Tratamento de erros
-              console.log(response.data);
-            });
+          var alertPopup = $ionicPopup.alert({
+            title: 'Finalizado',
+              template: 'Sua compra foi efetuada com sucesso!',
+          });
+          $scope.user = {};
+
+        },function errorCallback(response) {
+          $scope.hideLoading();
+          var alertPopup = $ionicPopup.alert({
+            title: 'Error 401',
+            template: 'Alguma coisa deu errado!',
+          });
+          // Tratamento de erros
+          //error 400 - No content
+          if(response.status==400){
+            $scope.isEmpty = true;
+          }
+          else{$scope.isEmpty=false;}
+          //Fim Tratamento de erros
+          console.log(response.data);
+        });
       },
       error: function(response) {
         //tratamento do erro
@@ -111,8 +106,5 @@ $scope.checkout = function(){
     //parâmetro opcional para qualquer chamada
     param.cardBin = $scope.user.cardnumber.slice(0,6);
     PagSeguroDirectPayment.createCardToken(param);
-}
-
-  
-
+  }
 }]);

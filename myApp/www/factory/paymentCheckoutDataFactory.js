@@ -3,6 +3,7 @@ app.factory('paymentCheckout', function($http,$httpParamSerializerJQLike,$q){
 	return {
 
 		getSession: function(){
+			console.log('getSession');
 			return session_ID? $q.when(session_ID) : $http({
 		        method: 'POST',
 		        url: 'http://127.0.1.1/laravel/public/getSession',
@@ -39,6 +40,7 @@ app.factory('paymentCheckout', function($http,$httpParamSerializerJQLike,$q){
 		},
 		resetSessionId: function(){
 			session_ID = undefined;
+			console.log('resetSessionId');
 		}
 
 	}
