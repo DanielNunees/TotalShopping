@@ -1,5 +1,7 @@
-
-app.controller('productController', ['$scope', '$http','$stateParams','$location','$ionicHistory','$httpParamSerializerJQLike','$ionicPopup','$auth','$ionicNavBarDelegate', function($scope,$http,$stateParams,$location,$ionicHistory,$httpParamSerializerJQLike,$ionicPopup,$auth,$ionicNavBarDelegate){
+(function() {
+    'use strict';
+angular.module('app')
+.controller('productController', ['$scope', '$http','$stateParams','$location','$ionicHistory','$httpParamSerializerJQLike','$ionicPopup','$auth','$ionicNavBarDelegate', function($scope,$http,$stateParams,$location,$ionicHistory,$httpParamSerializerJQLike,$ionicPopup,$auth,$ionicNavBarDelegate){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     $ionicNavBarDelegate.showBackButton(true);
   });
@@ -73,3 +75,4 @@ app.controller('productController', ['$scope', '$http','$stateParams','$location
   $scope.loadProducts();
 }]);
 
+})();

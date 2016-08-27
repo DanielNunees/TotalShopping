@@ -1,4 +1,7 @@
-app.controller('userLoginController', ['$scope', '$http','$auth','$location','$ionicHistory','$ionicPopup','$ionicNavBarDelegate','$ionicModal','$httpParamSerializerJQLike', function($scope,$http,$auth,$location,$ionicHistory,$ionicPopup,$ionicNavBarDelegate,$ionicModal,$httpParamSerializerJQLike){
+(function() {
+    'use strict';
+angular.module('app')
+.controller('userLoginController', ['$scope', '$http','$auth','$location','$ionicHistory','$ionicPopup','$ionicNavBarDelegate','$ionicModal','$httpParamSerializerJQLike', function($scope,$http,$auth,$location,$ionicHistory,$ionicPopup,$ionicNavBarDelegate,$ionicModal,$httpParamSerializerJQLike){
     $scope.$on("$ionicView.beforeEnter", function(event, data){
       $ionicNavBarDelegate.showBackButton(true);
     });
@@ -93,3 +96,4 @@ app.controller('userLoginController', ['$scope', '$http','$auth','$location','$i
 
 }]);
 
+})();

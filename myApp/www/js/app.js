@@ -3,9 +3,11 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-var app = angular.module('starter', ['ionic','ngCookies','ngCart','satellizer','ngMask'])
+angular.module('app', ['ionic','ngCookies','ngCart','satellizer','ngMask','oc.lazyLoad'])
 
-app.config(function($stateProvider, $urlRouterProvider,$authProvider) {
+.config(function($stateProvider, $urlRouterProvider,$authProvider,$ocLazyLoadProvider) {
+
+
 
   $authProvider.loginUrl = 'http://127.0.1.1/laravel/public/user/auth';
   $authProvider.signupUrl = 'http://127.0.1.1/laravel/public/user/register';
@@ -14,22 +16,24 @@ app.config(function($stateProvider, $urlRouterProvider,$authProvider) {
   
     // Now set up the states
   $stateProvider
+
     .state('home', {
-      url: "/home",
-      controller: 'homeController',
+      url: "/home", // root route
+      controller: "homeController",
       templateUrl: "view/home.html"
     })
-    
+        
     .state('product', {
       url: "/product/:productId",
       controller: 'productController',
       templateUrl: "view/product.html"
     })
 
+
     .state('cart', {
       url: "/cart",
-      controller: 'cartController',
-      templateUrl: "view/cart.html"
+      templateUrl: "view/cart.html",
+      controller: 'cartController'
     })
 
     .state('userRegister', {
@@ -68,9 +72,9 @@ app.config(function($stateProvider, $urlRouterProvider,$authProvider) {
       templateUrl: "view/userPaymentDataCheckout.html"
     })
 
-});
+})
 
-app.run(function($ionicPlatform) {
+.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard

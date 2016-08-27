@@ -1,5 +1,10 @@
-app.factory('checkoutFactory', function($http,$httpParamSerializerJQLike){
+(function() {
+    'use strict';
+
+angular.module('app')
+.factory('checkoutFactory', function($http,$httpParamSerializerJQLike){
 	
 
 
 });
+})();

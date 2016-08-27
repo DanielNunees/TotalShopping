@@ -1,4 +1,8 @@
-app.controller('userRegisterController', ['$scope','$http','$httpParamSerializerJQLike','$ionicPopup',  function($scope,$http,$httpParamSerializerJQLike,$ionicPopup){
+
+(function() {
+    'use strict';
+    angular.module('app')
+.controller('userRegisterController', ['$scope','$http','$httpParamSerializerJQLike','$ionicPopup',  function($scope,$http,$httpParamSerializerJQLike,$ionicPopup){
 	$scope.userRegister={};
 	
 
@@ -67,3 +71,4 @@ app.controller('userRegisterController', ['$scope','$http','$httpParamSerializer
 		}	
 
 }]);*/
+})();

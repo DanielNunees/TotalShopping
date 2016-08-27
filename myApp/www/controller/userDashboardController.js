@@ -1,12 +1,13 @@
-app.controller('userDashboardController', ['$scope','$auth','$location','$ionicHistory','$ionicSlideBoxDelegate','$http','$httpParamSerializerJQLike','$ionicModal','$ionicNavBarDelegate','userDataFactory','$ionicPopup', function($scope,$auth,$location,$ionicHistory,$ionicSlideBoxDelegate,$http,$httpParamSerializerJQLike,$ionicModal,$ionicNavBarDelegate,userDataFactory,$ionicPopup){
+(function() {
+    'use strict';
+angular.module('app')
+.controller('userDashboardController', ['$scope','$auth','$location','$ionicHistory','$ionicSlideBoxDelegate','$http','$httpParamSerializerJQLike','$ionicModal','$ionicNavBarDelegate','userDataFactory','$ionicPopup', function($scope,$auth,$location,$ionicHistory,$ionicSlideBoxDelegate,$http,$httpParamSerializerJQLike,$ionicModal,$ionicNavBarDelegate,userDataFactory,$ionicPopup){
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
 		$ionicNavBarDelegate.showBackButton(true);
 		$ionicSlideBoxDelegate.slide(0, [0]);
     	$scope.loadData();
     	$scope.slide = 0;
   	});
-
-	$state = {}
 
 	$scope.address = {};
 
@@ -135,3 +136,4 @@ app.controller('userDashboardController', ['$scope','$auth','$location','$ionicH
 	  });
 
 }]);
+})();

@@ -1,4 +1,7 @@
-app.controller('homeController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate', function($scope,$http,$ionicHistory,$ionicNavBarDelegate){
+(function() {
+    'use strict';
+angular.module('app')
+.controller('homeController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate', function($scope,$http,$ionicHistory,$ionicNavBarDelegate){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     
     $ionicHistory.clearCache();
@@ -23,3 +26,4 @@ app.controller('homeController', ['$scope', '$http','$ionicHistory','$ionicNavBa
 
 
 }]);
+})();

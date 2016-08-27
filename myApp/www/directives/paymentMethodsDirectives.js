@@ -1,4 +1,7 @@
-app.directive('boletoMethod',function(){
+(function() {
+    'use strict';
+angular.module('app')
+.directive('boletoMethod',function(){
 	return {
 		restrict:'E',
 		templateUrl: '../templates/paymentMethodBoleto.html',
@@ -6,10 +9,12 @@ app.directive('boletoMethod',function(){
 	};
 });
 
-app.directive('creditcardMethod',function(){
+angular.module('app')
+.directive('creditcardMethod',function(){
 	return{
 		restrict:'E',
 		controller:'creditCardCheckoutController',
 		templateUrl:'../templates/paymentMethodCreditCard.html'
 	};
 });
+})();

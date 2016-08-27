@@ -1,4 +1,7 @@
-app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActionSheet', '$timeout','paymentCheckout','userDataFactory','$ionicNavBarDelegate','$window','$ionicPopup','$ionicLoading',function($scope,$http,$ionicActionSheet, $timeout,paymentCheckout,userDataFactory,$ionicNavBarDelegate,$window,$ionicPopup,$ionicLoading){
+(function() {
+    'use strict';
+angular.module('app')
+.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActionSheet', '$timeout','paymentCheckout','userDataFactory','$ionicNavBarDelegate','$window','$ionicPopup','$ionicLoading',function($scope,$http,$ionicActionSheet, $timeout,paymentCheckout,userDataFactory,$ionicNavBarDelegate,$window,$ionicPopup,$ionicLoading){
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
     	$ionicNavBarDelegate.showBackButton(true);
     	$scope.loadUserData1();
@@ -89,3 +92,4 @@ app.controller('userPaymentDataCheckoutController',['$scope','$http','$ionicActi
  	
 	
 }])
+})();

@@ -1,4 +1,7 @@
-app.controller('boletoCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup','$timeout','$interval', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup,$timeout,$interval){
+(function() {
+    'use strict';
+angular.module('app')
+.controller('boletoCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup','$timeout','$interval', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup,$timeout,$interval){
   var checkoutData={};
   var SenderHash;
   $scope.method = 0;
@@ -9,7 +12,7 @@ app.controller('boletoCheckoutController', ['$scope', '$http','$ionicHistory','$
         paymentCheckout.resetSessionId();
         paymentCheckout.getSession();
         console.log('resetando a seção');
-    }, 108000);
+    }, 3600000);
 
   $scope.checkout = function(){
     $scope.showLoading(); //Loading animation...
@@ -50,3 +53,4 @@ app.controller('boletoCheckoutController', ['$scope', '$http','$ionicHistory','$
     }); 
   }
 }]);
+})();

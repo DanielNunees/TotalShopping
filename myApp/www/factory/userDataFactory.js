@@ -1,4 +1,7 @@
-app.factory('userDataFactory', function($http,$httpParamSerializerJQLike,$q){
+(function() {
+    'use strict';
+angular.module('app')
+.factory('userDataFactory', function($http,$httpParamSerializerJQLike,$q){
 	var userData;
 	return{
 
@@ -46,3 +49,4 @@ app.factory('userDataFactory', function($http,$httpParamSerializerJQLike,$q){
 	}
 
 });
+})();

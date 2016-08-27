@@ -1,4 +1,7 @@
-app.factory('paymentCheckout', function($http,$httpParamSerializerJQLike,$q){
+(function() {
+    'use strict';
+angular.module('app')
+.factory('paymentCheckout', function($http,$httpParamSerializerJQLike,$q){
 	var session_ID;
 	return {
 
@@ -46,3 +49,4 @@ app.factory('paymentCheckout', function($http,$httpParamSerializerJQLike,$q){
 	}
 
 });
+})();

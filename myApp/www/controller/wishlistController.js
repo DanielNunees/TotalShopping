@@ -1,5 +1,7 @@
-(function () {
-app.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSerializerJQLike','$ionicPopup','$location','$ionicHistory','$ionicNavBarDelegate', function($scope,$http,$auth,$httpParamSerializerJQLike,$ionicPopup,$location,$ionicHistory,$ionicNavBarDelegate){
+(function() {
+    'use strict';
+angular.module('app')
+.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSerializerJQLike','$ionicPopup','$location','$ionicHistory','$ionicNavBarDelegate', function($scope,$http,$auth,$httpParamSerializerJQLike,$ionicPopup,$location,$ionicHistory,$ionicNavBarDelegate){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     $ionicNavBarDelegate.showBackButton(true);
     $scope.loadWishlist();

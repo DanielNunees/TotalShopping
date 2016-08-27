@@ -1,4 +1,7 @@
-app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup){
+(function() {
+    'use strict';
+angular.module('app')
+.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup){
   var checkoutData={};
   var SenderHash;
   $scope.method = 0;
@@ -108,3 +111,4 @@ app.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory
     PagSeguroDirectPayment.createCardToken(param);
   }
 }]);
+})();
