@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Wishlist;
 use App\Http\Requests;
-use App\Models\Product;
+use App\Models\Products\Product;
 use App\Models\WishlistProducts;
  
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Attributes;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +11,7 @@ class Attributes extends Model
 	protected $primaryKey = 'id_attribute';
 
 	public function AttributesGroupLang(){
-		return $this->belongsTo('\App\Models\AttributeGroupLang','id_attribute_group')->select('name')->where('id_lang',2);
+		return $this->belongsTo('\App\Models\Attributes\AttributeGroupLang','id_attribute_group')->select('name')->where('id_lang',2);
 	}
 	
 

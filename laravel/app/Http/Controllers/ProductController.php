@@ -2,12 +2,12 @@
 namespace  App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Models\ProductStock;
-use App\Models\ProductLang;
+use App\Models\Products\ProductStock;
+use App\Models\Products\ProductLang;
 use Illuminate\Http\attributes_names;
-use App\Models\Product;
-use App\Models\ProductImages;
-use App\Models\Attributes;
+use App\Models\Products\Product;
+use App\Models\Products\ProductImages;
+use App\Models\Attributes\Attributes;
 use App\Exceptions\Handler;
 use Exception;
 

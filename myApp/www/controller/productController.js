@@ -1,5 +1,5 @@
 (function() {
-    'use strict';
+  'use strict';
 angular.module('app')
 .controller('productController', ['$scope', '$http','$stateParams','$location','$ionicHistory','$httpParamSerializerJQLike','$ionicPopup','$auth','$ionicNavBarDelegate', function($scope,$http,$stateParams,$location,$ionicHistory,$httpParamSerializerJQLike,$ionicPopup,$auth,$ionicNavBarDelegate){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
@@ -17,7 +17,7 @@ angular.module('app')
     $http.get('http://127.0.1.1/laravel/public/product/'+$stateParams.productId,{ cache: true}).then(   
       function(data){
         $scope.product = data.data;
-        produto = data.data;
+        var produto = data.data;
         var size = [];
         angular.forEach(produto.attributes,function(value,key){
           if(angular.isNumber(key)){

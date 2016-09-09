@@ -19,7 +19,7 @@ use App\Libraries\PagSeguroLibrary\service\PagSeguroSessionService;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroDirectPaymentRequest;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroInstallment;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroCreditCardCheckout;
-
+use App\Http\Controller\OrderController;
 use App\Models\State;
 use Exception;
 
@@ -202,16 +202,6 @@ class creditCardCheckoutController extends Controller
         $directPaymentRequest->setCreditCard($creditCardData);
 
         try {
-            /**
-             * #### Credentials #####
-             * Replace the parameters below with your credentials
-             * You can also get your credentials from a config file. See an example:
-             * $credentials = PagSeguroConfig::getAccountCredentials();
-             */
-
-            // seller authentication
-            //$credentials = new PagSeguroAccountCredentials("vendedor@lojamodelo.com.br",
-            //    "E231B2C9BCC8474DA2E260B6C8CF60D3");
 
             // application authentication
             $credentials = PagSeguroConfig::getAccountCredentials();

@@ -1,11 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Models\ProductLang;
-use App\Models\Product;
-use App\Models\ProductStock;
-use App\Models\ProductImages;
+use App\Models\Products\ProductLang;
 
 class ProductHomeController extends Controller
 {
@@ -25,7 +21,6 @@ class ProductHomeController extends Controller
     		    $product->ProductImage->image= $image;
             }   
     	}
-        
     	return $products;
     }
 }

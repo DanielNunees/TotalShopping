@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Products;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductImages extends Model

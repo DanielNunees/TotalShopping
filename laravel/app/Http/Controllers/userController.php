@@ -56,7 +56,7 @@ class userController extends Controller
       $wishlist = new Wishlist;
 
       $wishlist->id_customer = $user1[0]->id_customer;
-      $token = openssl_random_pseudo_bytes(8);
+      $token = openssl_random_pseudo_bytes(8,true);
       $token = bin2hex($token);
       $wishlist->token = strtoupper($token);
       $wishlist->name = 'Minha lista de desejos';

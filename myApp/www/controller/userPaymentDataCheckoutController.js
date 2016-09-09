@@ -10,7 +10,7 @@ angular.module('app')
     	paymentCheckout.getSession().then(function successCallback(response) {
 
 	  		//PagSeguroDirectPayment.setSessionId(response.data);
-	  		SenderHash = PagSeguroDirectPayment.getSenderHash();
+	  		var SenderHash = PagSeguroDirectPayment.getSenderHash();
 	  		$scope.hideLoading();
         },function errorCallback(response) {
         	/* Tratamento de erros*/
