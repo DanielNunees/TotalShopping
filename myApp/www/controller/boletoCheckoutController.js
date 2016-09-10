@@ -23,6 +23,7 @@ angular.module('app')
       checkoutData.userData = response.address[0];
       checkoutData.userBirth = response.user[0];
       //checkoutData.cpf = $scope.user.cpf;
+      checkoutData.customer_id = localStorage.id;
       checkoutData.cpf = '15600944276'; //valid teste cpf 15600944276
       checkoutData.name = $scope.user.name;
       checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();

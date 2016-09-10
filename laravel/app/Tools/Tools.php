@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Tools;
-use App\Tools;
+use App\Tools\Tools;
 
 class Tools{
 
@@ -27,7 +27,7 @@ class Tools{
                 $str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
                 break;
         }
-        $bytes = pwsgenerator::getBytes($length);
+        $bytes = Tools::getBytes($length);
         $position = 0;
         $result = '';
         for ($i = 0; $i < $length; $i++) {

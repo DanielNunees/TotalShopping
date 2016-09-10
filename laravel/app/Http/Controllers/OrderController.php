@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Model\Orders;
-use App\Model\User;
+use App\Models\Orders;
+use App\User;
 use App\Http\Requests;
 use App\Models\Address;
 use App\Tools\Tools;
@@ -12,27 +12,36 @@ use App\Tools\Tools;
 class OrderController extends Controller
 {
     //
-    public function createOrder($orderData){
-
+    public static function createOrder($ordemData,$id_customer){
+    	
     	$reference = Tools::passwdGen(8,'NO_NUMERIC'); //TODO
     	$today = date("Y-m-d H:i:s");
     	
+    	$price = 0;
     	$customer_secure_key = 
-    	User::select("secure_key")->where('id_customer',$orderData->id_customer)->get();
+    	User::select("secure_key")->where('id_customer',$id_customer)->get();
     	
     	$customer_address = 
-    	Address::select('id_address')->where('id_customer',$orderData->id_customer)->get();
+    	Address::select('id_address')->where('id_customer',$id_customer)->get();
     	
+
+        $count = count($ordemData['items']);
+        for($i=0;$i<$count;$i++){
+                $quantity = $ordemData['items'][$i]['_quantity'];
+                $price += number_format($ordemData['items'][$i]['_price'],2);
+        }
+
+        //return $price;
     	$order = new Orders;
 
     	$order->insertGetId(['reference' => $reference,
     		'id_shop'=>1,'id_shop_group'=>1,'id_carrier'=>3,
-    		'id_lang'=>2,'id_customer'=>$request->id_customer,
-    		'id_cart'=> //TODO
+    		'id_lang'=>2,'id_customer'=>$id_customer,
+    		'id_cart'=>1, //REALLY TODOOOOOOOOOOOOOOOOOOOOOO
     		'id_currency'=>2,  //1->Dolar($) 2->Real(R$)
     		'id_address_delivery'=>$customer_address[0]['id_address'],
     		'id_address_invoice'=>$customer_address[0]['id_address'],
-    		'current_state'=>15  //TODO 15->status:iniciado ps_order_state ps_order_state_lang
+    		'current_state'=>15,  //TODO 15->status:iniciado ps_order_state ps_order_state_lang
     		'secure_key'=>$customer_secure_key[0]['secure_key'],
     		'payment'=>'PagSeguro',
     		'conversion_rate'=>'1',
@@ -45,12 +54,12 @@ class OrderController extends Controller
     		'total_discounts_tax_incl'=>0,
     		'total_discounts_tax_excl'=>0,
 
-    		'total_paid'=>//TODO,
-    		'total_paid_tax_incl'=>,//TODO
-    		'total_paid_tax_excl'=>,//TODO
-    		'total_paid_real'=>0,//TODO
-    		'total_products'=>,//TODO
-    		'total_products_wt'=>,//TODO
+    		'total_paid'=>$price,
+    		'total_paid_tax_incl'=>$price,
+    		'total_paid_tax_excl'=>$price,
+    		'total_paid_real'=>0,
+    		'total_products'=>$price,
+    		'total_products_wt'=>$price,
 
     		'total_shipping'=>0,//TODO
     		'total_shipping_tax_incl'=>0,//TODO
@@ -60,10 +69,12 @@ class OrderController extends Controller
     		'total_wrapping_tax_incl'=>0,//TODO
     		'round_mode'=>2,//TODO
     		'invoice_number'=>0,//TODO
-    		'delivery_date'=>,//TODO
+    		'delivery_date'=>'',//TODO
     		'valid'=>0,
     		'date_add'=>$today,
     		'date_upd'=>$today]);
+
+        return $order;
 
 
     }

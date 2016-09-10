@@ -20,6 +20,7 @@ use App\Libraries\PagSeguroLibrary\domain\PagSeguroDirectPaymentRequest;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroInstallment;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroCreditCardCheckout;
 
+use App\Http\Controllers\OrderController;
 use App\Models\State;
 use Exception;
 
@@ -45,6 +46,7 @@ class boletoCheckoutController extends Controller
             'userBirth.*'=> 'bail|required|present|filled',
             'userBirth'=> 'bail|required|present|filled',                       
         ]);
+        //return $request->checkoutData;
         
         if($validator->fails()){
             return $validator->errors()->all();
@@ -136,8 +138,8 @@ class boletoCheckoutController extends Controller
             $credentials = PagSeguroConfig::getAccountCredentials();
 
             // Register this payment request in PagSeguro to obtain the payment URL to redirect your customer.
-            
-            $response = $directPaymentRequest->register($credentials);
+            return OrderController::createOrder($request->checkoutData['cart'],$request->checkoutData['customer_id']);
+            //$response = $directPaymentRequest->register($credentials);
 
             //return $response;
         } catch (PagSeguroServiceException $e) {

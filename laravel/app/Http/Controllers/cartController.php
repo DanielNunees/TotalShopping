@@ -12,7 +12,7 @@ use App\Http\Requests;
 
 class cartController extends Controller
 {
-    public function createCart($id_customer){
+    public static function createCart($id_customer){
     	
     	$this->validate($request, [
 	      'id_customer' => 'bail|required|max:128'
@@ -39,17 +39,13 @@ class cartController extends Controller
     		'date_add'=>$today,
     		'date_upd'=>$today]);
 
-    	//$reference = openssl_random_pseudo_bytes(5);
-      	//$reference = bin2hex($reference);
-      	//$new_cart->reference = strtoupper($reference);
-    	
     	return $new_cart;
 
     }
 
-    public function addProducts(Request $request){
+    public static function addProducts(Request $request){
 
-    	$cart_id = createCart($request->id_customer);
+    	$cart_id = cartController::createCart($request->id_customer);
     	
     	$new_cart = new Cart;
     	$new_cart = $new_cart->insertGetId(['id_shop_group' => 1,
@@ -60,7 +56,7 @@ class cartController extends Controller
     		'id_product_attribute'=>$request->id_product_attribute,
     		'quantity'=> $request->product_quantity,
     		'date_add'=>$today]);
-    	return response()->json(['succes' => 'ok'], 200);
+    	return response()->json(['success' => 'ok'], 200);
     }
 
     public function cartRemoveProducts(Request $request){
