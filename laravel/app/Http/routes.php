@@ -34,7 +34,7 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::post('/getSession','CheckoutController@getSession');
 	Route::post('/boletoCheckout','boletoCheckoutController@boletoCheckout');
 	Route::post('/cartAddProducts','cartController@addProducts');
-	Route::post('/cartRemoveProducts','cartController@addProducts');
+	Route::post('/cartRemoveProducts','cartController@removeProducts');
 	
 
 	Route::get('home', ['as' => 'home', 'uses' => 'ProductHomeController@index']);

@@ -45,29 +45,32 @@ class cartController extends Controller
 
     public static function addProducts(Request $request){
 
-    	$cart_id = cartController::createCart($request->id_customer);
-    	
-    	$new_cart = new Cart;
-    	$new_cart = $new_cart->insertGetId(['id_shop_group' => 1,
-    		'id_cart'=>$cart_id,
+    	$cart_id = Cart::select('id_cart')->where('id_customer',$request->id_customer)->orderBy('date_add','dsc')->first();
+        $customer_address = Address::select('id_address')->where('id_customer',$request->id_customer)->get();
+        $today = date("Y-m-d H:i:s");
+        return $request->id_customer;
+    	$insert_product = new CartProducts;
+    	$insert_product = $insert_product->insertGetId([
+    		'id_cart'=>$cart_id['id_cart'],
     		'id_product'=>$request->id_product,
     		'id_address_delivery'=>$customer_address[0]['id_address'],
     		'id_shop'=>1,
     		'id_product_attribute'=>$request->id_product_attribute,
     		'quantity'=> $request->product_quantity,
     		'date_add'=>$today]);
-    	return response()->json(['success' => 'ok'], 200);
+    	
+        return response()->json(['success' => 'ok'], 200);
     }
 
-    public function cartRemoveProducts(Request $request){
+    public function removeProducts(Request $request){
     	
     	$this->validate($request, [
           'id_product' => 'bail|required',
           'id_cart' => 'bail|required'
         ]);
 
-
-        $delete_product_cart = CartProducts::where('id_product',$request->id_cart)->where('id_product',$request->id_product)->delete();
+        $cart_id = Cart::select('id_cart')->where('id_customer',$request->id_customer)->orderBy('date_add','dsc')->first();
+        $delete_product_cart = CartProducts::where('id_product',$cart_id)->where('id_product',$request->id_product)->delete();
 
         return response()->json(['succes' => 'ok'], 200);
     }

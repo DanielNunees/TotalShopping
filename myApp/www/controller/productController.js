@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 angular.module('app')
-.controller('productController', ['$scope', '$http','$stateParams','$location','$ionicHistory','$httpParamSerializerJQLike','$ionicPopup','$auth','$ionicNavBarDelegate', function($scope,$http,$stateParams,$location,$ionicHistory,$httpParamSerializerJQLike,$ionicPopup,$auth,$ionicNavBarDelegate){
+.controller('productController', ['$scope', '$http','$stateParams','$location','$ionicHistory','$httpParamSerializerJQLike','$ionicPopup','$auth','$ionicNavBarDelegate','ngCart','ngCartItem', function($scope,$http,$stateParams,$location,$ionicHistory,$httpParamSerializerJQLike,$ionicPopup,$auth,$ionicNavBarDelegate,ngCart,ngCartItem){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     $ionicNavBarDelegate.showBackButton(true);
   });
@@ -38,6 +38,24 @@ angular.module('app')
     )
   }
 
+  $scope.teste = function(id_product){
+    var item = ngCart.getItemById(String(id_product));
+    var quantity = item.getQuantity();
+    $http({
+        method: 'POST',
+        url: 'http://127.0.1.1/laravel/public/cartAddProducts',
+        dataType: 'json',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        data: $httpParamSerializerJQLike({'id_customer':localStorage.id,'id_product':$scope.product.description[0].id_product,'product_quantity':quantity,
+                                          'id_product_attribute':$scope.product.description[0].product_stock_complete[0].id_product_attribute})
+        
+      }).then(function successCallback(response) {
+          console.log(response);
+        },function errorCallback(response) {
+
+        });
+  }
+
   $scope.favoriteProduct = function(){
     if($scope.isAuthenticated()){
       $http({
@@ -50,7 +68,7 @@ angular.module('app')
         
       }).then(function successCallback(response) {
         $scope.added = true;
-        localStorage.setItem('product',[10,20,30]);
+        //localStorage.setItem('product',[10,20,30]);
         console.log(response.data);
         var alertPopup = $ionicPopup.alert({
           template: 'Adicionado aos favoritos!'

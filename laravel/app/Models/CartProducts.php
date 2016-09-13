@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CartProduct extends Model
+class CartProducts extends Model
 {
     //ps_cart_product
     public $timestamps = false;

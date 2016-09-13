@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('boletoCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup','$timeout','$interval', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup,$timeout,$interval){
+.controller('boletoCheckoutController', ['$scope', '$http','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup','$interval','ngCart', function($scope,$http,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup,$interval,ngCart){
   var checkoutData={};
   var SenderHash;
   $scope.method = 0;
@@ -18,8 +18,8 @@ angular.module('app')
     $scope.showLoading(); //Loading animation...
     userDataFactory.loadUserData().then(function successCallback(response) {
 
-      var cart = angular.fromJson($window.localStorage ['cart']);
-      checkoutData.cart = JSON.parse(cart);
+      
+      checkoutData.cart = ngCart.getCart();
       checkoutData.userData = response.address[0];
       checkoutData.userBirth = response.user[0];
       //checkoutData.cpf = $scope.user.cpf;

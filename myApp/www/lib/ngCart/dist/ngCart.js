@@ -39,7 +39,6 @@ angular.module('ngCart', ['ngCart.directives'])
         };
 
         this.addItem = function (id, name, price, quantity, data) {
-
             var inCart = this.getItemById(id);
 
             if (typeof inCart === 'object'){
@@ -50,7 +49,6 @@ angular.module('ngCart', ['ngCart.directives'])
                 this.$cart.items.push(newItem);
                 $rootScope.$broadcast('ngCart:itemAdded', newItem);
             }
-
             $rootScope.$broadcast('ngCart:change', {});
         };
 

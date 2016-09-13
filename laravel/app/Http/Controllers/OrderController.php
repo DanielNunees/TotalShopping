@@ -8,6 +8,7 @@ use App\User;
 use App\Http\Requests;
 use App\Models\Address;
 use App\Tools\Tools;
+use App\Models\Cart;
 
 class OrderController extends Controller
 {
@@ -37,7 +38,7 @@ class OrderController extends Controller
     	$order->insertGetId(['reference' => $reference,
     		'id_shop'=>1,'id_shop_group'=>1,'id_carrier'=>3,
     		'id_lang'=>2,'id_customer'=>$id_customer,
-    		'id_cart'=>1, //REALLY TODOOOOOOOOOOOOOOOOOOOOOO
+    		'id_cart'=>Cart::select('cart_id')->where('id_customer',$request->id_customer)->orderBy('date_add','dsc')->get(),
     		'id_currency'=>2,  //1->Dolar($) 2->Real(R$)
     		'id_address_delivery'=>$customer_address[0]['id_address'],
     		'id_address_invoice'=>$customer_address[0]['id_address'],
