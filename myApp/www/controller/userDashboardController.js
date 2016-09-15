@@ -31,39 +31,37 @@ angular.module('app')
 	}
 
 	$scope.loadData = function(){
-		userDataFactory.loadUserData().then(function(response) {
-		    $scope.isEmpty = false;
-      		$scope.userData = response.address[0];
-      		$scope.userBirth = response.user[0];
-      		$scope.states = response.states;
-		}, function errorCallback(response) {
-		       	/* Tratamento de erros*/
-		       	switch (response.status) {
-				    case 400:
-			        	alertPopup = $ionicPopup.alert({
-	                      title: 'Error 400',
-	                      template: 'Nenhum endereço cadastrado',
-	                  	});
-		                break; 
-				    case 422:
-				        alertPopup = $ionicPopup.alert({
-	                      title: 'Error 422',
-	                      template: 'Paramentros errados',
-	                  	});
-		                break; 
-				    default: 
-				        alertPopup = $ionicPopup.alert({
-	                      title: 'Error',
-	                      template: 'Algo deu errado',
-	                  	});
-		                break;
-				}
-		         	console.log(response);
-	        });
-
-
-	
-
+		if($auth.isAuthenticated()){
+			userDataFactory.loadUserData().then(function(response) {
+			    $scope.isEmpty = false;
+	      		$scope.userData = response.address[0];
+	      		$scope.userBirth = response.user[0];
+	      		$scope.states = response.states;
+			}, function errorCallback(response) {
+			       	/* Tratamento de erros*/
+			       	switch (response.status) {
+					    case 400:
+				        	alertPopup = $ionicPopup.alert({
+		                      title: 'Error 400',
+		                      template: 'Nenhum endereço cadastrado',
+		                  	});
+			                break; 
+					    case 422:
+					        alertPopup = $ionicPopup.alert({
+		                      title: 'Error 422',
+		                      template: 'Paramentros errados',
+		                  	});
+			                break; 
+					    default: 
+					        alertPopup = $ionicPopup.alert({
+		                      title: 'Error',
+		                      template: 'Algo deu errado',
+		                  	});
+			                break;
+					}
+			         	console.log(response);
+		        });
+		}
 	}
 
 	$scope.createAddress = function(){

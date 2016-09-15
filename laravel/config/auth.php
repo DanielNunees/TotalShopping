@@ -100,7 +100,7 @@ return [
             'provider' => 'users',
             'email' => 'auth.emails.password',
             'table' => 'password_resets',
-            'expire' => 21600,
+            'expire' => 30000,
         ],
     ],
 

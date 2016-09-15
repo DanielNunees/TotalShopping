@@ -5,6 +5,19 @@ use App\Tools\Tools;
 
 class Tools{
 
+    public static function ConfereSO(){
+
+       if(strstr($_SERVER['HTTP_USER_AGENT'], 'Linux')) { 
+            return 6; // Linux
+       }
+       elseif(strstr($_SERVER['HTTP_USER_AGENT'], 'Windows')) {    
+            return 3; //Windows
+       }
+       else{
+            return 0; //Nao identificado
+       }
+    }
+
 	public static function passwdGen($length = 8, $flag = 'ALPHANUMERIC')
     {
         $length = (int)$length;

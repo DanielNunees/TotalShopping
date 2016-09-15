@@ -8,6 +8,7 @@ angular.module('app')
 
   $scope.product = {};
   $scope.added = false;
+  var guest;
   
   $scope.isAuthenticated = function() {
     return $auth.isAuthenticated();
@@ -38,19 +39,42 @@ angular.module('app')
     )
   }
 
+  function isGuest(){
+    var id_customer = localStorage.id;
+    if(!$auth.isAuthenticated()){
+      guest = null;
+      console.log('guest = null');
+    }
+    else{
+      guest = !null; //true
+      console.log('guest = true');
+    }
+  }
+  
+
   $scope.teste = function(id_product){
     var item = ngCart.getItemById(String(id_product));
     var quantity = item.getQuantity();
+    isGuest();
     $http({
         method: 'POST',
         url: 'http://127.0.1.1/laravel/public/cartAddProducts',
         dataType: 'json',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        data: $httpParamSerializerJQLike({'id_customer':localStorage.id,'id_product':$scope.product.description[0].id_product,'product_quantity':quantity,
+        data: $httpParamSerializerJQLike({'id_customer':localStorage.id,'isGuest':guest,'id_product':$scope.product.description[0].id_product,'product_quantity':quantity,
                                           'id_product_attribute':$scope.product.description[0].product_stock_complete[0].id_product_attribute})
         
       }).then(function successCallback(response) {
           console.log(response);
+          if(guest==null){
+            localStorage.id = response.data[0]['id_guest'];
+            guest=!null;
+          }
+          else{
+            console.log(response.data);
+          }
+
+
         },function errorCallback(response) {
 
         });
