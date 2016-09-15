@@ -18,8 +18,7 @@
         <select required ng-model="firstSize" ng-options='size for size in sizes'>
         </select>
       </label>
-
-      <ngcart-addtocart id="{{products.id_product}}" name="{{products.name}}" price="{{products.product_price.price}}" quantity="1" quantity-max="5" data="{'image':product.images[0].image,size:firstSize}" ng-click='teste(products.id_product)'>Adicionar ao carrinho</ngcart-addtocart>
+      <ngcart-addtocart id="{{products.id_product}}" name="{{products.name}}" price="{{products.product_price.price}}" quantity="1" quantity-max="5" data="{'image':product.images[0].image,size:firstSize,product_attributte:products.product_stock_complete[0].id_product_attribute}" ng-click='teste(products.id_product)'>Adicionar ao carrinho</ngcart-addtocart>
 
       <button ng-disabled='added' ng-click="favoriteProduct()" class="button button-block button-assertive button-outline"><i class="icon ion-ios-heart-outline"></i>Adicionar aos Favoritos</button>
 

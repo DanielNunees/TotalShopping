@@ -52,8 +52,6 @@ class cartController extends Controller
     		'date_upd'=>$today]);
 
     	return $new_cart;
-        
-
     }
 
     public static function addProducts(Request $request){
@@ -98,8 +96,6 @@ class cartController extends Controller
         else{
             return response()->json(['success' => 'ok'], 200);
         }
-
-
     }
 
     public function removeProducts(Request $request){

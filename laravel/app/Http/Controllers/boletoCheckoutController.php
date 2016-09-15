@@ -138,9 +138,9 @@ class boletoCheckoutController extends Controller
             $credentials = PagSeguroConfig::getAccountCredentials();
 
             // Register this payment request in PagSeguro to obtain the payment URL to redirect your customer.
-            OrderController::createOrder($request->checkoutData['cart'],$request->checkoutData['customer_id']);
-            $response = $directPaymentRequest->register($credentials);
-
+            $order = OrderController::createOrder($request->checkoutData['cart'],$request->checkoutData['customer_id']);
+            //$response = $directPaymentRequest->register($credentials);
+            return $order;
         } catch (PagSeguroServiceException $e) {
             die($e->getMessage());
         }

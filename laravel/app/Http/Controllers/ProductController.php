@@ -14,9 +14,13 @@ use Exception;
 class ProductController extends Controller
 {
 
-    public function index($id_product){
+    public static function retrivingProduct($id_product){
             /* Validate if a product id exceed the quantity on DB */
+
+            if(!is_numeric($id_product)) return response()->json(['error' => 'not_numeric_id'], 500);
+
             if($id_product==0 || $id_product>Product::max('id_product')) return response()->json(['error' => 'page_not_found'], 404);
+            /* End of Validate */
 
             $description_name = ProductLang::where('id_product',$id_product)->where('id_lang',2)->select('name','description','id_product')->get();
 

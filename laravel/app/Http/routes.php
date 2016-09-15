@@ -35,10 +35,10 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::post('/boletoCheckout','boletoCheckoutController@boletoCheckout');
 	Route::post('/cartAddProducts','cartController@addProducts');
 	Route::post('/cartRemoveProducts','cartController@removeProducts');
-	Route::post('/newGuest','GuestController@newGuest');
+	Route::post('/order','OrderController@createOrder');
 
 	
 
 	Route::get('home', ['as' => 'home', 'uses' => 'ProductHomeController@index']);
-	Route::get('/product/{id_product}','ProductController@index')->where('id_product', '[0-9]+');
+	Route::get('/product/{id_product}','ProductController@retrivingProduct')->where('id_product', '[0-9]+');
 });
