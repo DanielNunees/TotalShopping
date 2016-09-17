@@ -1,16 +1,15 @@
 <ion-view view-title="Product">
   <ion-content class="padding-horizontal has-footer">
-    <div ng-repeat="products in product.description" >
+    <div ng-repeat="(key1,value1) in product.description" >
       <ion-slide-box >
-        <ion-slide ng-repeat="products in product.images" >
-          <img ng-model="product.images[0].image" class="img-size" ng-src='http://127.0.1.1/prestashop{{products.image}}'>
+        <ion-slide ng-repeat="(key,value) in productImages" >
+          <img ng-model="product.images[0].image" class="img-size" ng-src='http://127.0.1.1/prestashop{{value}}'>
         </ion-slide>
       </ion-slide-box>
-
-      <h2 ng-model="products.name" class="css-selector text-center">{{products.name}}</h2>
-      <h3 class="css-selector text-center">{{products.product_price.price | currency:"R$ "}}</h3>
-      <h4 class="css-selector">3x {{products.product_price.price/3 | currency:"R$ ":2}}</h4>
-
+    </div>
+      <h2 ng-model="productName" class="css-selector text-center">{{productName}}</h2>
+      <h3 class="css-selector text-center">{{productPrice | currency:"R$ "}}</h3>
+      <h4 class="css-selector">3x {{productPrice/3 | currency:"R$ ":2}}</h4>
        <label class="item item-input item-select">
         <div class="input-label">
           Tamanho
@@ -18,11 +17,11 @@
         <select required ng-model="firstSize" ng-options='size for size in sizes'>
         </select>
       </label>
-      <ngcart-addtocart id="{{products.id_product}}" name="{{products.name}}" price="{{products.product_price.price}}" quantity="1" quantity-max="5" data="{'image':product.images[0].image,size:firstSize,product_attributte:products.product_stock_complete[0].id_product_attribute}" ng-click='teste(products.id_product)'>Adicionar ao carrinho</ngcart-addtocart>
+      <ngcart-addtocart id="{{productId}}" name="{{productName}}" price="{{productPrice}}" quantity="1" quantity-max="5" data="{'image':product.images[0].image,size:firstSize,product_attributte:10}" ng-click='teste(productId)'>Adicionar ao carrinho</ngcart-addtocart>
 
       <button ng-disabled='added' ng-click="favoriteProduct()" class="button button-block button-assertive button-outline"><i class="icon ion-ios-heart-outline"></i>Adicionar aos Favoritos</button>
 
-      <p class="css-selector" ng-bind-html="products.description"></p>
-    </div> 
+    
+    <p class="css-selector" ng-bind-html="productDescription"></p> 
   </ion-content>
 </ion-view>

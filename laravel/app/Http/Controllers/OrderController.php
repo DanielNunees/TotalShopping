@@ -17,42 +17,33 @@ class OrderController extends Controller
     public static function createOrder($ordemData,$id_customer){
         $price = 0;
         $count = count($ordemData['items']);
+        
+        if(!is_numeric($id_customer)){
+            return response()->json(['error' => 'customer id is not a integer'], 500);
+        }
         for($i=0;$i<$count;$i++){
-            if(!is_numeric($ordemData['items'][0]['_quantity'])){
+            if(!is_numeric($ordemData['items'][$i]['_quantity'])){
                 return response()->json(['error' => 'quantity is not a integer'], 500);
             }
-            $product = ProductController::retrivingProduct(11);
+
+            $product = ProductController::retrivingProduct($ordemData['items'][$i]['_id']);
+            $products[] = $product;
            
-           //return gettype($product);
-           if(is_array($product)){
-            return 'is array';
-           }
-
-           return 'ok';
-
-
-            $quantity = $ordemData['items'][$i]['_quantity'];
-            
-            if(isset($product['description'][0]['product_price']['price'])){
-                $price  = $quantity*$product['description'][0]['product_price']['price'];
-            }else if(true){
+            if(is_array($product)){
+                $quantity = $ordemData['items'][$i]['_quantity'];
+                $price  += $quantity*$product['description'][0]['product_price']['price'];
+            }else if(is_object($product)){
                 return $product;
             }
-
-            
-            //$product = json_decode($product);
-            //$product = ($product->status());
-            //if(($product->getContent()))
-                //return 'aquasdaosdmaçlsdmaçsldmaçsd';
-            return $product;
-            
-            //return $coisa['description'][0]['product_price']['price'];      
+            else{
+                return response()->json(['error' => 'Big Error!'], 500);
+           }
         }
-        return 'ok';
+        return $products;
+        $price = number_format($price,2);
         $reference = Tools::passwdGen(8,'NO_NUMERIC'); //TODO
     	$today = date("Y-m-d H:i:s");
-    	
-    	
+
     	$customer_secure_key = 
     	User::select("secure_key")->where('id_customer',$id_customer)->get();
     	
@@ -61,8 +52,6 @@ class OrderController extends Controller
         $id_cart = Cart::select('id_cart')->where('id_customer',$id_customer)->orderBy('date_add','dsc')->first();
         $id_cart = $id_cart['id_cart'];
 
-        $price = number_format($price,2);
-        //return $price;
     	$order_id = new Orders;
 
     	$order_id->insertGetId(['reference' => $reference,
@@ -104,11 +93,12 @@ class OrderController extends Controller
     		'valid'=>0,
     		'date_add'=>$today,
     		'date_upd'=>$today]);
-        //OrderController::OrderDetail($order_id,$ordemData);
+        //OrderController::OrderDetail($order_id,);
         return $order_id;
+
     }
 
-    /*public static function OrderDetail($order_id,$ordemData){
+    public static function OrderDetail($order_id,$ordemData){
     
         $count = count($ordemData['items']);
             for($i=0;$i<$count;$i++){
@@ -118,7 +108,7 @@ class OrderController extends Controller
                     'id_order' =>$order_id ,
                     'id_order_invoice'=>0,'id_order_warehouse'=>0,'id_shop'=>1,
                     'product_id'=>$ordemData['items'][$i]['_id'],
-                    'product_attribute_id'=>$ordemData['items'][$i][_data]['_product_attributte'],
+                    'product_attribute_id'=>$ordemData['items'][$i]['_data']['_product_attributte'],
                     'product_name'=>$ordemData['items'][$i]['_name'],
                     'product_quantity'=>$ordemData['items'][$i]['_quantity'],
                     'product_quantity_in_stock'=>1,
@@ -132,9 +122,9 @@ class OrderController extends Controller
                     'reduction_amount_tax_excl'=>0,
                     'group_reduction'=>0,
                     'product_quantity_discount'=>0,
-                    'product_ean13'=>,
-                    'product_upc'=>,
-                    'product_reference'=>,
+                    'product_ean13'=>'',
+                    'product_upc'=>'',
+                    'product_reference'=>'',
                     'product_supplier_reference'=>'',
                     'product_weight'=>0,
                     'id_taxt_rules_group'=>0,
@@ -143,7 +133,7 @@ class OrderController extends Controller
                     'tax_rate'=>0,
                     'ecotax'=>0,
                     'ecotax_tax_rate'=>0,
-                    'discount_quantity_applied'=>,
+                    'discount_quantity_applied'=>0,
                     'download_hash'=>0,
                     'download_nb'=>0,
                     'download_deadline'=>0,
@@ -157,5 +147,5 @@ class OrderController extends Controller
                     'original_product_price'=>$ordemData['items'][$i]['_price'] ,
                     'original_wholesale_price'=>$ordemData['items'][$i]['_price']]);
             }
-    }*/
+    }
 }

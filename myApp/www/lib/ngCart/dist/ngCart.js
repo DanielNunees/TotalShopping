@@ -44,6 +44,11 @@ angular.module('ngCart', ['ngCart.directives'])
             if (typeof inCart === 'object'){
                 //Update quantity of an item if it's already in the cart
                 inCart.setQuantity(quantity, false);
+                console.log(inCart);
+                console.log(inCart._data.size);
+                console.log(data);
+                console.log(data.size);
+                console.log('aasdasdasdas');
             } else {
                 var newItem = new ngCartItem(id, name, price, quantity, data);
                 this.$cart.items.push(newItem);

@@ -17,21 +17,48 @@ angular.module('app')
   $scope.loadProducts = function(){
     $http.get('http://127.0.1.1/laravel/public/product/'+$stateParams.productId,{ cache: true}).then(   
       function(data){
+        console.log(data.data);
         $scope.product = data.data;
-        var produto = data.data;
-        var size = [];
-        angular.forEach(produto.attributes,function(value,key){
-          if(angular.isNumber(key)){
-            size.push(value);
-          }else{
-            angular.forEach(value,function(value1,key){
-              size.push(value1);
-            })
-          }
+        $scope.productPrice = data.data['description'][0]['product_price']['price'];
+        $scope.productName = data.data['description'][0]['name'];
+        $scope.productId = data.data['description'][0]['id_product'];
+        $scope.productDescription = data.data['description'][0]['description'];
+        $scope.productImages = [];
+        angular.forEach(data.data['images'],function(value,key){
+          $scope.productImages.push(value.image);
         })
-        size.sort();
-        $scope.sizes = size;
-        $scope.firstSize = size[0];
+        $scope.productAttributtes = data.data['attributes'];
+        
+        $scope.sizes = []
+        if(data.data['attributes'].length>1){
+          angular.forEach(data.data['attributes'],function(value1,key1){
+            angular.forEach(value1,function(value2,key2){
+              console.log(key2);
+              $scope.sizes.push(value2);
+            })
+          })
+
+          console.log($scope.sizes);
+        }
+        else{
+          angular.forEach(data.data['attributes'],function(value,key){
+            if(angular.isNumber(key)){
+              $scope.sizes.push(value);
+            }else{
+              angular.forEach(value,function(value1,key){
+                $scope.sizes.push(value1);
+              })
+            }
+          })
+          $scope.sizes.sort();
+          //$scope.firstSize = $scope.sizes[0];
+        }
+
+
+
+
+        
+        
       },
       function(err){
         $location.path('/home');

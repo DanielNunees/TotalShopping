@@ -24,17 +24,23 @@ class ProductController extends Controller
 
             $description_name = ProductLang::where('id_product',$id_product)->where('id_lang',2)->select('name','description','id_product')->get();
 
+            
+
             if($description_name->isEmpty()){
                 return response()->json(['error' => 'is_empty'], 404);
             }
-            
+
             $productAttributes = ProductStock::findOrFail($id_product)->where('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute')->get();
             
+
+
             foreach ($description_name as $product) {
                 $product->ProductPrice; //Price of product
                 $product->ProductImages; //Images of product
                 $product->ProductStockComplete; //verifica a quantidade no stock
             }
+
+
             $description_name = json_decode($description_name,true);
             
                 foreach ($description_name[0]['product_images'] as $id_image) {
@@ -56,7 +62,6 @@ class ProductController extends Controller
                     $id_attribute[] = $value->pivot->id_attribute;
                 }
             }
-        
             if(isset($id_attribute)){
                 $attributes = Attributes::select('id_attribute_group')->distinct()->find($id_attribute);
                 foreach ($attributes as $value) {
@@ -64,19 +69,21 @@ class ProductController extends Controller
                 }
             }
             
-
             if(isset($attributes_names)){
                 foreach ($attributes_names as $key => $value) {
                     $aux[$key] = $value->name;
                 }
                 
                 $v=1;
+                $i=0;
                 if(count($attributes)==2){
                     while (isset($aux[$v])&&($key = array_search($aux[$v], $aux)) !== NULL )
-                    {
-                        $color_sizes[$aux[$key]][]=$aux[$key-1];
+                    {   
+                        //return $aux[$key];
+                        $color_sizes[]=array($description_name[0]['product_stock_complete'][$i]['id_product_attribute']=>$aux[$key-1]);
                         unset($aux[$key]);
                         $v+=2;
+                        $i++;
                     }
                 }else{
                     $color_sizes = $aux;
