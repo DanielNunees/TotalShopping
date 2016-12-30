@@ -39,22 +39,23 @@ angular.module('ngCart', ['ngCart.directives'])
         };
 
         this.addItem = function (id, name, price, quantity, data) {
-            var inCart = this.getItemById(id);
+            //console.log(data.product_attributte);
+            var inCart1 = this.getItemById(id);
+            var inCart = this.getItemByAttribute(data);
 
-            if (typeof inCart === 'object'){
-                //Update quantity of an item if it's already in the cart
-                inCart.setQuantity(quantity, false);
-                console.log(inCart);
-                console.log(inCart._data.size);
-                console.log(data);
-                console.log(data.size);
-                console.log('aasdasdasdas');
-            } else {
-                var newItem = new ngCartItem(id, name, price, quantity, data);
-                this.$cart.items.push(newItem);
-                $rootScope.$broadcast('ngCart:itemAdded', newItem);
+            if(!angular.isUndefined(data.product_attributte)){
+
+                if (angular.isObject(inCart)){
+                    //Update quantity of an item if it's already in the cart
+                    inCart.setQuantity(quantity, false);
+                    $rootScope.$broadcast('ngCart:itemUpdated', inCart);
+                } else {
+                    var newItem = new ngCartItem(id, name, price, quantity, data);
+                    this.$cart.items.push(newItem);
+                    $rootScope.$broadcast('ngCart:itemAdded', newItem);
+                }
+                $rootScope.$broadcast('ngCart:change', {});
             }
-            $rootScope.$broadcast('ngCart:change', {});
         };
 
         this.getItemById = function (itemId) {
@@ -63,6 +64,18 @@ angular.module('ngCart', ['ngCart.directives'])
 
             angular.forEach(items, function (item) {
                 if  (item.getId() === itemId) {
+                    build = item;
+                }
+            });
+            return build;
+        };
+
+        this.getItemByAttribute = function (data) {
+            var items = this.getItems();
+            var build = false;
+
+            angular.forEach(items, function (item) {
+                if(item._data.product_attributte === data.product_attributte ){
                     build = item;
                 }
             });

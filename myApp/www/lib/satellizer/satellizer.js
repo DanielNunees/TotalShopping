@@ -343,7 +343,6 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             var tokenPath = config.tokenRoot ? config.tokenRoot + '.' + config.tokenName : config.tokenName;
             return $log.warn('Expecting a token named "' + tokenPath);
           }
-          storage.set('id',response.data.id_customer);
           storage.set(tokenName, token);
         };
 
@@ -390,7 +389,6 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
         Shared.logout = function() {
           storage.remove(tokenName);
-          storage.remove('id');
           return $q.when();
         };
 

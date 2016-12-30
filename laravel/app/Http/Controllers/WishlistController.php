@@ -7,25 +7,40 @@ use App\Models\Wishlist;
 use App\Http\Requests;
 use App\Models\Products\Product;
 use App\Models\WishlistProducts;
- 
+use App\Http\Controllers\myAuthController;
 
 class WishlistController extends Controller
 {
+    
     public function addProduct(Request $request){
+        $id_customer = myAuthController::getAuthenticatedUser();
     	
-    	$this->validate($request, [
-    	  'id_customer' => 'bail|required',
+        $this->validate($request, [
           'id_product' => 'bail|required',
           'id_product_attribute' => 'bail|required',
       	]);
 
-    	$wishlist = Wishlist::select('id_wishlist')->where('id_customer',$request->id_customer)->get();
+    	$wishlist = Wishlist::select('id_wishlist')->where('id_customer',$id_customer)->get();
         if($wishlist->isEmpty()){
             return response()->json(['error' => 'Wishlist not created'],400);
         }
 
+        foreach ($wishlist as $value) {
+           $value->ProductsId;
+        }
+        $wishlist = json_decode($wishlist,true);
+        //return $wishlist[0]['products_id'];
+
+        foreach($wishlist[0]['products_id'] as $id_products){
+            foreach ($id_products as $id) {
+               if($id == $request->id_product){
+                    return response()->json(['error' => 'Produto já esta na wishlist'],409);
+                }
+            }
+        }
+
     	$new_wishlist = new WishlistProducts;
-    	$new_wishlist->id_wishlist = $wishlist[0]->id_wishlist;
+    	$new_wishlist->id_wishlist = $wishlist[0]['id_wishlist'];
     	$new_wishlist->id_product = $request->id_product;
     	$new_wishlist->id_product_attribute = $request->id_product_attribute;
     	$new_wishlist->quantity = 1;
@@ -36,13 +51,9 @@ class WishlistController extends Controller
 
     public function listProducts(Request $request){
 
-        $this->validate($request, [
-          'id_customer' => 'bail|required|numeric'
-        ]);
-
-    	$wishlistProducts = Wishlist::where('id_customer',$request->id_customer)->select('id_wishlist')->get();
-        
-
+        $id_customer = myAuthController::getAuthenticatedUser();
+    	$wishlistProducts = Wishlist::where('id_customer',$id_customer)->select('id_wishlist')->get();
+    
         if($wishlistProducts->isEmpty()){
             return response()->json(['error' => 'Wishlist not created'],400);
         }
@@ -73,7 +84,7 @@ class WishlistController extends Controller
         foreach ($wishlistProducts[0]['products_price'] as $price) {
             $price1[] = $price;
             $name[] = $wishlistProducts[0]['products_name'][$a];
-            $id_product[]= $wishlistProducts[0]['products_name'][$a]['pivot']['id_product'];
+            $id_product[]= $wishlistProducts[0]['products_price'][$a]['pivot']['id_product'];
             $a++;
         }
         $final = array('name'=>$name,'price'=>$price1,'image'=>$images,'id_product'=>$id_product);
@@ -82,11 +93,11 @@ class WishlistController extends Controller
     }
 
     public function removeProducts(Request $request){
+        $id_customer = myAuthController::getAuthenticatedUser();
         $this->validate($request, [
-          'id_product' => 'bail|required',
-          'id_customer' => 'bail|required'
+          'id_product' => 'bail|required'
         ]);
-        $wishlistProducts = Wishlist::select('id_wishlist')->where('id_customer',$request->id_customer)->get();
+        $wishlistProducts = Wishlist::select('id_wishlist')->where('id_customer',$id_customer)->get();
 
         if($wishlistProducts->isEmpty()){
             return response()->json(['error' => 'page_not_found'], 404);

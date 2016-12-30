@@ -13,4 +13,8 @@ class Address extends Model
     public function loadStates(){
     	return $this->hasMany('App\Models\State','id_state')->select('id_state','name');
     }
+
+    static public function getIdAdressFromCustomer($id_customer){
+    	return Address::select('id_address')->where('id_customer',$id_customer)->get();
+    }
 }

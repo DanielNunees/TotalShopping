@@ -17,4 +17,6 @@ angular.module('app')
 		templateUrl:'../templates/paymentMethodCreditCard.html'
 	};
 });
+
+
 })();

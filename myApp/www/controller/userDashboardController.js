@@ -33,6 +33,7 @@ angular.module('app')
 	$scope.loadData = function(){
 		if($auth.isAuthenticated()){
 			userDataFactory.loadUserData().then(function(response) {
+				console.log(response);
 			    $scope.isEmpty = false;
 	      		$scope.userData = response.address[0];
 	      		$scope.userBirth = response.user[0];

@@ -6,9 +6,7 @@ angular.module('app')
     $ionicNavBarDelegate.showBackButton(true);
     $scope.loadWishlist();
   });
-  
   $scope.product = [];
-  console.log($ionicHistory.viewHistory());
 
   $scope.isAuthenticated = function() {
       return $auth.isAuthenticated();
@@ -19,15 +17,10 @@ angular.module('app')
   }
 
   $scope.loadWishlist = function(){
-    if($auth.isAuthenticated()){
       $http({
           method: 'POST',
           url: 'http://127.0.1.1/laravel/public/wishlist',
-          dataType: 'json',
-          cache: true,
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          data: $httpParamSerializerJQLike({'id_customer':localStorage.id})
-        }).then(function successCallback(response) {          
+        }).then(function successCallback(response) {
             $scope.product = [];
             for(var i=0;i<response.data.image.length;i++){
               var item={};
@@ -53,11 +46,11 @@ angular.module('app')
               template: 'Whislist not created',
             });
             }
-            /* Tratamento de erros*/
+            /* Fim Tratamento de erros*/
             
             //$location.url('/user/home');
           });
-      }
+      
     }
     
     $scope.remove = function(index,id_product){
@@ -68,7 +61,7 @@ angular.module('app')
           url: 'http://127.0.1.1/laravel/public/removeWishlistProduct',
           dataType: 'json',
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          data: $httpParamSerializerJQLike({'id_customer':localStorage.id,'id_product':id_product})
+          data: $httpParamSerializerJQLike({'id_product':id_product})
         }).then(function successCallback(response) {
             console.log(response.data);
             $scope.product.splice(index,1);

@@ -10,8 +10,8 @@ use App\Models\UserRegister;
 use App\Models\Address;
 use App\User;
 use App\Models\Country;
-//use App\services\PSWebServiceLibrary; 
-
+use App\Http\Controllers\myAuthController;
+//use App\services\PSWebServiceLibrary;
 class userController extends Controller
 {
 	public function register(Request $request)
@@ -76,19 +76,11 @@ class userController extends Controller
   }
 
   public function loadData(Request $request){
+    $id_customer = myAuthController::getAuthenticatedUser();
 
-    $this->validate($request, [
-      'id_customer' => 'bail|required',
-      'key_id_customer_retrieving' =>'bail|required',
-    ]);
+    $address = Address::where('id_customer',$id_customer)->where('active','1')->select('id_state','lastname','firstname','address1','address2','postcode','city','phone','phone_mobile','other')->get();
 
-    if(strcmp($request->key_id_customer_retrieving,'DHC7BB2K3FGJPHQ87VFJ7MDJD')!=0){
-      return response()->json(['error' => 'Retriving error'], 400);
-    }
-
-    $address = Address::where('id_customer',$request->id_customer)->where('active','1')->select('id_state','lastname','firstname','address1','address2','postcode','city','phone','phone_mobile','other')->get();
-
-    $user = User::where('id_customer',$request->id_customer)->select('birthday','email')->get();
+    $user = User::where('id_customer',$id_customer)->select('birthday','email')->get();
 
     if($address->isEmpty()){
       return response()->json(['error' => 'is_empty'], 400);

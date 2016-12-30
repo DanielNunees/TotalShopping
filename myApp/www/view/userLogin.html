@@ -1,21 +1,28 @@
 <ion-view view-title="Login">
 	<ion-content  > <!-- loginForm.$valid && -->
-  		<form ng-if="!isAuthenticated()" name='loginForm' ng-submit="login(loginForm)" novalidate>
-  		    
-		    <label class="item item-input item-stacked-label">
-			    <span class="input-label">Email*</span>
-			    <input ng-model="loginData.email" type="email" ng-maxlength="128" placeholder="john@suhr.com" required/>
-			</label>
-
-			<label class="item item-input item-stacked-label">
-			    <span class="input-label">Senha*</span>
-			    <input ng-model="loginData.password" ng-minlength="5" ng-maxlength="32" type="password" placeholder="" required/>
-			</label>
-
-		    <input class="button button-block button-positive" type="submit" ng-disabled="loginForm.$invalid" value="Login" />
-
-		    <p class="text-center"><a class="button" ng-click="openModal()">Register Now</a></p>
-		</form>
+  		<form ng-if="!isAuthenticated()" name='myForm' ng-submit="login(myForm)" novalidate>
+	        <div class="list">
+	            <label class="item item-input item-stacked-label">
+	                <span class="input-label">Email</span>
+	                <input ng-model="loginData.email" type="email" name="username" ng-minlength="5" required>
+	            </label>
+	            <label class="item item-input item-stacked-label">
+	                <span class="input-label">Senha</span>
+	                <input type="password" name="password" ng-model="loginData.password" ng-minlength="6" required>
+	            </label>
+	        </div>
+	        <div class="padding">
+	            <p ng-if="myForm.username.$error.required" class="form-error"><i class="ion-information-circled"></i> Email é necessário!</p>
+	            <p ng-if="myForm.username.$invalid && !myForm.username.$pristine" class="form-error"><i class="ion-information-circled"></i> O login deve ser feito com o seu email</p>
+	            <p ng-if="myForm.username.$error.minlength" class="form-error"><i class="ion-information-circled"></i> Seu email deve conter no mínimo 5 caracteres!</p>
+	            <p ng-if="myForm.password.$error.required" class="form-error"><i class="ion-information-circled"></i> Senha é necessária!</p>
+	            <p ng-if="myForm.password.$error.minlength" class="form-error"><i class="ion-information-circled"></i> A senha deve conter pelo menos 6 caracteres.</p>
+	        </div>
+	        <div class="padding">
+	            <input class="button button-block button-positive" type="submit" ng-disabled="myForm.$invalid" value="Login" />
+	        </div>
+	        <p class="text-center"><a class="button" ng-click="openModal()">Registra-se</a></p>
+	    </form>
     </ion-content>
 </ion-view>
 

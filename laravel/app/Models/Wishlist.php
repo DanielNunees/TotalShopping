@@ -3,6 +3,7 @@
 namespace App\Models;
 use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\WishlistProducts;
 
 class Wishlist extends Model
 {
@@ -26,7 +27,7 @@ class Wishlist extends Model
     	return $this->belongsToMany('App\Models\Products\ProductImages','ps_wishlist_product','id_wishlist','id_product')->select('id_image')->where('cover',1);
     }
 
-    public function ProductsIds(){
+    public function ProductsId(){
         return $this->hasMany('App\Models\WishlistProducts','id_wishlist')->select('id_product');
     }
 

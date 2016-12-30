@@ -7,17 +7,21 @@
         </ion-slide>
       </ion-slide-box>
     </div>
-      <h2 ng-model="productName" class="css-selector text-center">{{productName}}</h2>
+      <h2  class="css-selector text-center">{{productName}}</h2>
       <h3 class="css-selector text-center">{{productPrice | currency:"R$ "}}</h3>
       <h4 class="css-selector">3x {{productPrice/3 | currency:"R$ ":2}}</h4>
-       <label class="item item-input item-select">
-        <div class="input-label">
-          Tamanho
-        </div>
-        <select required ng-model="firstSize" ng-options='size for size in sizes'>
-        </select>
-      </label>
-      <ngcart-addtocart id="{{productId}}" name="{{productName}}" price="{{productPrice}}" quantity="1" quantity-max="5" data="{'image':product.images[0].image,size:firstSize,product_attributte:10}" ng-click='teste(productId)'>Adicionar ao carrinho</ngcart-addtocart>
+      <form name="myForm">
+        <span ng-show="myForm.service_id.$error.required" class="form-error">Escolha um tamanho</span>
+        <label class="item item-input item-select">
+
+          <span >
+            <select name="service_id" required ng-model="value" ng-options='value.name for (id_attribute,value) in attributes' ></select>
+            <option value="">Tamanho</option>
+          </span>
+        </label>
+        
+      </form>
+      <ngcart-addtocart id="{{productId}}" name="{{productName}}" price="{{productPrice}}" quantity="1" quantity-max="5" data="{'image':product.images[0].image,size:value.name, product_attributte:value.id_product_attribute}" ng-click='addProduct(productId,value.id_product_attribute)'>Adicionar ao carrinho</ngcart-addtocart>
 
       <button ng-disabled='added' ng-click="favoriteProduct()" class="button button-block button-assertive button-outline"><i class="icon ion-ios-heart-outline"></i>Adicionar aos Favoritos</button>
 

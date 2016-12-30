@@ -1,0 +1,25 @@
+<div class="list">
+	<div ng-repeat="item in ngCart.getCart().items track by $index">
+		<div class="item item-thumbnail-left"  >
+			<img  ng-src="http://127.0.1.1/prestashop{{item.getData().image}}" ng-href="#/product/{{item._id}}" >
+			{{ item.getName() }}
+			<p>Tam. {{item.getData().size}}</p>
+			<h3>{{ item.getPrice() | currency:"R$"}}</h3>{{ item.getTotal() | currency:"R$"}}
+			<div class="row ">
+			  <div class="col col-10"><span class="icon ion-minus" ng-class="{'disabled':item.getQuantity()==1}" ng-click="item.setQuantity(-1, true)"></span></div>
+			  <div class="col col-10">{{ item.getQuantity() | number }}</div>
+			  <div class="col col-10"><span class="icon ion-plus" ng-class="{'disabled':item.getQuantity()==15}" ng-click="item.setQuantity(1, true)"></span></div>
+			  <div class="col col-70 col-offset-33" >			  	
+			  	<button class="button button-assertive button-clear" ng-click="cartFactory.removeProduct({{item._id}},{{item.getData().product_attributte}});ngCart.removeItemById(item.getId())"> 
+					<i class="ion-ios-trash-outline medium"></i>
+				</button>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<div class="row ">
+	  <div class="col col-50">Total: {{ ngCart.getSubTotal() | currency:"R$" }} </div>
+	</div>
+    <a class="button button-outline button-positive button-block" ng-href='#user/dataCheckout'>Finalizar Pedido</a>

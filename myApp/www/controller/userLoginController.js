@@ -1,13 +1,18 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('userLoginController', ['$scope', '$http','$auth','$location','$ionicHistory','$ionicPopup','$ionicNavBarDelegate','$ionicModal','$httpParamSerializerJQLike', function($scope,$http,$auth,$location,$ionicHistory,$ionicPopup,$ionicNavBarDelegate,$ionicModal,$httpParamSerializerJQLike){
+.controller('userLoginController', ['$scope', '$http','$auth','$ionicHistory','$ionicPopup','$ionicNavBarDelegate','$ionicModal','$httpParamSerializerJQLike','$state', function($scope,$http,$auth,$ionicHistory,$ionicPopup,$ionicNavBarDelegate,$ionicModal,$httpParamSerializerJQLike,$state){
     $scope.$on("$ionicView.beforeEnter", function(event, data){
       $ionicNavBarDelegate.showBackButton(true);
     });
     
     $scope.loginData = {};
     $scope.userRegister = {};
+
+    $scope.authenticate = function(provider) {
+      $auth.authenticate(provider);
+    };
+   
     $scope.isAuthenticated = function() {
       return $auth.isAuthenticated();
     };
@@ -17,7 +22,7 @@ angular.module('app')
 
       $auth.login($scope.loginData).then(
         function(response){
-          $location.url('/user/dashboard');
+          $state.go('userDashboard');
           $scope.loginData = {};
           $ionicHistory.removeBackView();
         },

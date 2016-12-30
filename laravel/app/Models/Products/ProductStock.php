@@ -10,6 +10,16 @@ class ProductStock extends Model
     public $timestamps = false;
     protected $table = 'ps_stock_available';
     protected $primaryKey = 'id_product_attribute';
+    protected $hidden = array('pivot');
+
+
+    static public function RetrivingAttributes($id_product){
+        if(is_array($id_product)){
+            return ProductStock::whereIn('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute','id_product')->get();
+        }
+        return ProductStock::where('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute','id_product')->get();
+    }
+
 
 	public function ProductAttributeName(){
     	return $this->belongsToMany('App\Models\Attributes\AttributesLang','ps_product_attribute_combination','id_product_attribute','id_attribute')->select('name')->where('id_lang',2);

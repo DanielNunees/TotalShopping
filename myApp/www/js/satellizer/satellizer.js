@@ -391,7 +391,6 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
         Shared.logout = function() {
           storage.remove(tokenName);
-          storage.remove('id');
           return $q.when();
         };
 

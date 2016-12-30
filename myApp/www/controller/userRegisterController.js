@@ -2,7 +2,7 @@
 (function() {
     'use strict';
     angular.module('app')
-.controller('userRegisterController', ['$scope','$http','$httpParamSerializerJQLike','$ionicPopup',  function($scope,$http,$httpParamSerializerJQLike,$ionicPopup){
+.controller('userRegisterController', ['$scope','$http','$httpParamSerializerJQLike','$ionicPopup','$auth', function($scope,$http,$httpParamSerializerJQLike,$ionicPopup,$auth){
 	$scope.userRegister={};
 	
 
@@ -13,7 +13,7 @@
 		  url: 'http://127.0.1.1/laravel/public/user/register',
 		  dataType: 'json',
 		  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-		  data: $httpParamSerializerJQLike($scope.userRegister)
+		  data: $httpParamSerializerJQLike({'userRegister':$scope.userRegister,'token':$auth.getToken()})
 		  
 		}).then(function successCallback(response) {
 			$scope.userRegister={};

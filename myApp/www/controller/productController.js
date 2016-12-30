@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 angular.module('app')
-.controller('productController', ['$scope', '$http','$stateParams','$location','$ionicHistory','$httpParamSerializerJQLike','$ionicPopup','$auth','$ionicNavBarDelegate','ngCart','ngCartItem', function($scope,$http,$stateParams,$location,$ionicHistory,$httpParamSerializerJQLike,$ionicPopup,$auth,$ionicNavBarDelegate,ngCart,ngCartItem){
+.controller('productController', ['$scope', '$http','$stateParams','$location','$ionicHistory','$httpParamSerializerJQLike','$ionicPopup','$auth','$ionicNavBarDelegate','ngCart','cartFactory', function($scope,$http,$stateParams,$location,$ionicHistory,$httpParamSerializerJQLike,$ionicPopup,$auth,$ionicNavBarDelegate,ngCart,cartFactory){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     $ionicNavBarDelegate.showBackButton(true);
   });
@@ -24,41 +24,12 @@ angular.module('app')
         $scope.productId = data.data['description'][0]['id_product'];
         $scope.productDescription = data.data['description'][0]['description'];
         $scope.productImages = [];
+        $scope.productAttribute = [];
         angular.forEach(data.data['images'],function(value,key){
           $scope.productImages.push(value.image);
         })
-        $scope.productAttributtes = data.data['attributes'];
-        
-        $scope.sizes = []
-        if(data.data['attributes'].length>1){
-          angular.forEach(data.data['attributes'],function(value1,key1){
-            angular.forEach(value1,function(value2,key2){
-              console.log(key2);
-              $scope.sizes.push(value2);
-            })
-          })
+        $scope.attributes = data.data['attributes'];
 
-          console.log($scope.sizes);
-        }
-        else{
-          angular.forEach(data.data['attributes'],function(value,key){
-            if(angular.isNumber(key)){
-              $scope.sizes.push(value);
-            }else{
-              angular.forEach(value,function(value1,key){
-                $scope.sizes.push(value1);
-              })
-            }
-          })
-          $scope.sizes.sort();
-          //$scope.firstSize = $scope.sizes[0];
-        }
-
-
-
-
-        
-        
       },
       function(err){
         $location.path('/home');
@@ -67,9 +38,8 @@ angular.module('app')
   }
 
   function isGuest(){
-    var id_customer = localStorage.id;
     if(!$auth.isAuthenticated()){
-      guest = null;
+      guest = null; //false
       console.log('guest = null');
     }
     else{
@@ -79,9 +49,17 @@ angular.module('app')
   }
   
 
-  $scope.teste = function(id_product){
+  $scope.addProduct = function(id_product,product_attribute){
     var item = ngCart.getItemById(String(id_product));
+    if(item === false || angular.isUndefined(product_attribute)){
+      var alertPopup = $ionicPopup.alert({
+          template: 'Selecione o Tamanho'
+        })
+    }
+    else{
+    
     var quantity = item.getQuantity();
+    var product_attributte = item.getData().product_attributte;
     isGuest();
     $http({
         method: 'POST',
@@ -89,7 +67,7 @@ angular.module('app')
         dataType: 'json',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         data: $httpParamSerializerJQLike({'id_customer':localStorage.id,'isGuest':guest,'id_product':$scope.product.description[0].id_product,'product_quantity':quantity,
-                                          'id_product_attribute':$scope.product.description[0].product_stock_complete[0].id_product_attribute})
+                                          'id_product_attribute':product_attributte})
         
       }).then(function successCallback(response) {
           console.log(response);
@@ -98,13 +76,14 @@ angular.module('app')
             guest=!null;
           }
           else{
-            console.log(response.data);
+           // console.log(response.data);
           }
 
 
         },function errorCallback(response) {
-
+          console.log(response);
         });
+    }
   }
 
   $scope.favoriteProduct = function(){
@@ -114,12 +93,11 @@ angular.module('app')
         url: 'http://127.0.1.1/laravel/public/createWishlist',
         dataType: 'json',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        data: $httpParamSerializerJQLike({'id_customer':localStorage.id,'id_product':$scope.product.description[0].id_product,
+        data: $httpParamSerializerJQLike({'id_product':$scope.product.description[0].id_product,
                                           'id_product_attribute':$scope.product.description[0].product_stock_complete[0].id_product_attribute})
         
       }).then(function successCallback(response) {
         $scope.added = true;
-        //localStorage.setItem('product',[10,20,30]);
         console.log(response.data);
         var alertPopup = $ionicPopup.alert({
           template: 'Adicionado aos favoritos!'
@@ -138,7 +116,8 @@ angular.module('app')
         });
     }else{var alertPopup = $ionicPopup.alert({
           template: 'Faça Login Primeiro'
-        })}
+        })
+     }
   }
     
   $scope.loadProducts();
