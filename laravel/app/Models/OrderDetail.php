@@ -10,4 +10,8 @@ class OrderDetail extends Model
     public $timestamps = false;
     protected $table = 'ps_order_detail';
     protected $primaryKey = 'id_order_detail';
+
+    public static function OrderDetail($orderDetail){
+    	return OrderDetail::insert($orderDetail);
+    }
 }

@@ -33,4 +33,8 @@ class User extends Authenticatable
 
     }
 
+    public static function getSecureKey($id_customer){
+        return  User::select("secure_key")->where('id_customer',$id_customer)->get();
+    }
+
 }

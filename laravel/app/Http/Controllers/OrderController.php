@@ -14,54 +14,36 @@ use App\Http\Controllers\ProductController;
 
 class OrderController extends Controller
 {
-    public static function createOrder($ordemData,$id_customer){
+    public static function createOrder($cart_products){
         $price = 0;
-        $count = count($ordemData['items']);
-        
-        if(!is_numeric($id_customer)){
-            return response()->json(['error' => 'customer id is not a integer'], 500);
-        }
+        $id_customer = myAuthController::getAuthenticatedUser();
+        $count = count($cart_products['description']);
         for($i=0;$i<$count;$i++){
-            if(!is_numeric($ordemData['items'][$i]['_quantity'])){
-                return response()->json(['error' => 'quantity is not a integer'], 500);
-            }
-
-            $product = ProductController::retrivingProduct($ordemData['items'][$i]['_id']);
-            $products[] = $product;
-           
-            if(is_array($product)){
-                $quantity = $ordemData['items'][$i]['_quantity'];
-                $price  += $quantity*$product['description'][0]['product_price']['price'];
-            }else if(is_object($product)){
-                return $product;
-            }
-            else{
-                return response()->json(['error' => 'Big Error!'], 500);
-           }
+                $quantity = $cart_products['attributes'][$i]['quantity'];
+                $price = $price + number_format($quantity * $cart_products['description'][$i]['product_price']['price'],2, '.', '');
         }
-        return $products;
+        
         $price = number_format($price,2);
+        
         $reference = Tools::passwdGen(8,'NO_NUMERIC'); //TODO
     	$today = date("Y-m-d H:i:s");
 
-    	$customer_secure_key = 
-    	User::select("secure_key")->where('id_customer',$id_customer)->get();
+    	$customer_secure_key = User::getSecureKey($id_customer);
     	
-    	$customer_address = Address::select('id_address')->where('id_customer',$id_customer)->get();
-    	
-        $id_cart = Cart::select('id_cart')->where('id_customer',$id_customer)->orderBy('date_add','dsc')->first();
+    	$customer_address = Address::getIdAdressFromCustomer($id_customer);
+        $id_cart = $cart_id = Cart::RetrivingCartId($id_customer);
         $id_cart = $id_cart['id_cart'];
 
     	$order_id = new Orders;
 
-    	$order_id->insertGetId(['reference' => $reference,
+    	$order_id = $order_id->insertGetId(['reference' => $reference,
     		'id_shop'=>1,'id_shop_group'=>1,'id_carrier'=>3,
     		'id_lang'=>2,'id_customer'=>$id_customer,
     		'id_cart'=>$id_cart,
     		'id_currency'=>2,  //1->Dolar($) 2->Real(R$)
     		'id_address_delivery'=>$customer_address[0]['id_address'],
     		'id_address_invoice'=>$customer_address[0]['id_address'],
-    		'current_state'=>15,  //TODO 15->status:iniciado ps_order_state ps_order_state_lang
+    		'current_state'=>15,  //TODO 15->status:iniciado; ps_order_state ps_order_state_lang
     		'secure_key'=>$customer_secure_key[0]['secure_key'],
     		'payment'=>'PagSeguro',
     		'conversion_rate'=>'1',
@@ -93,29 +75,40 @@ class OrderController extends Controller
     		'valid'=>0,
     		'date_add'=>$today,
     		'date_upd'=>$today]);
-        //OrderController::OrderDetail($order_id,);
+        OrderController::OrderDetail($order_id,$cart_products);
+        CartController::deleteCart();
         return $order_id;
 
     }
 
-    public static function OrderDetail($order_id,$ordemData){
-    
-        $count = count($ordemData['items']);
-            for($i=0;$i<$count;$i++){
-                $order_details = new OrderDetail;
+    public static function OrderDetail($order_id,$cart_products){
+        $price = 0;
+        $id_customer = myAuthController::getAuthenticatedUser();
+        $count = count($cart_products['description']);
+        for($i=0;$i<$count;$i++){
+                $quantity = $cart_products['attributes'][$i]['quantity'];
+                $price = $price + number_format($quantity * $cart_products['description'][$i]['product_price']['price'],2, '.', '');
+        }
+        
+        $price = number_format($price,2);
                 
-                $order_details->insertGetId([
+        $customer_address = Address::getIdAdressFromCustomer($id_customer);
+        $id_cart = $cart_id = Cart::RetrivingCartId($id_customer);
+        $id_cart = $id_cart['id_cart'];            
+
+        for($i=0;$i<$count;$i++){       
+                $order_details[] = [
                     'id_order' =>$order_id ,
-                    'id_order_invoice'=>0,'id_order_warehouse'=>0,'id_shop'=>1,
-                    'product_id'=>$ordemData['items'][$i]['_id'],
-                    'product_attribute_id'=>$ordemData['items'][$i]['_data']['_product_attributte'],
-                    'product_name'=>$ordemData['items'][$i]['_name'],
-                    'product_quantity'=>$ordemData['items'][$i]['_quantity'],
+                    'id_order_invoice'=>0,'id_warehouse'=>0,'id_shop'=>1,
+                    'product_id'=>$cart_products['description'][$i]['id_product'],
+                    'product_attribute_id'=>$cart_products['attributes'][$i]['attributes']['id_product_attribute'],
+                    'product_name'=>$cart_products['description'][$i]['name'],
+                    'product_quantity'=>$cart_products['attributes'][$i]['quantity'],
                     'product_quantity_in_stock'=>1,
                     'product_quantity_refunded'=>0,
-                    'product_quantiry_return'=>0,
+                    'product_quantity_return'=>0,
                     'product_quantity_reinjected'=>0,
-                    'product_price'=>$ordemData['items'][$i]['_price'],
+                    'product_price'=>$cart_products['description'][$i]['product_price']['price'],
                     'reduction_percent'=>0,
                     'reduction_amount'=>0,
                     'reduction_amount_tax_incl'=>0,
@@ -127,7 +120,7 @@ class OrderController extends Controller
                     'product_reference'=>'',
                     'product_supplier_reference'=>'',
                     'product_weight'=>0,
-                    'id_taxt_rules_group'=>0,
+                    'id_tax_rules_group'=>0,
                     'tax_computation_method'=>0,
                     'tax_name'=>'',
                     'tax_rate'=>0,
@@ -137,15 +130,16 @@ class OrderController extends Controller
                     'download_hash'=>0,
                     'download_nb'=>0,
                     'download_deadline'=>0,
-                    'total_price_tax_incl'=>$ordemData['items'][$i]['_price'],
-                    'total_price_tax_excl'=>$ordemData['items'][$i]['_price'],
-                    'unit_price_tax_incl'=>$ordemData['items'][$i]['_price'],
-                    'unit_price_tax_excl'=>$ordemData['items'][$i]['_price'],
+                    'total_price_tax_incl'=>$cart_products['description'][$i]['product_price']['price'],
+                    'total_price_tax_excl'=>$cart_products['description'][$i]['product_price']['price'],
+                    'unit_price_tax_incl'=>$cart_products['description'][$i]['product_price']['price'],
+                    'unit_price_tax_excl'=>$cart_products['description'][$i]['product_price']['price'],
                     'total_shipping_price_tax_incl'=>0,
                     'total_shipping_price_tax_excl'=>0,
                     'purchase_supplier_price'=>0,
-                    'original_product_price'=>$ordemData['items'][$i]['_price'] ,
-                    'original_wholesale_price'=>$ordemData['items'][$i]['_price']]);
+                    'original_product_price'=> $cart_products['description'][$i]['product_price']['price'],
+                    'original_wholesale_price'=>$cart_products['description'][$i]['product_price']['price']];
             }
+            OrderDetail::OrderDetail($order_details);
     }
 }

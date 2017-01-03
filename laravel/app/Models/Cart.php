@@ -14,4 +14,8 @@ class Cart extends Model
     static public function RetrivingCartId($id_customer){
          return Cart::select('id_cart')->where('id_customer',$id_customer)->orderBy('date_add','dsc')->first();
     }
+
+    static public function DeleteCart($id_cart){
+    	return Cart::where('id_cart',$id_cart)->delete();
+    }
 }

@@ -17,7 +17,6 @@
 				var data={'image':images[i].image,'size':attributes[i].attributes.name, 'product_attributte':attributes[i].attributes.id_product_attribute};
 				ngCart.addItem(description[i].id_product, description[i].name, description[i].product_price.price, attributes[i].quantity, data)
 			}
-			//ngCart.addItem()
         },function errorCallback(response) {
 
         });

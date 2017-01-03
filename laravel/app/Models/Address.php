@@ -17,4 +17,5 @@ class Address extends Model
     static public function getIdAdressFromCustomer($id_customer){
     	return Address::select('id_address')->where('id_customer',$id_customer)->get();
     }
+
 }

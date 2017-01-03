@@ -104,7 +104,7 @@ class cartController extends Controller
         return response()->json(['success' => 'ok'], 200);
     }
 
-    public function loadCart(){
+    public static function loadCart(){
         $id_customer = myAuthController::getAuthenticatedUser();
         $cart_id = Cart::RetrivingCartId($id_customer);
         $products = CartProducts::allProductsFromCart($cart_id['id_cart']);
@@ -141,5 +141,14 @@ class cartController extends Controller
                 'quantity'=> $request->product_quantity,
                 'date_add'=>$today]);
             return $insert_product;
+    }
+
+    public static function deleteCart(){
+        $id_customer = myAuthController::getAuthenticatedUser();
+        $cart_id = Cart::RetrivingCartId($id_customer);
+
+        Cart::DeleteCart($cart_id['id_cart']);
+        return response()->json(['success' => 'ok'], 200);
+
     }
 } 

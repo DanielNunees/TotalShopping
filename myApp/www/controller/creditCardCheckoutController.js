@@ -50,7 +50,7 @@ angular.module('app')
             title: 'Finalizado',
               template: 'Sua compra foi efetuada com sucesso!',
           });
-          $scope.user = {};
+          //$scope.user = {};
 
         },function errorCallback(response) {
           $scope.hideLoading();

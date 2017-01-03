@@ -28,26 +28,10 @@ class boletoCheckoutController extends Controller
 {
     public static function boletoCheckout(Request $request)
     {       
-        $validator = Validator::make($request->checkoutData, [
-            'SenderHash' => 'bail|required|present|filled',
-            'cpf' => 'bail|required|present|filled',
-            'cart.*'=> 'bail|required|present|filled',
-            'cart' => 'bail|required|present|filled',
-            'userData' => 'bail|required|present|filled',
-            'userData.phone' => 'present',
-            'userData.address1' => 'bail|required|present',
-            'userData.address2' => 'bail|required|present',
-            'userData.city' => 'bail|required|present',
-            'userData.state' => 'bail|required|present',
-            'userData.postcode' => 'bail|required|present',
-            'userData.firstname' => 'bail|required|present',
-            'userData.lastname' => 'bail|required|present',
-            'userData.phone_mobile' => 'bail|required|present',
-            'userBirth.*'=> 'bail|required|present|filled',
-            'userBirth'=> 'bail|required|present|filled',                       
-        ]);
+        
         //return $request->checkoutData;
         
+
         if($validator->fails()){
             return $validator->errors()->all();
         }
@@ -69,14 +53,18 @@ class boletoCheckoutController extends Controller
         $directPaymentRequest->setCurrency("BRL");
 
         // Add an item for this payment request
-        $count = count($request->checkoutData['cart']['items']);
+
+        $cart_products = cartController::loadCart();
+        $count = count($cart_products['description']);
+        $price =0;
         for($i=0;$i<$count;$i++){
             $directPaymentRequest->addItem(
-                $request->checkoutData['cart']['items'][$i]['_id'],
-                $request->checkoutData['cart']['items'][$i]['_name'].','.$request->checkoutData['cart']['items'][$i]['_data']['size'],
-                $quantity = $request->checkoutData['cart']['items'][$i]['_quantity'],
-                number_format($request->checkoutData['cart']['items'][$i]['_price'],2)
+                $cart_products['description'][$i]['id_product'],
+                $cart_products['description'][$i]['name'].','.$cart_products['attributes'][$i]['attributes']['name'],
+                $quantity = $cart_products['attributes'][$i]['quantity'] ,
+                number_format($cart_products['description'][$i]['product_price']['price'] ,2)
             );
+            $price = $price + number_format($quantity * $cart_products['description'][$i]['product_price']['price'],2, '.', '');
         }
 
 
@@ -101,23 +89,17 @@ class boletoCheckoutController extends Controller
         // Set shipping information for this payment request
         $sedexCode = PagSeguroShippingType::getCodeByType('SEDEX');
         $directPaymentRequest->setShippingType($sedexCode);
-        
-         if(isset($request->checkoutData['userData']['other'])) {
-            $complement = $request->checkoutData['userData']['other'];
-        }
-        else{
-            $complement = null;
-        }
 
-
+        $address = userController::loadData();
+        //return $address['address'];
         $directPaymentRequest->setShippingAddress(
-            $request->checkoutData['userData']['postcode'], //CEP
-            strstr($request->checkoutData['userData']['address1'],',',true), //Logradouro
-            substr(strrchr($request->checkoutData['userData']['address1'],','),1), //Numero
-            null,//Complemento
-            $request->checkoutData['userData']['address2'], //Bairro
-            $request->checkoutData['userData']['city'], //Cidade
-            $request->checkoutData['userData']['state'],//Estado
+            $address['address'][0]['postcode'], //CEP
+            strstr($address['address'][0]['address1'],',',true), //Logradouro
+            substr(strrchr($address['address'][0]['address1'],','),1), //Numero
+            $address['address'][0]['other'],//Complemento
+            $address['address'][0]['address2'], //Bairro
+            $address['address'][0]['city'], //Cidade
+            $address['address'][0]['state'],//Estado
             'BRA'
         );
 
@@ -138,7 +120,7 @@ class boletoCheckoutController extends Controller
             $credentials = PagSeguroConfig::getAccountCredentials();
 
             // Register this payment request in PagSeguro to obtain the payment URL to redirect your customer.
-            $order = OrderController::createOrder($request->checkoutData['cart'],$request->checkoutData['customer_id']);
+            $order = OrderController::createOrder($cart_products);
             //$response = $directPaymentRequest->register($credentials);
             return $order;
         } catch (PagSeguroServiceException $e) {
