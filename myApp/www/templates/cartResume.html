@@ -3,6 +3,7 @@
 		<div class="item item-thumbnail-left"  >
 			<img  ng-src="http://127.0.1.1/prestashop{{item.getData().image}}" ng-href="#/product/{{item._id}}" >
 			{{ item.getName() }}
+			ID:{{item._id}} {{item.getData().product_attributte}}
 			<p>Tam. {{item.getData().size}}</p>
 			<h3>{{ item.getPrice() | currency:"R$"}}</h3>{{ item.getTotal() | currency:"R$"}}
 			<div class="row ">
@@ -10,9 +11,10 @@
 			  <div class="col col-10">{{ item.getQuantity() | number }}</div>
 			  <div class="col col-10"><span class="icon ion-plus" ng-disabled="item.getQuantity()==5" ng-click="item.setQuantity(1, true)"></span></div>
 			  <div class="col col-70 col-offset-33" >			  	
-			  	<button class="button button-assertive button-clear" ng-click="cartFactory.removeProduct({{item._id}},{{item.getData().product_attributte}});ngCart.removeItemById(item.getId())"> 
+			  	<button class="button button-assertive button-clear" ng-click="remove({{item._id}},{{item.getData().product_attributte}})"> 
 					<i class="ion-ios-trash-outline medium"></i>
 				</button>
+				<button ng-click="remove()">Remover</button>
 			  </div>
 			</div>
 		</div>

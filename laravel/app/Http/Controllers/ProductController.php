@@ -30,7 +30,6 @@ class ProductController extends Controller
             $description = ProductController::productDescription($id_product);
             $attributes = ProductController::productAttributes($id_product);
             $images = ProductController::productImages($id_product);
-
             foreach ($description as $product) {
                 $product->ProductPrice->price;
             }
@@ -84,6 +83,12 @@ class ProductController extends Controller
             }
             return $images;
         }
+
+        public static function productQuantityInStock($id_product){
+            return ProductStock::ProductQuantity($id_product);
+        }
+
+        //public static function produc //TODO
 
 
 

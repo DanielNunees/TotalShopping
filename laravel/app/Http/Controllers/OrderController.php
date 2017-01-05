@@ -52,7 +52,8 @@ class OrderController extends Controller
     		'gift_message'=>"",
     		'mobile_theme'=>0,
     		'shipping_number'=>'',
-    		'total_discounts'=>0,
+    		
+            'total_discounts'=>0,
     		'total_discounts_tax_incl'=>0,
     		'total_discounts_tax_excl'=>0,
 
@@ -66,7 +67,8 @@ class OrderController extends Controller
     		'total_shipping'=>0,//TODO
     		'total_shipping_tax_incl'=>0,//TODO
     		'total_shipping_tax_excl'=>0,//TODO
-    		'carrier_tax_rate'=>0,//TODO
+    		
+            'carrier_tax_rate'=>0,//TODO
     		'total_wrapping'=>0,//TODO
     		'total_wrapping_tax_incl'=>0,//TODO
     		'round_mode'=>2,//TODO
@@ -76,7 +78,7 @@ class OrderController extends Controller
     		'date_add'=>$today,
     		'date_upd'=>$today]);
         OrderController::OrderDetail($order_id,$cart_products);
-        CartController::deleteCart();
+        //CartController::deleteCart();
         return $order_id;
 
     }
@@ -141,5 +143,9 @@ class OrderController extends Controller
                     'original_wholesale_price'=>$cart_products['description'][$i]['product_price']['price']];
             }
             OrderDetail::OrderDetail($order_details);
+    }
+
+    public static function getOrderByCartId($cart_id){
+        return Orders::getOrder($cart_id);
     }
 }

@@ -28,13 +28,7 @@ class boletoCheckoutController extends Controller
 {
     public static function boletoCheckout(Request $request)
     {       
-        
-        //return $request->checkoutData;
-        
-
-        if($validator->fails()){
-            return $validator->errors()->all();
-        }
+    
         // Instantiate a new payment request
         $directPaymentRequest = new PagSeguroDirectPaymentRequest();
 

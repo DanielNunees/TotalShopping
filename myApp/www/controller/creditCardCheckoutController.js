@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup){
+.controller('creditCardCheckoutController', ['$scope', '$http','$ionicHistory','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup','ngCart', function($scope,$http,$ionicHistory,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup,ngCart){
   var checkoutData={};
   var SenderHash;
   $scope.method = 0;
@@ -35,8 +35,6 @@ angular.module('app')
       expirationYear: $scope.user.expirationYear,
       success: function(response) {
         //token gerado, esse deve ser usado na chamada da API do Checkout Transparente
-        var cart = angular.fromJson($window.localStorage ['cart']);
-        checkoutData.cart = JSON.parse(cart);
         checkoutData.cpf = '15600944276'; //valid teste cpf 15600944276
         checkoutData.creditCardToken = response.card.token;
         checkoutData.name = $scope.user.name;
@@ -44,6 +42,7 @@ angular.module('app')
 
         paymentCheckout.creditCardCheckout(checkoutData).then(function successCallback(response) {
           paymentCheckout.resetSessionId();
+          ngCart.empty();
           console.log(response.data);
           $scope.hideLoading();
           var alertPopup = $ionicPopup.alert({

@@ -15,6 +15,9 @@ use App\Http\Controllers\myAuthController;
 
 class cartController extends Controller
 {
+
+    protected $id_customer;
+
     public static function createCart($id_customer){
 
         if(!is_numeric($id_customer)){
@@ -28,8 +31,8 @@ class cartController extends Controller
             $id_guest=GuestController::newGuest(0);
         }
         else{
-        	$customer_secure_key = User::select("secure_key")->where('id_customer',$id_customer)->get();
-        	$customer_address = Address::select('id_address')->where('id_customer',$id_customer)->get();
+        	$customer_secure_key = User::getSecureKey($id_customer);
+        	$customer_address = Address::getIdAdressFromCustomer($id_customer);
         	$customer_address = $customer_address[0]['id_address'];
             $customer_secure_key = $customer_secure_key[0]['secure_key'];
             $today = date("Y-m-d H:i:s");
@@ -67,12 +70,38 @@ class cartController extends Controller
 
         $cart_id = Cart::RetrivingCartId($id_customer);
 
+        $order = OrderController::getOrderByCartId($cart_id['id_cart']);
+
+        if(!$order->isEmpty()){
+            $cart_id['id_cart'] = cartController::createCart($id_customer);
+        }
+
+        $product = ProductController::productQuantityInStock($request->id_product);
+
+        if($product->isEmpty()){
+            return response()->json(['product_not_found' => 'error'], 400); 
+        }
+        else{
+            $find = false;
+            foreach ($product as $key => $value) {
+                if($value->id_product_attribute == $request->id_product_attribute){
+                    $id_product_attribute = $request->id_product_attribute;
+                    $find  = true;
+                    break;
+                }
+            }
+        }
+        if(!$find){
+            return response()->json(['product_not_found' => 'error'], 400);
+        }
+
         $address = Address::getIdAdressFromCustomer($id_customer);
         $address = $address[0]['id_address'];
 
         if(is_null($cart_id)){
             $cart_id['id_cart'] = cartController::createCart($id_customer);
-            cartController::add($cart_id['id_cart'],$request,$address);
+
+            cartController::addToCart($cart_id['id_cart'],$request,$address);
         }
         else{
             try{
@@ -81,32 +110,41 @@ class cartController extends Controller
             catch(Exception $e){
                 return $e;
             }
+            //return $cart_products;
             if(count($cart_products)==0){
-                cartController::add($cart_id['id_cart'],$request,$address);
+                //return 'if';
+                cartController::addToCart($cart_id['id_cart'],$request,$address);
             }
             else{
-                CartProducts::where('id_cart',$cart_id['id_cart'])->where('id_product',$request->id_product)->where('id_product_attribute',$request->id_product_attribute)->update(['quantity'=>$request->product_quantity]);
+                CartProducts::updateQuantity($cart_id['id_cart'],$request->id_product,$request->id_product_attribute,$request->product_quantity);
             }
         }
         return response()->json(['success' => 'ok'], 200);
     }
 
     public function removeProducts(Request $request){
+        //return is_null($request->data);
+
     	$this->validate($request, [
           'id_product' => 'bail|required|integer',
           'id_product_attribute' => 'bail|required|integer'
         ]);
         $id_customer = myAuthController::getAuthenticatedUser();
         $cart_id = Cart::RetrivingCartId($id_customer);
-        $delete_product_cart = CartProducts::where('id_cart',$cart_id['id_cart'])->where('id_product',$request->id_product)->where('id_product_attribute',$request->id_product_attribute)->delete();
 
-        //return $delete_product_cart;
+        $delete_product_cart = CartProducts::removeProduct($cart_id['id_cart'],$request->id_product,$request->id_product_attribute);
         return response()->json(['success' => 'ok'], 200);
     }
 
     public static function loadCart(){
         $id_customer = myAuthController::getAuthenticatedUser();
         $cart_id = Cart::RetrivingCartId($id_customer);
+        $order = OrderController::getOrderByCartId($cart_id['id_cart']);
+
+        if(!$order->isEmpty()){
+            return response()->json(['error' => 'cart empty'], 500);
+        }
+
         $products = CartProducts::allProductsFromCart($cart_id['id_cart']);
         if($products->isEmpty()) return response()->json(['error' => 'cart empty'], 500);
         foreach ($products as $value) {
@@ -129,7 +167,7 @@ class cartController extends Controller
         
     }
 
-    public function add($cart_id,$request,$address){
+    public function addToCart($cart_id,$request,$address){
         $today = date("Y-m-d H:i:s");
             $insert_product = new CartProducts;
             $insert_product = $insert_product->insertGetId([

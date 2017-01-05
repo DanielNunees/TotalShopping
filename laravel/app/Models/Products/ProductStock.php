@@ -29,7 +29,9 @@ class ProductStock extends Model
         return $this->hasOne('App\Models\Products\ProductLang','id_product')->select('description');
     }
 
-
+    static public function ProductQuantity($id_product){
+        return ProductStock::where('id_product',$id_product)->where('id_product_attribute','>',0)->select('quantity','id_product_attribute')->get();
+    }
 
 	
 }
