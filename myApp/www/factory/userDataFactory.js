@@ -7,7 +7,7 @@ angular.module('app')
 
 	 	loadUserData: function(){
 			return userData? $q.when(userData) : $http({
-		        method: 'POST',
+		        method: 'GET',
 		        url: 'http://127.0.1.1/laravel/public/user/loadData',
 		        cache: true,
 		    }).then(function(result){
@@ -41,6 +41,15 @@ angular.module('app')
 		
 		resetUserData: function(){
 			userData = undefined;
+		},
+
+		loadHistoric: function(){
+			return $http({
+				method: 'GET',
+				url: 'http://127.0.1.1/laravel/public/historic/getHistoric'
+			}).then(function(data){
+				return data.data;
+			})
 		}
 	}
 

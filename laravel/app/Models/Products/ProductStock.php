@@ -33,5 +33,10 @@ class ProductStock extends Model
         return ProductStock::where('id_product',$id_product)->where('id_product_attribute','>',0)->select('quantity','id_product_attribute')->get();
     }
 
+    static public function updateQuantity($id_product,$id_product_attribute,$quantity){
+        ProductStock::where('id_product',$id_product)->where('id_product_attribute',$id_product_attribute)->decrement('quantity',$quantity);
+        return ProductStock::where('id_product',$id_product)->where('id_product_attribute',0)->decrement('quantity',$quantity);
+    }
+
 	
 }

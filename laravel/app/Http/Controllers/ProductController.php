@@ -88,7 +88,9 @@ class ProductController extends Controller
             return ProductStock::ProductQuantity($id_product);
         }
 
-        //public static function produc //TODO
+        public static function productUpdateStock($id_product,$id_product_attribute,$quantity){
+            ProductStock::updateQuantity($id_product,$id_product_attribute,$quantity);
+        }
 
 
 

@@ -49,7 +49,7 @@ class WishlistController extends Controller
     	return $new_wishlist;    	
     }
 
-    public function listProducts(Request $request){
+    public function listProducts(){
 
         $id_customer = myAuthController::getAuthenticatedUser();
     	$wishlistProducts = Wishlist::where('id_customer',$id_customer)->select('id_wishlist')->get();

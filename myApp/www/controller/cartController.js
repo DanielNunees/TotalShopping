@@ -15,17 +15,14 @@
 				$scope.ngCart = ngCart;
 		})
 		} 
-		
-
-
-
+	
 		cartFactory.loadCart().then(function successCallback(response) {
 			var description = response.description;
 			var images = response.images;
 			var attributes = response.attributes;
 			var i=0;
 		
-
+			ngCart.empty();
 			angular.forEach(images, function(value, key) {
 				var data={'image':value.image,'size':attributes[i].attributes.name, 'product_attributte':attributes[i].attributes.id_product_attribute};
 				ngCart.addItem(description[i].id_product, description[i].name, description[i].product_price.price, attributes[i].quantity, data)
@@ -33,8 +30,6 @@
 			});
         },function errorCallback(response) {
 
-        });
-
-		
+        });		
 	}]);
 })();

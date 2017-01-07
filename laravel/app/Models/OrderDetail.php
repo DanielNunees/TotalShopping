@@ -14,4 +14,11 @@ class OrderDetail extends Model
     public static function OrderDetail($orderDetail){
     	return OrderDetail::insert($orderDetail);
     }
+
+    public static function getOrderDetail($order_id){
+    	if(is_array($order_id)){
+    		return OrderDetail::whereIn('id_order',$order_id)->select('product_id','product_attribute_id','product_quantity','id_order')->get();
+    	}
+    	return OrderDetail::where('id_order',$order_id)->select('product_id','product_attribute_id','product_quantity','id_order')->get();
+    }
 }

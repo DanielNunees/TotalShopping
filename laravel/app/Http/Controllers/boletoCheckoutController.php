@@ -48,7 +48,7 @@ class boletoCheckoutController extends Controller
 
         // Add an item for this payment request
 
-        $cart_products = cartController::loadCart();
+        $cart_products = CartController::loadCart();
         $count = count($cart_products['description']);
         $price =0;
         for($i=0;$i<$count;$i++){
@@ -115,7 +115,7 @@ class boletoCheckoutController extends Controller
 
             // Register this payment request in PagSeguro to obtain the payment URL to redirect your customer.
             $order = OrderController::createOrder($cart_products);
-            //$response = $directPaymentRequest->register($credentials);
+            $response = $directPaymentRequest->register($credentials);
             return $order;
         } catch (PagSeguroServiceException $e) {
             die($e->getMessage());

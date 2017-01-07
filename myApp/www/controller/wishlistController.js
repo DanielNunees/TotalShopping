@@ -18,7 +18,7 @@ angular.module('app')
 
   $scope.loadWishlist = function(){
       $http({
-          method: 'POST',
+          method: 'GET',
           url: 'http://127.0.1.1/laravel/public/wishlist',
         }).then(function successCallback(response) {
             $scope.product = [];

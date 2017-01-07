@@ -21,7 +21,7 @@
 			},
 			loadCart: function(){
 				return $http({
-			        method: 'POST',
+			        method: 'GET',
 			        url: 'http://127.0.1.1/laravel/public/cartLoad',
 	      		}).then(function(response){
 	      			return response.data;

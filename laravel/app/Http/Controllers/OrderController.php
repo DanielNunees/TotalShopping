@@ -14,17 +14,19 @@ use App\Http\Controllers\ProductController;
 
 class OrderController extends Controller
 {
-    public static function createOrder($cart_products){
-        $price = 0;
+    public static function createOrder(){
         $id_customer = myAuthController::getAuthenticatedUser();
+        
+        $cart_products = CartController::loadCart();
         $count = count($cart_products['description']);
+        
+        $price =0;
         for($i=0;$i<$count;$i++){
-                $quantity = $cart_products['attributes'][$i]['quantity'];
-                $price = $price + number_format($quantity * $cart_products['description'][$i]['product_price']['price'],2, '.', '');
+            $quantity = $cart_products['attributes'][$i]['quantity'];
+            number_format($cart_products['description'][$i]['product_price']['price'] ,2);
+            $price = $price + number_format($quantity * $cart_products['description'][$i]['product_price']['price'],2, '.', '');
         }
-        
-        $price = number_format($price,2);
-        
+        //return $price;
         $reference = Tools::passwdGen(8,'NO_NUMERIC'); //TODO
     	$today = date("Y-m-d H:i:s");
 
@@ -84,21 +86,15 @@ class OrderController extends Controller
     }
 
     public static function OrderDetail($order_id,$cart_products){
-        $price = 0;
         $id_customer = myAuthController::getAuthenticatedUser();
         $count = count($cart_products['description']);
-        for($i=0;$i<$count;$i++){
-                $quantity = $cart_products['attributes'][$i]['quantity'];
-                $price = $price + number_format($quantity * $cart_products['description'][$i]['product_price']['price'],2, '.', '');
-        }
-        
-        $price = number_format($price,2);
+
                 
         $customer_address = Address::getIdAdressFromCustomer($id_customer);
         $id_cart = $cart_id = Cart::RetrivingCartId($id_customer);
         $id_cart = $id_cart['id_cart'];            
 
-        for($i=0;$i<$count;$i++){       
+        for($i=0;$i<$count;$i++){
                 $order_details[] = [
                     'id_order' =>$order_id ,
                     'id_order_invoice'=>0,'id_warehouse'=>0,'id_shop'=>1,
@@ -141,11 +137,25 @@ class OrderController extends Controller
                     'purchase_supplier_price'=>0,
                     'original_product_price'=> $cart_products['description'][$i]['product_price']['price'],
                     'original_wholesale_price'=>$cart_products['description'][$i]['product_price']['price']];
+
+                    ProductController::productUpdateStock(
+                        $cart_products['description'][$i]['id_product'],
+                        $cart_products['attributes'][$i]['attributes']['id_product_attribute'],
+                        $cart_products['attributes'][$i]['quantity']
+                    );
             }
             OrderDetail::OrderDetail($order_details);
     }
 
     public static function getOrderByCartId($cart_id){
-        return Orders::getOrder($cart_id);
+        return Orders::getOrderByCartId($cart_id);
+    }
+
+    public static function getOrderByCustomerId($id_customer){
+        return Orders::getOrderIdByCustomerId($id_customer);
+    }
+
+    public static function getOrderDetails($id_order){
+        return OrderDetail::getOrderDetail($id_order);
     }
 }

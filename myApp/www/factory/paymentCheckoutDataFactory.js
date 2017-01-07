@@ -6,14 +6,10 @@ angular.module('app')
 	return {
 
 		getSession: function(){
-			console.log('getSession');
 			return session_ID? $q.when(session_ID) : $http({
-		        method: 'POST',
+		        method: 'GET',
 		        url: 'http://127.0.1.1/laravel/public/getSession',
-		        dataType: 'json',
 		        cache: true,
-		        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-		        data: $httpParamSerializerJQLike({})
 		    }).then(function(response){
 
 		    	PagSeguroDirectPayment.setSessionId(response.data);

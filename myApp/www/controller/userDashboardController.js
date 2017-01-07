@@ -15,6 +15,12 @@ angular.module('app')
 	  return $auth.isAuthenticated();
 	};
 
+	userDataFactory.loadHistoric().then(function(data){
+		console.log(data);
+	},function errorCallback(data){
+		console.log(data);
+	});
+
 	$scope.logout = function(){
 		$auth.logout();
 		$location.url('/user/home');

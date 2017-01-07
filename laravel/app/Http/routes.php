@@ -27,23 +27,26 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::post('/user/auth','myAuthController@login');
 	Route::post('/user/createAddress','userController@createAddress');
 	Route::post('/user/updateAddress','userController@updateAddress');
-	Route::post('/user/loadData','userController@loadData');
+	Route::get('/user/loadData','userController@loadData');
 	
 	/* Wishlist Routes */
 	Route::post('/createWishlist','WishlistController@addProduct');
-	Route::post('/wishlist','WishlistController@listProducts');
+	Route::get('/wishlist','WishlistController@listProducts');
 	Route::post('/removeWishlistProduct','WishlistController@removeProducts');
 	
 	/* Paymente Routes */
 	Route::post('/creditCardCheckout','creditCardCheckoutController@creditCardCheckout');
-	Route::post('/getSession','CheckoutController@getSession');
+	Route::get('/getSession','CheckoutController@getSession');
 	Route::post('/boletoCheckout','boletoCheckoutController@boletoCheckout');
 	Route::post('/order','OrderController@createOrder');
 	
 	/* Cart Routes */ 
-	Route::post('/cartAddProducts','cartController@addProducts');
-	Route::post('/cartRemoveProducts','cartController@removeProducts');
-	Route::post('/cartLoad','cartController@loadCart');
+	Route::post('/cartAddProducts','CartController@addProducts');
+	Route::post('/cartRemoveProducts','CartController@removeProducts');
+	Route::get('/cartLoad','CartController@loadCart');
+
+	/*  Order Historic Routes*/
+	Route::get('/historic/getHistoric','HistoricController@getHistoric');
 	
 
 	
