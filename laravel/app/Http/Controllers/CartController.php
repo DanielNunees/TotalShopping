@@ -154,7 +154,6 @@ class CartController extends Controller
         }
 
         $product = ProductController::retrivingProduct($id_product);
-        
         $attributes = [];
         foreach ($id_product_attribute as $key => $value) {
             $attributes[] = array('quantity'=>$quantity[$key],'attributes'=>$product['attributes'][array_search($value, array_column($product['attributes'],'id_product_attribute'))]);

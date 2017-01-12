@@ -66,7 +66,7 @@ class ProductController extends Controller
                 }
             }
             return Tools::unique_multidim_array($attributes,'id_product_attribute');
-            return $attributes;
+            //return $attributes;
         }
 
         public static function productImages($id_product){

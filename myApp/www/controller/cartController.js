@@ -17,6 +17,7 @@
 		} 
 	
 		cartFactory.loadCart().then(function successCallback(response) {
+			console.log(response);
 			var description = response.description;
 			var images = response.images;
 			var attributes = response.attributes;

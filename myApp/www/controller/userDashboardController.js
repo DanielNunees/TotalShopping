@@ -16,10 +16,27 @@ angular.module('app')
 	};
 
 	userDataFactory.loadHistoric().then(function(data){
-		console.log(data);
+			$scope.products = [];
+			var productImages;
+			angular.forEach(data,function(value,key){
+				angular.forEach(value,function(value1,key1){
+
+					console.log(value1['product']['images'][0]['image']);
+					$scope.products.push({productPrice:value1['product']['description'][0]['product_price']['price'],
+									      productName:value1['product']['description'][0]['name'],
+									      productQuantity: value1['product_quantity'],
+									      productImage: value1['product']['images'][0]['image']
+									      });
+									
+	        	})
+			})
+			//console.log($scope.products);
 	},function errorCallback(data){
 		console.log(data);
 	});
+
+
+
 
 	$scope.logout = function(){
 		$auth.logout();

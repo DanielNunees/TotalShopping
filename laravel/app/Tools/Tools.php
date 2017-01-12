@@ -62,7 +62,7 @@ class Tools{
             } 
             $i++; 
         } 
-        return $temp_array; 
+        return ($temp_array); 
     }
 
     public static function getBytes($length)
