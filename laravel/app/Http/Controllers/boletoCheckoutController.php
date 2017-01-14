@@ -49,18 +49,17 @@ class boletoCheckoutController extends Controller
         // Add an item for this payment request
 
         $cart_products = CartController::loadCart();
-        $count = count($cart_products['description']);
         $price =0;
-        for($i=0;$i<$count;$i++){
+        //return $cart_products;
+        foreach ($cart_products as $key => $value) {
             $directPaymentRequest->addItem(
-                $cart_products['description'][$i]['id_product'],
-                $cart_products['description'][$i]['name'].','.$cart_products['attributes'][$i]['attributes']['name'],
-                $quantity = $cart_products['attributes'][$i]['quantity'] ,
-                number_format($cart_products['description'][$i]['product_price']['price'] ,2)
+                $value['product']['description'][0]['id_product'],
+                $value['product']['description'][0]['name'].','.$value['product']['attributes'][0]['name'],
+                $quantity = $value['quantity'] ,
+                number_format($value['product']['description'][0]['product_price']['price'] ,2)
             );
-            $price = $price + number_format($quantity * $cart_products['description'][$i]['product_price']['price'],2, '.', '');
+            $price = $price + number_format($quantity * $value['product']['description'][0]['product_price']['price'],2, '.', '');
         }
-
 
         // Set a reference code for this payment request. It is useful to identify this payment
         // in future notifications.
@@ -115,7 +114,7 @@ class boletoCheckoutController extends Controller
 
             // Register this payment request in PagSeguro to obtain the payment URL to redirect your customer.
             $order = OrderController::createOrder($cart_products);
-            $response = $directPaymentRequest->register($credentials);
+            //$response = $directPaymentRequest->register($credentials);
             return $order;
         } catch (PagSeguroServiceException $e) {
             die($e->getMessage());

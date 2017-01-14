@@ -6,7 +6,7 @@ use App\Models\Products\ProductLang;
 class ProductHomeController extends Controller
 {
     public function index(){
-    	$products = ProductLang::where('id_lang','2')->select('name','id_product')->get();
+    	$products = ProductLang::where('id_lang','2')->select('name','id_product')->distinct()->get();
     	foreach ($products as $product) {
     		$product->ProductPrice; //Price of product
     		$product->ProductStock; //Return the quantity available in stock and null, otherwise

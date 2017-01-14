@@ -17,17 +17,12 @@
 		} 
 	
 		cartFactory.loadCart().then(function successCallback(response) {
-			console.log(response);
-			var description = response.description;
-			var images = response.images;
-			var attributes = response.attributes;
-			var i=0;
-		
 			ngCart.empty();
-			angular.forEach(images, function(value, key) {
-				var data={'image':value.image,'size':attributes[i].attributes.name, 'product_attributte':attributes[i].attributes.id_product_attribute};
-				ngCart.addItem(description[i].id_product, description[i].name, description[i].product_price.price, attributes[i].quantity, data)
-				i++;
+			console.log(response);
+			angular.forEach(response, function(value, key) {
+				var data={'image':value['product']['images'][0]['image'] ,'size':value['product']['attributes'][0]['name'] , 'product_attributte':value['product']['attributes'][0]['id_product_attribute']};
+				
+				ngCart.addItem(value.id_product, value['product']['description'][0]['name'] , value['product']['description'][0]['product_price']['price'], value.quantity, data)
 			});
         },function errorCallback(response) {
 

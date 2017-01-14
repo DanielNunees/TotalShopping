@@ -18,15 +18,19 @@ class OrderController extends Controller
         $id_customer = myAuthController::getAuthenticatedUser();
         
         $cart_products = CartController::loadCart();
-        $count = count($cart_products['description']);
-        
-        $price =0;
-        for($i=0;$i<$count;$i++){
-            $quantity = $cart_products['attributes'][$i]['quantity'];
-            number_format($cart_products['description'][$i]['product_price']['price'] ,2);
-            $price = $price + number_format($quantity * $cart_products['description'][$i]['product_price']['price'],2, '.', '');
+        $price = 0;
+        $values = [];
+
+        foreach ($cart_products as $key => $value) {
+            if(!isset($values[$value->id_shop]))
+                $values[$value->id_shop] = 0;
+
+            $quantity = $value->quantity;
+            number_format($value->product['description'][0]['product_price']['price'],2);
+            $price = $values[$value->id_shop] + number_format($quantity *$value->product['description'][0]['product_price']['price'],2, '.', '');
+            $values[$value->id_shop] = $price;
+            $shop_ids[] = $value->id_shop;
         }
-        //return $price;
         $reference = Tools::passwdGen(8,'NO_NUMERIC'); //TODO
     	$today = date("Y-m-d H:i:s");
 
@@ -34,52 +38,53 @@ class OrderController extends Controller
     	
     	$customer_address = Address::getIdAdressFromCustomer($id_customer);
         $id_cart = $cart_id = Cart::RetrivingCartId($id_customer);
-        $id_cart = $id_cart['id_cart'];
+        $id_cart = $id_cart['id_cart']; 	
+        
+        foreach($shop_ids as $key => $value1){
+            $order_id = new Orders;
+        	$order_id = $order_id->insertGetId(['reference' => $reference,
+        		'id_shop'=>$value1,'id_shop_group'=>1,'id_carrier'=>3,
+        		'id_lang'=>2,'id_customer'=>$id_customer,
+        		'id_cart'=>$id_cart,
+        		'id_currency'=>2,  //1->Dolar($) 2->Real(R$)
+        		'id_address_delivery'=>$customer_address[0]['id_address'],
+        		'id_address_invoice'=>$customer_address[0]['id_address'],
+        		'current_state'=>15,  //TODO 15->status:iniciado; ps_order_state ps_order_state_lang
+        		'secure_key'=>$customer_secure_key[0]['secure_key'],
+        		'payment'=>'PagSeguro',
+        		'conversion_rate'=>'1',
+        		'module'=>'pagseguro',
+        		'recyclable'=>0,'gift'=>0,
+        		'gift_message'=>"",
+        		'mobile_theme'=>0,
+        		'shipping_number'=>'',
+        		
+                'total_discounts'=>0,
+        		'total_discounts_tax_incl'=>0,
+        		'total_discounts_tax_excl'=>0,
 
-    	$order_id = new Orders;
+        		'total_paid'=>$values[$value1],
+        		'total_paid_tax_incl'=>$values[$value1],
+        		'total_paid_tax_excl'=>$values[$value1],
+        		'total_paid_real'=>0,
+        		'total_products'=>$values[$value1],
+        		'total_products_wt'=>$values[$value1],
 
-    	$order_id = $order_id->insertGetId(['reference' => $reference,
-    		'id_shop'=>1,'id_shop_group'=>1,'id_carrier'=>3,
-    		'id_lang'=>2,'id_customer'=>$id_customer,
-    		'id_cart'=>$id_cart,
-    		'id_currency'=>2,  //1->Dolar($) 2->Real(R$)
-    		'id_address_delivery'=>$customer_address[0]['id_address'],
-    		'id_address_invoice'=>$customer_address[0]['id_address'],
-    		'current_state'=>15,  //TODO 15->status:iniciado; ps_order_state ps_order_state_lang
-    		'secure_key'=>$customer_secure_key[0]['secure_key'],
-    		'payment'=>'PagSeguro',
-    		'conversion_rate'=>'1',
-    		'module'=>'pagseguro',
-    		'recyclable'=>0,'gift'=>0,
-    		'gift_message'=>"",
-    		'mobile_theme'=>0,
-    		'shipping_number'=>'',
-    		
-            'total_discounts'=>0,
-    		'total_discounts_tax_incl'=>0,
-    		'total_discounts_tax_excl'=>0,
-
-    		'total_paid'=>$price,
-    		'total_paid_tax_incl'=>$price,
-    		'total_paid_tax_excl'=>$price,
-    		'total_paid_real'=>0,
-    		'total_products'=>$price,
-    		'total_products_wt'=>$price,
-
-    		'total_shipping'=>0,//TODO
-    		'total_shipping_tax_incl'=>0,//TODO
-    		'total_shipping_tax_excl'=>0,//TODO
-    		
-            'carrier_tax_rate'=>0,//TODO
-    		'total_wrapping'=>0,//TODO
-    		'total_wrapping_tax_incl'=>0,//TODO
-    		'round_mode'=>2,//TODO
-    		'invoice_number'=>0,//TODO
-    		'delivery_date'=>'',//TODO
-    		'valid'=>0,
-    		'date_add'=>$today,
-    		'date_upd'=>$today]);
-        OrderController::OrderDetail($order_id,$cart_products);
+        		'total_shipping'=>0,//TODO
+        		'total_shipping_tax_incl'=>0,//TODO
+        		'total_shipping_tax_excl'=>0,//TODO
+        		
+                'carrier_tax_rate'=>0,//TODO
+        		'total_wrapping'=>0,//TODO
+        		'total_wrapping_tax_incl'=>0,//TODO
+        		'round_mode'=>2,//TODO
+        		'invoice_number'=>0,//TODO
+        		'delivery_date'=>'',//TODO
+        		'valid'=>0,
+        		'date_add'=>$today,
+        		'date_upd'=>$today]);
+        }
+        //OrderController::OrderDetail($order_id,$cart_products);
         //CartController::deleteCart();
         return $order_id;
 
@@ -89,7 +94,7 @@ class OrderController extends Controller
         $id_customer = myAuthController::getAuthenticatedUser();
         $count = count($cart_products['description']);
 
-                
+                 
         $customer_address = Address::getIdAdressFromCustomer($id_customer);
         $id_cart = $cart_id = Cart::RetrivingCartId($id_customer);
         $id_cart = $id_cart['id_cart'];            

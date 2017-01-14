@@ -17,23 +17,41 @@ angular.module('app')
 
 	userDataFactory.loadHistoric().then(function(data){
 			$scope.products = [];
-			var productImages;
 			angular.forEach(data,function(value,key){
+				//console.log(value);
+				$scope.products[key] = {
+					name: value[0]['id_order_detail'],
+					items:[]
+				};
 				angular.forEach(value,function(value1,key1){
-
-					console.log(value1['product']['images'][0]['image']);
-					$scope.products.push({productPrice:value1['product']['description'][0]['product_price']['price'],
+					$scope.products[key].items.push({productPrice:value1['product']['description'][0]['product_price']['price'],
 									      productName:value1['product']['description'][0]['name'],
 									      productQuantity: value1['product_quantity'],
-									      productImage: value1['product']['images'][0]['image']
+									      productImage: value1['product']['images'][0]['image'],
+									      productAttribute: value1['product']['attributes'][0]['name'],
+									      productId: value1['product_id']
 									      });
-									
 	        	})
 			})
-			//console.log($scope.products);
 	},function errorCallback(data){
 		console.log(data);
 	});
+
+
+  /*
+   * if given group is the selected group, deselect it
+   * else, select the given group
+   */
+  $scope.toggleGroup = function(group) {
+    if ($scope.isGroupShown(group)) {
+      $scope.shownGroup = null;
+    } else {
+      $scope.shownGroup = group;
+    }
+  };
+  $scope.isGroupShown = function(group) {
+    return $scope.shownGroup === group;
+  };
 
 
 

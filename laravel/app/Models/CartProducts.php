@@ -16,7 +16,7 @@ class CartProducts extends Model
     }
 
     static public function allProductsFromCart($id_cart){
-    	return CartProducts::where('id_cart',$id_cart)->select('id_product','id_product_attribute','quantity')->get();
+    	return CartProducts::where('id_cart',$id_cart)->select('id_product','id_product_attribute','quantity','id_shop')->get();
     }
 
     static public function removeProduct($id_cart,$id_product,$id_product_attribute){

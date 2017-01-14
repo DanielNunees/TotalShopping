@@ -142,38 +142,34 @@ class CartController extends Controller
         $order = OrderController::getOrderByCartId($cart_id['id_cart']);
 
         if(!$order->isEmpty()){
-            return response()->json(['error' => 'cart empty'], 500);
+            return response()->json(['error' => 'Have some order with this cart!'], 500);
         }
 
         $products = CartProducts::allProductsFromCart($cart_id['id_cart']);
         if($products->isEmpty()) return response()->json(['error' => 'cart empty'], 500);
-        foreach ($products as $value) {
-            $id_product[] = $value->id_product;
-            $quantity[] = $value->quantity;
-            $id_product_attribute[] = $value->id_product_attribute;
-        }
+        foreach ($products as $key => $value) {
+            $product2 = ProductController::retrivingProduct($value->id_product);
 
-        $product = ProductController::retrivingProduct($id_product);
-        $attributes = [];
-        foreach ($id_product_attribute as $key => $value) {
-            $attributes[] = array('quantity'=>$quantity[$key],'attributes'=>$product['attributes'][array_search($value, array_column($product['attributes'],'id_product_attribute'))]);
-        }
-        $product['attributes'] = $attributes;
-        
-        $product['images'] = Tools::unique_multidim_array($product['images'],'id_product');
+            sort($product2['attributes']);
+           
+            $attribute=  array_search($value->id_product_attribute, array_column($product2['attributes'],'id_product_attribute'));
+            $product2['attributes'] = array_slice($product2['attributes'], -(count($product2['attributes'])-$attribute),1);
 
-        return $product;
-        
+            $products[$key]->product = $product2;
+        }
+        return $products;        
     }
 
     public function addToCart($cart_id,$request,$address){
+        $product_shop_id = ProductController::productIdShop($request->id_product);
+        $product_shop_id = $product_shop_id[0]['id_shop_default']; 
         $today = date("Y-m-d H:i:s");
             $insert_product = new CartProducts;
             $insert_product = $insert_product->insertGetId([
                 'id_cart'=>$cart_id,
                 'id_product'=>$request->id_product,
                 'id_address_delivery'=>$address,
-                'id_shop'=>1,
+                'id_shop'=>$product_shop_id,
                 'id_product_attribute'=>$request->id_product_attribute,
                 'quantity'=> $request->product_quantity,
                 'date_add'=>$today]);

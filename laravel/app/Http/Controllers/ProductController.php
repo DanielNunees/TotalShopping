@@ -30,6 +30,7 @@ class ProductController extends Controller
             $description = ProductController::productDescription($id_product);
             $attributes = ProductController::productAttributes($id_product);
             $images = ProductController::productImages($id_product);
+            
             foreach ($description as $product) {
                 $product->ProductPrice->price;
             }
@@ -41,9 +42,7 @@ class ProductController extends Controller
         public static function productDescription($id_product){  //$id_product pode ser um valor ou um object
 
             $description_name = ProductLang::ProductResume($id_product);
-            if($description_name->isEmpty()){
-                return response()->json(['error' => 'is_empty'], 404);
-            }
+            
             return $description_name; //retorna o nome e a descricao do produto.
         }
 
@@ -90,6 +89,10 @@ class ProductController extends Controller
 
         public static function productUpdateStock($id_product,$id_product_attribute,$quantity){
             ProductStock::updateQuantity($id_product,$id_product_attribute,$quantity);
+        }
+
+        public static function productIdShop($id_product){
+            return Product::getShopId($id_product);
         }
 
 

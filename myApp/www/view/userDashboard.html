@@ -21,24 +21,29 @@
         </ion-slide>
         <ion-slide>
           <div> 
-            <table>
-      <thead>
-        <tr>
-          <th>Image</th>
-          <th>Produto</th>
-          <th>Preço</th>
-          <th>Quantidade</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="item in products">
-          <td><img class="img-size" ng-src="http://127.0.1.1/prestashop{{item.productImage}}"  ></td>
-          <td>{{ item.productName }}</td>
-          <td><strong>{{ item.productPrice }}</strong></td>
-          <td>{{ item.productQuantity }}</td>
-        </tr>
-      </tbody>
-    </table>
+            <ion-list>
+        <div ng-repeat="group in products">
+          <ion-item class="item-stable"
+                    ng-click="toggleGroup(group)"
+                    ng-class="{active: isGroupShown(group)}">
+              <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
+            &nbsp;
+            {{group.name}}
+          </ion-item>
+          <ion-item class="item-accordion" ng-repeat="product in group.items" ng-show="isGroupShown(group)">
+            <div class="list">
+
+                <a class="item item-thumbnail-left" ng-href="#/product/{{product.productId}}">
+                  <img ng-src="http://127.0.1.1/prestashop{{product.productImage}}">
+                  <h2>{{product.productName}}</h2>
+                  <p>{{product.productPrice | currency:"R$ " }}</p>
+                  <p>Tam: {{product.productAttribute}} | Qnt: {{product.productQuantity}} </p>
+                </a>
+            </div>
+            
+          </ion-item>
+        </div>
+      </ion-list>
           </div>
         </ion-slide>
         <ion-slide>
