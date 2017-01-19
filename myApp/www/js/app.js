@@ -72,6 +72,18 @@ angular.module('app', ['ionic','ngCookies','ngCart','satellizer','ngMask','oc.la
       templateUrl: "view/userPaymentDataCheckout.html"
     })
 
+    .state('multiStore', {
+      url: "/multiStore",
+      controller: 'multiStoreController',
+      templateUrl: "view/multiStore.html"
+    })
+
+    .state('store', {
+      url: "/store/:idStore",
+      controller: 'multiStoreController',
+      templateUrl: "view/store.html"
+    })
+
 })
 
 .run(function($ionicPlatform) {

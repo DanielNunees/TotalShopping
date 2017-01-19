@@ -12,10 +12,10 @@
 	            </label>
 	        </div>
 	        <div class="padding">
-	            <p ng-if="myForm.username.$error.required" class="form-error"><i class="ion-information-circled"></i> Email é necessário!</p>
+	            <p ng-if="myForm.username.$error.required && myForm.username.$dirty" class="form-error"><i class="ion-information-circled"></i> Email é necessário!</p>
 	            <p ng-if="myForm.username.$invalid && !myForm.username.$pristine" class="form-error"><i class="ion-information-circled"></i> O login deve ser feito com o seu email</p>
 	            <p ng-if="myForm.username.$error.minlength" class="form-error"><i class="ion-information-circled"></i> Seu email deve conter no mínimo 5 caracteres!</p>
-	            <p ng-if="myForm.password.$error.required" class="form-error"><i class="ion-information-circled"></i> Senha é necessária!</p>
+	            <p ng-if="myForm.password.$error.required && myForm.password.$dirty" class="form-error"><i class="ion-information-circled"></i> Senha é necessária!</p>
 	            <p ng-if="myForm.password.$error.minlength" class="form-error"><i class="ion-information-circled"></i> A senha deve conter pelo menos 6 caracteres.</p>
 	        </div>
 	        <div class="padding">

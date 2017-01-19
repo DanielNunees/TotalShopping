@@ -13,8 +13,7 @@ use App\Tools\Tools;
 use Exception;
 
 class ProductController extends Controller
-{
-
+{  
     public static function retrivingProduct($id_product){
             
             /* Validate if a product id exceed the quantity on DB */
@@ -30,7 +29,6 @@ class ProductController extends Controller
             $description = ProductController::productDescription($id_product);
             $attributes = ProductController::productAttributes($id_product);
             $images = ProductController::productImages($id_product);
-            
             foreach ($description as $product) {
                 $product->ProductPrice->price;
             }
@@ -48,7 +46,6 @@ class ProductController extends Controller
 
         public static function productAttributes($id_product){  //$id_product pode ser um valor ou um object
             $productAttributes = ProductStock::RetrivingAttributes($id_product);
-            
             $attributes = [];
             if(is_array($id_product)){
                 foreach ($productAttributes as $product) {
@@ -64,8 +61,8 @@ class ProductController extends Controller
                     $attributes[] = array('id_product_attribute'=>$value->pivot->id_product_attribute,'name'=>$value->name);
                 }
             }
-            return Tools::unique_multidim_array($attributes,'id_product_attribute');
-            //return $attributes;
+            $a = Tools::unique_multidim_array($attributes,'id_product_attribute');
+            return $a;
         }
 
         public static function productImages($id_product){

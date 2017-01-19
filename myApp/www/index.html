@@ -33,12 +33,16 @@
     <script type="text/javascript" src='controller/userPaymentDataCheckoutController.js'></script>
     <script type="text/javascript" src='controller/creditCardCheckoutController.js'></script>
     <script type="text/javascript" src='controller/boletoCheckoutController.js'></script>
+    <script type="text/javascript" src='controller/multiStoreController.js'></script>
 
 
     <!--Factories-->
     <script type="text/javascript" src='factory/userDataFactory.js'></script>
     <script type="text/javascript" src='factory/paymentCheckoutDataFactory.js'></script>
     <script type="text/javascript" src='factory/cartFactory.js'></script>
+    <script type="text/javascript" src='factory/multiStoreFactory.js'></script>
+    <script type="text/javascript" src='factory/productFactory.js'></script>
+    <script type="text/javascript" src='factory/wishlistFactory.js'></script>
 
     <!--Directives-->
     <script type="text/javascript" src='directives/userAddressDirective.js'></script>
@@ -68,35 +72,32 @@
     </ion-nav-bar>
 
     <ion-nav-view>
-      <ion-view>
-        <ion-content></ion-content>
-      </ion-view>
     </ion-nav-view>
 
-    <div clas="ui-view"></div>
 
     <div ng-controller="userLoginController" class="tabs tabs-icon-only">
-      <a class="tab-item" ng-href="#/home">
-        <i class="icon ion-ios-home-outline"></i>
-      </a>
-      <a class="tab-item" >
+        <a class="tab-item" ui-sref="home" ui-sref-active="active"  >
+          <i class="icon ion-ios-home-outline" ></i>
+        </a>
+      <a class="tab-item" ui-sref="multiStore" ui-sref-active="active">
         <i class="icon ion-ios-box-outline"></i>
       </a>
-      <a ng-if="isAuthenticated()" class="tab-item" ng-href="#user/dashboard">
+      <a ng-if="isAuthenticated()" class="tab-item" ui-sref="userDashboard" ui-sref-active="active">
         <i class="icon ion-ios-person-outline"></i>
       </a>
-      <a ng-if="!isAuthenticated()" class="tab-item" ng-href="#user/login">
+      <a ng-if="!isAuthenticated()" class="tab-item" ui-sref="userLogin" ui-sref-active="active">
         <i class="icon ion-ios-person-outline"></i>
       </a>  
-      <a ng-if="isAuthenticated()" class="tab-item" ng-href="#/user/wishlist">
+      <a ng-if="isAuthenticated()" class="tab-item" ui-sref="wishlist" ui-sref-active="active">
         <i class="icon ion-ios-heart-outline"></i>
       </a>
-      <a ng-if="!isAuthenticated()" class="tab-item" ng-href="#/user/login">
+      <a ng-if="!isAuthenticated()" class="tab-item" ui-sref="userLogin" ui-sref-active="active">
         <i class="icon ion-ios-heart-outline"></i>
       </a>
-      <a class="tab-item">
+      <a class="tab-item" ui-sref-active="active" >
         <i class="icon ion-ios-search"></i>
       </a>
     </div>
   </body>
 </html>
+

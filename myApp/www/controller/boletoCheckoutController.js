@@ -2,7 +2,6 @@
     'use strict';
 angular.module('app')
 .controller('boletoCheckoutController', ['$scope', '$http','$ionicNavBarDelegate','$window','paymentCheckout','userDataFactory','$ionicPopup','$interval','ngCart', function($scope,$http,$ionicNavBarDelegate,$window,paymentCheckout,userDataFactory,$ionicPopup,$interval,ngCart){
-  var checkoutData={};
   var SenderHash;
   $scope.method = 0;
   $scope.user = {};
@@ -14,19 +13,11 @@ angular.module('app')
         console.log('resetando a seção');
     }, 3600000);
 
-  $scope.checkout = function(){
+  $scope.checkout = function(user){
+    console.log(user);
     $scope.showLoading(); //Loading animation...
-    userDataFactory.loadUserData().then(function successCallback(response) {
-
-      
-      checkoutData.userData = response.address[0];
-      checkoutData.userBirth = response.user[0];
-      //checkoutData.cpf = $scope.user.cpf;
-      checkoutData.cpf = '15600944276'; //valid teste cpf 15600944276
-      checkoutData.name = $scope.user.name;
-      checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();
-
-    paymentCheckout.boletoCheckout(checkoutData).then(function successCallback(response){
+    SenderHash = PagSeguroDirectPayment.getSenderHash();
+    paymentCheckout.boletoCheckout(SenderHash).then(function successCallback(response){
       ngCart.empty();
       console.log(response.data);
       $scope.hideLoading();
@@ -34,7 +25,8 @@ angular.module('app')
         title: 'Finalizado',
         template: 'Sua compra foi efetuada com sucesso!',
       });
-      $scope.user = {};
+      delete $scope.user;
+      $scope.teste();
       paymentCheckout.resetSessionId();
 
       paymentCheckout.getSession().then(function successCallback(response){
@@ -44,12 +36,7 @@ angular.module('app')
     },function errorCallback(response){
       console.log(response);
     });
-    },function errorCallback(response) {
-      /* Tratamento de erros*/
 
-      /* Fim Tratamento de erros*/
-      console.log(response);
-    }); 
   }
 }]);
 })();

@@ -41,6 +41,10 @@ angular.module('app')
 	    });
 	};
 
+	$scope.teste = function(){
+		alert("vei nao e possivel!");
+	};
+
   	$scope.hideLoading = function(){
     	$ionicLoading.hide().then(function(){
        		console.log("The loading indicator is now hidden");

@@ -16,6 +16,10 @@ class Product extends Model
     public static function getShopId($id_product){
     	return Product::where('id_product',$id_product)->select('id_shop_default')->get();
     }
+
+    public static function getProductsFromStore($id_store){
+    	return Product::where('id_shop_default',$id_store)->select('id_product')->get();
+    }
    
 }
  

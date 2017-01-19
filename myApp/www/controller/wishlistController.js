@@ -1,10 +1,9 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSerializerJQLike','$ionicPopup','$location','$ionicHistory','$ionicNavBarDelegate', function($scope,$http,$auth,$httpParamSerializerJQLike,$ionicPopup,$location,$ionicHistory,$ionicNavBarDelegate){
+.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSerializerJQLike','$ionicPopup','$location','$ionicHistory','$ionicNavBarDelegate','wishlistFactory', function($scope,$http,$auth,$httpParamSerializerJQLike,$ionicPopup,$location,$ionicHistory,$ionicNavBarDelegate,wishlistFactory){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     $ionicNavBarDelegate.showBackButton(true);
-    $scope.loadWishlist();
   });
   $scope.product = [];
 
@@ -12,69 +11,48 @@ angular.module('app')
       return $auth.isAuthenticated();
     };
 
-  $scope.login = function(){
-    $location.url('/user/login');
-  }
 
-  $scope.loadWishlist = function(){
-      $http({
-          method: 'GET',
-          url: 'http://127.0.1.1/laravel/public/wishlist',
-        }).then(function successCallback(response) {
-            $scope.product = [];
-            for(var i=0;i<response.data.image.length;i++){
-              var item={};
-              item.id_product = response.data.id_product[i];
-              item.name = response.data.name[i].name;
-              item.price = response.data.price[i].price;
-              item.image = response.data.image[i].image;
 
-              $scope.product.push(item);
-            }
-          },function errorCallback(response) {
-            /* Tratamento de erros*/
-            //error 204 - No content
-            console.log(response.data);
-            if(response.status == 404){
-              var alertPopup = $ionicPopup.alert({
-                title: 'Error 404',
-                template: 'Sua lista está vazia',
-              });
-            }else if(response.status == 400){
-              var alertPopup = $ionicPopup.alert({
-              title: 'Error 400',
-              template: 'Whislist not created',
-            });
-            }
-            /* Fim Tratamento de erros*/
-            
-            //$location.url('/user/home');
-          });
-      
-    }
-    
-    $scope.remove = function(index,id_product){
-      console.log(id_product);
-      if($auth.isAuthenticated()){
-      $http({
-          method: 'POST',
-          url: 'http://127.0.1.1/laravel/public/removeWishlistProduct',
-          dataType: 'json',
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          data: $httpParamSerializerJQLike({'id_product':id_product})
-        }).then(function successCallback(response) {
-            console.log(response.data);
-            $scope.product.splice(index,1);
-          },function errorCallback(response) {
-            var alertPopup = $ionicPopup.alert({
-              title: 'Nada ainda na sua lista',
-              template: 'Crie agora sua lista de favoritos',
-            });
-            //$location.url('/user/home');
-          });
+  wishlistFactory.getWishlist().then(function successCallback(response){
+    $scope.product = [];
+      for(var i=0;i<response.image.length;i++){
+        var item={};
+        item.id_product = response.id_product[i];
+        item.name = response.name[i].name;
+        item.price = response.price[i].price;
+        item.image = response.image[i].image;
+
+        $scope.product.push(item);
       }
+  },function errorCallback(response) {
+    /* Tratamento de erros*/
+    //error 204 - No content
+    console.log(response.data);
+    if(response.status == 404){
+      var alertPopup = $ionicPopup.alert({
+        title: 'Error 404',
+        template: 'Sua lista está vazia',
+      });
+    }else if(response.status == 400){
+      var alertPopup = $ionicPopup.alert({
+      title: 'Error 400',
+      template: 'Whislist not created',
+    });
     }
+    /* Fim Tratamento de erros*/
     
-}])
+    //$location.url('/user/home');
+  });
+
+  $scope.remove = function(index,id_product){
+    wishlistFactory.removeProduct(id_product).then(function successCallback(response){
+      console.log(response.data);
+      $scope.product.splice(index,1);
+    },function errorCallback(response) {
+      console.log(response);
+    });
+  }
+    
+  }])
 })();
 

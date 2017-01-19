@@ -1,31 +1,29 @@
 <ion-view view-title="Product">
   <ion-content class="padding-horizontal has-footer">
-    <div ng-repeat="(key1,value1) in product.description" >
+    <div>
       <ion-slide-box >
-        <ion-slide ng-repeat="(key,value) in productImages" >
-          <img ng-model="product.images[0].image" class="img-size" ng-src='http://127.0.1.1/prestashop{{value}}'>
+        <ion-slide ng-repeat="image in product.product_images" >
+          <img ng-model="image.image" class="img-size" ng-src='http://127.0.1.1/prestashop{{image.image}}'>
         </ion-slide>
       </ion-slide-box>
     </div>
-      <h2  class="css-selector text-center">{{productName}}</h2>
-      <h3 class="css-selector text-center">{{productPrice | currency:"R$ "}}</h3>
-      <h4 class="css-selector">3x {{productPrice/3 | currency:"R$ ":2}}</h4>
+      <h2  class="css-selector text-center">{{product.product_name}}</h2>
+      <h3 class="css-selector text-center">{{product.product_price | currency:"R$ "}}</h3>
+      <h4 class="css-selector">3x {{product.product_price/3 | currency:"R$ ":2}}</h4>
       <form name="myForm">
         <span ng-show="myForm.service_id.$error.required" class="form-error">Escolha um tamanho</span>
         <label class="item item-input item-select">
-
           <span >
-            <select name="service_id" required ng-model="value" ng-options='value.name for (id_attribute,value) in attributes' ></select>
+            <select name="service_id" required ng-model="value" ng-options="value.name for (id_product_attribute,value) in product.product_attributes " ></select>
             <option value="">Tamanho</option>
           </span>
         </label>
-        
       </form>
-      <ngcart-addtocart id="{{productId}}" name="{{productName}}" price="{{productPrice}}" quantity="1" quantity-max="5" data="{'image':product.images[0].image,size:value.name, product_attributte:value.id_product_attribute}" ng-click='addProduct(productId,value.id_product_attribute)'>Adicionar ao carrinho</ngcart-addtocart>
+      <ngcart-addtocart id="{{product.product_id}}" name="{{product.product_name}}" price="{{product.product_price}}" quantity="1" quantity-max="5" data="{'image':product.product_images[0].image,size:value.name, product_attributte:value.id_product_attribute}" ng-click="addProductToCart(product.product_id,value.id_product_attribute)" >Adicionar ao carrinho</ngcart-addtocart>
 
-      <button ng-disabled='added' ng-click="favoriteProduct()" class="button button-block button-assertive button-outline"><i class="icon ion-ios-heart-outline"></i>Adicionar aos Favoritos</button>
+      <button ng-disabled='added' ng-click="favoriteProduct(product.product_id,value.id_product_attribute)" class="button button-block button-assertive button-outline"><i class="icon ion-ios-heart-outline"></i>Adicionar aos Favoritos</button>
 
     
-    <p class="css-selector" ng-bind-html="productDescription"></p> 
+    <p class="css-selector" ng-bind-html="product.product_description"></p> 
   </ion-content>
 </ion-view>

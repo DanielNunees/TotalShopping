@@ -77,7 +77,7 @@ class boletoCheckoutController extends Controller
             true
         );
         
-        $directPaymentRequest->setSenderHash($request->checkoutData['SenderHash']);
+        $directPaymentRequest->setSenderHash($request->SenderHash);
 
         // Set shipping information for this payment request
         $sedexCode = PagSeguroShippingType::getCodeByType('SEDEX');
@@ -113,7 +113,7 @@ class boletoCheckoutController extends Controller
             $credentials = PagSeguroConfig::getAccountCredentials();
 
             // Register this payment request in PagSeguro to obtain the payment URL to redirect your customer.
-            $order = OrderController::createOrder($cart_products);
+            $order = OrderController::createOrder();
             //$response = $directPaymentRequest->register($credentials);
             return $order;
         } catch (PagSeguroServiceException $e) {

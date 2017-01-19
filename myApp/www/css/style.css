@@ -7,7 +7,8 @@
   font-family: 'Lato', serif;
 }
 .img-size{
-	width: 100%;
+   width: 100%;
+   height: auto;
 }
 .img-circle{
   border-radius: 50%;
@@ -116,4 +117,8 @@ a{
 .list .item.item-accordion.ng-hide-add,
 .list .item.item-accordion.ng-hide-remove {
   display: block !important;
+}
+
+.updated{
+  color: black;
 }

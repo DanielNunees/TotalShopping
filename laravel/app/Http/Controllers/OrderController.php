@@ -20,27 +20,30 @@ class OrderController extends Controller
         $cart_products = CartController::loadCart();
         $price = 0;
         $values = [];
+        $shop_ids = [];
 
         foreach ($cart_products as $key => $value) {
             if(!isset($values[$value->id_shop]))
                 $values[$value->id_shop] = 0;
-
+            $products[$value->id_shop][] = $value;
             $quantity = $value->quantity;
             number_format($value->product['description'][0]['product_price']['price'],2);
             $price = $values[$value->id_shop] + number_format($quantity *$value->product['description'][0]['product_price']['price'],2, '.', '');
             $values[$value->id_shop] = $price;
+            if(!array_search($value->id_shop, $shop_ids))
             $shop_ids[] = $value->id_shop;
         }
-        $reference = Tools::passwdGen(8,'NO_NUMERIC'); //TODO
+         
     	$today = date("Y-m-d H:i:s");
 
     	$customer_secure_key = User::getSecureKey($id_customer);
-    	
     	$customer_address = Address::getIdAdressFromCustomer($id_customer);
         $id_cart = $cart_id = Cart::RetrivingCartId($id_customer);
+        
         $id_cart = $id_cart['id_cart']; 	
         
         foreach($shop_ids as $key => $value1){
+            $reference = Tools::passwdGen(8,'NO_NUMERIC');
             $order_id = new Orders;
         	$order_id = $order_id->insertGetId(['reference' => $reference,
         		'id_shop'=>$value1,'id_shop_group'=>1,'id_carrier'=>3,
@@ -83,35 +86,30 @@ class OrderController extends Controller
         		'valid'=>0,
         		'date_add'=>$today,
         		'date_upd'=>$today]);
+            
+            OrderController::OrderDetail($order_id,$products[$value1]);
         }
-        //OrderController::OrderDetail($order_id,$cart_products);
+        
         //CartController::deleteCart();
         return $order_id;
 
     }
 
-    public static function OrderDetail($order_id,$cart_products){
-        $id_customer = myAuthController::getAuthenticatedUser();
-        $count = count($cart_products['description']);
+    public static function OrderDetail($order_id,$products){
 
-                 
-        $customer_address = Address::getIdAdressFromCustomer($id_customer);
-        $id_cart = $cart_id = Cart::RetrivingCartId($id_customer);
-        $id_cart = $id_cart['id_cart'];            
-
-        for($i=0;$i<$count;$i++){
+        foreach($products as $key => $value){
                 $order_details[] = [
-                    'id_order' =>$order_id ,
-                    'id_order_invoice'=>0,'id_warehouse'=>0,'id_shop'=>1,
-                    'product_id'=>$cart_products['description'][$i]['id_product'],
-                    'product_attribute_id'=>$cart_products['attributes'][$i]['attributes']['id_product_attribute'],
-                    'product_name'=>$cart_products['description'][$i]['name'],
-                    'product_quantity'=>$cart_products['attributes'][$i]['quantity'],
+                    'id_order' => $order_id ,
+                    'id_order_invoice'=>0,'id_warehouse'=>0,'id_shop'=>$key,
+                    'product_id'=>$value['id_product'] ,
+                    'product_attribute_id'=>$value['id_product_attribute'],
+                    'product_name'=>$value['product']['description'][0]['name'],
+                    'product_quantity'=>$value['quantity'],
                     'product_quantity_in_stock'=>1,
                     'product_quantity_refunded'=>0,
                     'product_quantity_return'=>0,
                     'product_quantity_reinjected'=>0,
-                    'product_price'=>$cart_products['description'][$i]['product_price']['price'],
+                    'product_price'=>$value['product']['description'][0]['product_price']['price'],
                     'reduction_percent'=>0,
                     'reduction_amount'=>0,
                     'reduction_amount_tax_incl'=>0,
@@ -133,20 +131,20 @@ class OrderController extends Controller
                     'download_hash'=>0,
                     'download_nb'=>0,
                     'download_deadline'=>0,
-                    'total_price_tax_incl'=>$cart_products['description'][$i]['product_price']['price'],
-                    'total_price_tax_excl'=>$cart_products['description'][$i]['product_price']['price'],
-                    'unit_price_tax_incl'=>$cart_products['description'][$i]['product_price']['price'],
-                    'unit_price_tax_excl'=>$cart_products['description'][$i]['product_price']['price'],
+                    'total_price_tax_incl'=>$value['product']['description'][0]['product_price']['price'],
+                    'total_price_tax_excl'=>$value['product']['description'][0]['product_price']['price'],
+                    'unit_price_tax_incl'=>$value['product']['description'][0]['product_price']['price'],
+                    'unit_price_tax_excl'=>$value['product']['description'][0]['product_price']['price'],
                     'total_shipping_price_tax_incl'=>0,
                     'total_shipping_price_tax_excl'=>0,
                     'purchase_supplier_price'=>0,
-                    'original_product_price'=> $cart_products['description'][$i]['product_price']['price'],
-                    'original_wholesale_price'=>$cart_products['description'][$i]['product_price']['price']];
+                    'original_product_price'=> $value['product']['description'][0]['product_price']['price'],
+                    'original_wholesale_price'=>$value['product']['description'][0]['product_price']['price']];
 
                     ProductController::productUpdateStock(
-                        $cart_products['description'][$i]['id_product'],
-                        $cart_products['attributes'][$i]['attributes']['id_product_attribute'],
-                        $cart_products['attributes'][$i]['quantity']
+                        $value['id_product'],
+                        $value['id_product_attribute'],
+                        $value['quantity']
                     );
             }
             OrderDetail::OrderDetail($order_details);

@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('userDashboardController', ['$scope','$auth','$location','$ionicHistory','$ionicSlideBoxDelegate','$http','$httpParamSerializerJQLike','$ionicModal','$ionicNavBarDelegate','userDataFactory','$ionicPopup', function($scope,$auth,$location,$ionicHistory,$ionicSlideBoxDelegate,$http,$httpParamSerializerJQLike,$ionicModal,$ionicNavBarDelegate,userDataFactory,$ionicPopup){
+.controller('userDashboardController', ['$scope','$auth','$location','$ionicSlideBoxDelegate','$ionicModal','$ionicNavBarDelegate','userDataFactory','$ionicPopup', function($scope,$auth,$location,$ionicSlideBoxDelegate,$ionicModal,$ionicNavBarDelegate,userDataFactory,$ionicPopup){
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
 		$ionicNavBarDelegate.showBackButton(true);
 		$ionicSlideBoxDelegate.slide(0, [0]);
@@ -49,6 +49,7 @@ angular.module('app')
       $scope.shownGroup = group;
     }
   };
+  
   $scope.isGroupShown = function(group) {
     return $scope.shownGroup === group;
   };
