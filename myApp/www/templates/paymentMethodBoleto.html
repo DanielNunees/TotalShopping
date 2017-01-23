@@ -1,5 +1,4 @@
-<div ng-controller="boletoCheckoutController">
-	<form name='userForm' class="css-form" ng-submit="userForm.$valid && checkout(user)" novalidate >  
+	<form name='userForm' class="css-form" ng-submit="userForm.$valid && boletoCheckout(user)" novalidate >  
 	  <div class="item item-divider">
 	  	CPF para emissão do boleto bancario
 	  </div>
@@ -9,4 +8,3 @@
 	  </label>
 	  <input class="button button-outline button-positive button-block" value="Finalizar"  type="submit" ng-disabled="userForm.$invalid"></input>
 	</form>
-</div>

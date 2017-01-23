@@ -25,8 +25,7 @@ Route::group(['middleware' => 'cors'], function () {
 	/* User Routes */
 	Route::post('/user/register','userController@register');
 	Route::post('/user/auth','myAuthController@login');
-	Route::post('/user/createAddress','userController@createAddress');
-	Route::post('/user/updateAddress','userController@updateAddress');
+	Route::post('/user/updateOrCreateAddress','userController@updateOrCreateAddress');
 	Route::get('/user/loadData','userController@loadData');
 	
 	/* Wishlist Routes */

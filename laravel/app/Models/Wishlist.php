@@ -11,6 +11,9 @@ class Wishlist extends Model
     protected $table = 'ps_wishlist';
     protected $primaryKey = 'id_wishlist';
 
+    public static function createWishlist($Wishlist){
+        return Wishlist::insertGetId($Wishlist);
+    }
     public function listProducts(){ 
     	return $this->hasMany('App\Models\WishlistProducts','id_wishlist');
     }

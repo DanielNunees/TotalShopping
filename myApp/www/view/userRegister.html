@@ -4,7 +4,7 @@
         <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
     </ion-header-bar>
 	<ion-content >
-  		<form name='userForm' class="css-form" ng-submit="userForm.$valid && register()" novalidate>
+  		<form name='userForm' class="css-form" ng-submit="userForm.$valid && signup(userRegister)" novalidate>
   			<input ng-model="photo" type="file" id="files" />
 			<img class=" img-circle img-size text-center" id="image">
   		   

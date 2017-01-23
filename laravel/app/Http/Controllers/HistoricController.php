@@ -12,6 +12,9 @@ class HistoricController extends Controller
     public function getHistoric(){
     	$id_customer = myAuthController::getAuthenticatedUser();
     	$order = OrderController::getOrderByCustomerId($id_customer);
+        $final = [];
+        if(!is_array($order))
+            response()->json(['alert' => 'is_empty'], 200);
 
     	foreach ($order as $key => $value1) {
     		$product = OrderController::getOrderDetails($value1->id_order);

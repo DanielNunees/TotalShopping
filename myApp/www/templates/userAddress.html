@@ -4,38 +4,38 @@
   </div>
   <span class="item item-icon-left">
     <i class="icon ion-person"></i>
-    {{userData.firstname}} {{userData.lastname}}
+    {{user.firstname}} {{user.lastname}}
   </span>
   <span class="item item-icon-left">
     <i class="icon ion-at"></i>
-    {{userBirth.email}}
+    {{user.email}}
   </span>
 
   <span class="item item-icon-left ">
     <i class="icon ion-calendar"></i>
-    {{userBirth.birthday}}
+    {{user.birthday | date: 'dd/MM/yyyy'}}
   </span>
   <div class="item item-divider text-center">
     Endereço de Entrega
   </div>
   <span class="item item-icon-left">
     <i class="icon ion-location"></i>
-    <p>{{userData.city}}, {{userData.state}}</p>
+    <p>{{address.city}}, {{address.state}}</p>
   </span>
 
   <span class="item item-icon-left">
     <i class="icon ion-map"></i>
-    <p>{{userData.address1}}, {{userData.address2}}</p>
+    <p>{{address.address1}}, {{address.address2}}</p>
   </span>
 
   <span class="item item-icon-left">
     <i class="icon ion-pound"></i>
-    {{userData.postcode}}
+    {{address.postcode}}
   </span>
 
   <span class="item item-icon-left">
     <i class="icon ion-ios-telephone"></i>
-    {{userData.phone_mobile}}
+    {{address.phoneMobile}}
   </span>
 </div>
 <button ng-if="!isEmpty" class="button button-block button-positive button-outline" ng-click="openModal()">Editar</button>

@@ -35,21 +35,7 @@ class creditCardCheckoutController extends Controller
             'name' => 'bail|required|present|filled',
             'SenderHash' => 'bail|required|present|filled',
             'creditCardToken' => 'bail|required|present|filled',
-            'cpf' => 'bail|required|present|filled',
-            'cart.*'=> 'bail|required|present|filled',
-            'cart' => 'bail|required|present|filled',
-            'userData' => 'bail|required|present|filled',
-            'userData.phone' => 'present',
-            'userData.address1' => 'bail|required|present',
-            'userData.address2' => 'bail|required|present',
-            'userData.city' => 'bail|required|present',
-            'userData.state' => 'bail|required|present',
-            'userData.postcode' => 'bail|required|present',
-            'userData.firstname' => 'bail|required|present',
-            'userData.lastname' => 'bail|required|present',
-            'userData.phone_mobile' => 'bail|required|present',
-            'userBirth.*'=> 'bail|required|present|filled',
-            'userBirth'=> 'bail|required|present|filled',                       
+            'cpf' => 'bail|required|present|filled',                    
         ]);
         
         if($validator->fails()){
@@ -74,19 +60,22 @@ class creditCardCheckoutController extends Controller
 
         // Add an item for this payment request
         $price = 0;
-        $quantity = 0;
-        
-        $cart_products = cartController::loadCart();
-        $count = count($cart_products['description']);
 
-        for($i=0;$i<$count;$i++){
+
+        $cart_products = CartController::loadCart();
+
+        if(!is_array($cart_products))
+            return response()->json(['error' => 'cart_is_empty'], 400); 
+        $price =0;
+        //return $cart_products;
+        foreach ($cart_products as $key => $value) {
             $directPaymentRequest->addItem(
-                $cart_products['description'][$i]['id_product'],
-                $cart_products['description'][$i]['name'].','.$cart_products['attributes'][$i]['attributes']['name'],
-                $quantity = $cart_products['attributes'][$i]['quantity'] ,
-                number_format($cart_products['description'][$i]['product_price']['price'] ,2)
+                $value['product']['description'][0]['id_product'],
+                $value['product']['description'][0]['name'].','.$value['product']['attributes'][0]['name'],
+                $quantity = $value['quantity'] ,
+                number_format($value['product']['description'][0]['product_price']['price'] ,2)
             );
-            $price = $price + number_format($quantity * $cart_products['description'][$i]['product_price']['price'],2, '.', '');
+            $price = $price + number_format($quantity * $value['product']['description'][0]['product_price']['price'],2, '.', '');
         }
 
 

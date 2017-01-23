@@ -19,33 +19,31 @@
             <button class="button button-positive" ng-click='loadData()'>Reload</button>
           </div>
         </ion-slide>
-        <ion-slide>
+        <ion-slide> <!--historic-->
           <div> 
             <ion-list>
-        <div ng-repeat="group in products">
-          <ion-item class="item-stable"
-                    ng-click="toggleGroup(group)"
-                    ng-class="{active: isGroupShown(group)}">
-              <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
-            &nbsp;
-            {{group.name}}
-          </ion-item>
-          <ion-item class="item-accordion" ng-repeat="product in group.items" ng-show="isGroupShown(group)">
-            <div class="list">
-
-                <a class="item item-thumbnail-left" ng-href="#/product/{{product.productId}}">
-                  <img ng-src="http://127.0.1.1/prestashop{{product.productImage}}">
-                  <h2>{{product.productName}}</h2>
-                  <p>{{product.productPrice | currency:"R$ " }}</p>
-                  <p>Tam: {{product.productAttribute}} | Qnt: {{product.productQuantity}} </p>
-                </a>
-            </div>
-            
-          </ion-item>
-        </div>
-      </ion-list>
+              <div ng-repeat="group in products">
+                <ion-item class="item-stable"
+                          ng-click="toggleGroup(group)"
+                          ng-class="{active: isGroupShown(group)}">
+                    <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
+                  &nbsp;
+                  {{group.name}}
+                </ion-item>
+                <ion-item class="item-accordion" ng-repeat="product in group.items" ng-show="isGroupShown(group)">
+                  <div class="list">
+                      <a class="item item-thumbnail-left" ng-href="#/product/{{product.productId}}">
+                        <img ng-src="http://127.0.1.1/prestashop{{product.productImage}}">
+                        <h2>{{product.productName}}</h2>
+                        <p>{{product.productPrice | currency:"R$ " }}</p>
+                        <p>Tam: {{product.productAttribute}} | Qnt: {{product.productQuantity}} </p>
+                      </a>
+                  </div>
+                </ion-item>
+              </div>
+            </ion-list>
           </div>
-        </ion-slide>
+        </ion-slide><!--historic-->
         <ion-slide>
           <div ng-if="isEmpty">
             <h3>Nenhum endereço cadastrado ainda</h3>

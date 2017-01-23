@@ -49,6 +49,9 @@ class boletoCheckoutController extends Controller
         // Add an item for this payment request
 
         $cart_products = CartController::loadCart();
+        return gettype($cart_products);
+        if(!is_array($cart_products))
+            return response()->json(['error' => 'cart_is_empty'], 400); 
         $price =0;
         //return $cart_products;
         foreach ($cart_products as $key => $value) {

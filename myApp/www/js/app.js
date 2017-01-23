@@ -29,7 +29,6 @@ angular.module('app', ['ionic','ngCookies','ngCart','satellizer','ngMask','oc.la
       templateUrl: "view/product.html"
     })
 
-
     .state('cart', {
       url: "/cart",
       templateUrl: "view/cart.html",
@@ -38,19 +37,19 @@ angular.module('app', ['ionic','ngCookies','ngCart','satellizer','ngMask','oc.la
 
     .state('userRegister', {
       url: "/user/register",
-      controller: 'userLoginController',
+      controller: 'userController',
       templateUrl: "view/userRegister.html"
     })
 
     .state('userLogin', {
       url: "/user/login",
-      controller: 'userLoginController',
+      controller: 'userController',
       templateUrl: "view/userLogin.html"
     })
 
     .state('userDashboard', {
       url: "/user/dashboard",
-      controller: 'userDashboardController',
+      controller: 'dashboardController',
       templateUrl: "view/userDashboard.html"
     })
 
@@ -60,16 +59,10 @@ angular.module('app', ['ionic','ngCookies','ngCart','satellizer','ngMask','oc.la
       templateUrl: "view/wishlist.html"
     })
 
-    .state('userDataCheckout', {
-      url: "/user/dataCheckout",
-      controller: 'userDashboardController',
-      templateUrl: "view/userDataCheckout.html"
-    })
-
-    .state('userPaymentDataCheckout', {
-      url: "/user/PaymentdataCheckout",
-      controller: 'userPaymentDataCheckoutController',
-      templateUrl: "view/userPaymentDataCheckout.html"
+    .state('Checkout', {
+      url: "/user/Checkout",
+      controller: 'checkoutController',
+      templateUrl: "view/checkout.html"
     })
 
     .state('multiStore', {

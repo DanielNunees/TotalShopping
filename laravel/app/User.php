@@ -37,4 +37,16 @@ class User extends Authenticatable
         return  User::select("secure_key")->where('id_customer',$id_customer)->get();
     }
 
+    public static function getCustomerWithEmail($email){
+        return User::where('email',$email)->get();
+    }
+
+    public static function getCustomerWithId($id_customer){
+        return User::where('id_customer',$id_customer)->where('active',1)->select('lastname','firstname','email','birthday')->get();
+    }
+
+    public static function registerUser($user){
+        return User::insertGetId($user);
+    }
+
 }

@@ -1,5 +1,4 @@
-<div ng-controller='creditCardCheckoutController' >
-<form name='userForm' class="css-form" ng-submit="userForm.$valid && checkout()" novalidate >  
+<form name='userForm' class="css-form" ng-submit="userForm.$valid && creditCardCheckout(user)" novalidate >  
   <div class="item item-divider">
   	Dados do cartão de crédito 
   </div>
@@ -35,4 +34,3 @@
   </div>
   <input class="button button-outline button-positive button-block" value="Finalizar"  type="submit" ng-disabled="userForm.$invalid"></input>
 </form>
-</div>

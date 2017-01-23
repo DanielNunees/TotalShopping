@@ -81,7 +81,6 @@ class CartController extends Controller
         if($product->isEmpty()){
             return response()->json(['product_not_found' => 'error'], 400); 
         }
-        else{
             $find = false;
             foreach ($product as $key => $value) {
                 if($value->id_product_attribute == $request->id_product_attribute){
@@ -90,7 +89,6 @@ class CartController extends Controller
                     break;
                 }
             }
-        }
         if(!$find){
             return response()->json(['product_not_found' => 'error'], 400);
         }
@@ -130,6 +128,7 @@ class CartController extends Controller
           'id_product_attribute' => 'bail|required|integer'
         ]);
         $id_customer = myAuthController::getAuthenticatedUser();
+        
         $cart_id = Cart::RetrivingCartId($id_customer);
 
         $delete_product_cart = CartProducts::removeProduct($cart_id['id_cart'],$request->id_product,$request->id_product_attribute);
@@ -137,7 +136,12 @@ class CartController extends Controller
     }
 
     public static function loadCart(){
-        $id_customer = myAuthController::getAuthenticatedUser();
+        try{
+             $id_customer = myAuthController::getAuthenticatedUser();
+        }
+        catch(Exception $e){
+            return $e;
+        }
         $cart_id = Cart::RetrivingCartId($id_customer);
         $order = OrderController::getOrderByCartId($cart_id['id_cart']);
 
@@ -146,7 +150,9 @@ class CartController extends Controller
         }
 
         $products = CartProducts::allProductsFromCart($cart_id['id_cart']);
-        if($products->isEmpty()) return response()->json(['error' => 'cart empty'], 500);
+        if($products->isEmpty()) return response()->json(['error' => 'cart empty'], 200);
+
+
         foreach ($products as $key => $value) {
             $product2 = ProductController::retrivingProduct($value->id_product);
 

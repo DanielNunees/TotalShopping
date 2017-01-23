@@ -5,7 +5,10 @@ angular.module('app')
 	return {
 		restrict:'E',
 		templateUrl: '../templates/paymentMethodBoleto.html',
-		controller: 'boletoCheckoutController'
+		controller: 'checkoutController',
+		scope:{
+
+		}
 	};
 });
 
@@ -13,8 +16,11 @@ angular.module('app')
 .directive('creditcardMethod',function(){
 	return{
 		restrict:'E',
-		controller:'creditCardCheckoutController',
-		templateUrl:'../templates/paymentMethodCreditCard.html'
+		controller:'checkoutController',
+		templateUrl:'../templates/paymentMethodCreditCard.html',
+		scope: {
+			
+		}
 	};
 });
 

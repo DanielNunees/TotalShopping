@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 angular.module('app')
-.controller('productController', ['$scope','$stateParams','$location','$ionicPopup','$ionicNavBarDelegate','$ionicSlideBoxDelegate','productFactory','cartFactory','ngCart','$auth', function($scope,$stateParams,$location,$ionicPopup,$ionicNavBarDelegate,$ionicSlideBoxDelegate,productFactory,cartFactory,ngCart,$auth){
+.controller('productController', ['$scope','$stateParams','$ionicPopup','$ionicNavBarDelegate','$ionicSlideBoxDelegate','productFactory','cartFactory','ngCart','$auth', function($scope,$stateParams,$ionicPopup,$ionicNavBarDelegate,$ionicSlideBoxDelegate,productFactory,cartFactory,ngCart,$auth){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     $ionicNavBarDelegate.showBackButton(true);
   });
@@ -14,7 +14,6 @@ angular.module('app')
 
 
   productFactory.getProduct($stateParams.productId).then(function successCallback(data){
-    console.log(data);
     $scope.product = {};
         $scope.product = {product_name: data['description'][0]['name'],
                           product_id: data['description'][0]['id_product'],
@@ -30,6 +29,7 @@ angular.module('app')
      var item = ngCart.getItemById(String(product_id));
       if(item === false || angular.isUndefined(product_attribute)){
         var alertPopup = $ionicPopup.alert({
+            title: 'Selecione uma Opção',
             template: 'Selecione o Tamanho'
           })
         return;

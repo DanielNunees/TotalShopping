@@ -7,9 +7,9 @@
         </ion-slide>
       </ion-slide-box>
     </div>
-      <h2  class="css-selector text-center">{{product.product_name}}</h2>
-      <h3 class="css-selector text-center">{{product.product_price | currency:"R$ "}}</h3>
-      <h4 class="css-selector">3x {{product.product_price/3 | currency:"R$ ":2}}</h4>
+      <h2  class="css-selector text-center">{{::product.product_name}}</h2>
+      <h3 class="css-selector text-center">{{::product.product_price | currency:"R$ "}}</h3>
+      <h4 class="css-selector">3x {{::product.product_price/3 | currency:"R$ ":2}}</h4>
       <form name="myForm">
         <span ng-show="myForm.service_id.$error.required" class="form-error">Escolha um tamanho</span>
         <label class="item item-input item-select">

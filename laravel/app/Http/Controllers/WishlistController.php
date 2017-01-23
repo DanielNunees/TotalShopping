@@ -11,7 +11,23 @@ use App\Http\Controllers\myAuthController;
 
 class WishlistController extends Controller
 {
-    
+    public static function createWishlist($id_customer){
+        $token = random_bytes(8);
+        $token = bin2hex($token);
+        $today = date("Y-m-d H:i:s");
+      $wishlist =[
+          'id_customer' => $id_customer,
+          'token' => strtoupper($token),
+          'name' => 'Minha lista de desejos',
+          'id_shop' => 1, //TODO
+          'id_shop_group' => 1,
+          'date_add' => $today,
+          'date_upd' => $today,
+          'default' => 1
+          ];
+
+      return Wishlist::createWishlist($wishlist);
+    }
     public function addProduct(Request $request){
         $id_customer = myAuthController::getAuthenticatedUser();
     	

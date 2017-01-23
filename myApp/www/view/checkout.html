@@ -1,0 +1,25 @@
+<ion-view view-title="Checkout"> 
+    <ion-content class="padding-horizontal has-footer" >
+    <div class="item item-divider">
+      Resumo do pedido
+    </div>
+    <div class="item item-text-wrap">
+      <ngcart-cart></ngcart-cart>
+    </div>
+    <div class="item item-divider">
+      Dados da entrega
+    </div>
+    <div class="item item-text-wrap">
+      Nome: {{user.firstname}} {{user.lastname}}</br>
+      Telefone: {{address.phoneMobile}} </br>
+      Endereço: {{address.address1}}, {{address.address2}}</br>
+      CEP: {{address.postcode}}</br>
+      {{address.city}}, {{address.state}}</br>
+      {{address.other}}
+    </div>
+    <creditcard-method ng-if="method==0"></creditcard-method>
+    <boleto-method ng-if="method==1"></boleto-method>
+  	<div class=" button button-clear button-positive button-block" ng-click="show()">Mudar Método de pagamento</div>
+
+    </ion-content>
+</ion-view >

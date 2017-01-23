@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('wishlistController', ['$scope', '$http','$auth','$httpParamSerializerJQLike','$ionicPopup','$location','$ionicHistory','$ionicNavBarDelegate','wishlistFactory', function($scope,$http,$auth,$httpParamSerializerJQLike,$ionicPopup,$location,$ionicHistory,$ionicNavBarDelegate,wishlistFactory){
+.controller('wishlistController', ['$scope','$auth','$ionicPopup','$ionicNavBarDelegate','wishlistFactory', function($scope,$auth,$ionicPopup,$ionicNavBarDelegate,wishlistFactory){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     $ionicNavBarDelegate.showBackButton(true);
   });

@@ -26,28 +26,25 @@
     <script type="text/javascript" src="controller/homeController.js"></script>
     <script type="text/javascript" src="controller/productController.js"></script>
     <script type="text/javascript" src="controller/cartController.js"></script>
-    <script type="text/javascript" src='controller/userRegisterController.js'></script>
-    <script type="text/javascript" src='controller/userLoginController.js'></script>
-    <script type="text/javascript" src='controller/userDashboardController.js'></script>
+    <script type="text/javascript" src='controller/dashboardController.js'></script>
     <script type="text/javascript" src='controller/wishlistController.js'></script>
-    <script type="text/javascript" src='controller/userPaymentDataCheckoutController.js'></script>
-    <script type="text/javascript" src='controller/creditCardCheckoutController.js'></script>
-    <script type="text/javascript" src='controller/boletoCheckoutController.js'></script>
+    <script type="text/javascript" src='controller/checkoutController.js'></script>    
     <script type="text/javascript" src='controller/multiStoreController.js'></script>
+    <script type="text/javascript" src='controller/userController.js'></script>
 
 
     <!--Factories-->
-    <script type="text/javascript" src='factory/userDataFactory.js'></script>
-    <script type="text/javascript" src='factory/paymentCheckoutDataFactory.js'></script>
+    <script type="text/javascript" src='factory/checkoutFactory.js'></script>
     <script type="text/javascript" src='factory/cartFactory.js'></script>
     <script type="text/javascript" src='factory/multiStoreFactory.js'></script>
     <script type="text/javascript" src='factory/productFactory.js'></script>
     <script type="text/javascript" src='factory/wishlistFactory.js'></script>
+    <script type="text/javascript" src='factory/userFactory.js'></script>
+    <script type="text/javascript" src='factory/dashboardFactory.js'></script>
 
     <!--Directives-->
     <script type="text/javascript" src='directives/userAddressDirective.js'></script>
     <script type="text/javascript" src='directives/paymentMethodsDirectives.js'></script>
-    <script type="text/javascript" src='directives/cartDirectives.js'></script>
 
 
     <!-- Libs -->
@@ -75,7 +72,7 @@
     </ion-nav-view>
 
 
-    <div ng-controller="userLoginController" class="tabs tabs-icon-only">
+    <div ng-controller="userController" class="tabs tabs-icon-only">
         <a class="tab-item" ui-sref="home" ui-sref-active="active"  >
           <i class="icon ion-ios-home-outline" ></i>
         </a>
