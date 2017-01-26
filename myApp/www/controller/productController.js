@@ -14,13 +14,14 @@ angular.module('app')
 
 
   productFactory.getProduct($stateParams.productId).then(function successCallback(data){
+    console.log(data.data);
     $scope.product = {};
-        $scope.product = {product_name: data['description'][0]['name'],
-                          product_id: data['description'][0]['id_product'],
-                          product_description: data['description'][0]['description'],
-                          product_price: data['description'][0]['product_price']['price'],
-                          product_images: data['images'],
-                          product_attributes: data['attributes']};
+        $scope.product = {product_name: data.data['description'][0]['name'],
+                          product_id: data.data['description'][0]['id_product'],
+                          product_description: data.data['description'][0]['description'],
+                          product_price: data.data['description'][0]['product_price']['price'],
+                          product_images: data.data['images'],
+                          product_attributes: data.data['attributes']};
         
         $ionicSlideBoxDelegate.update();
   })
@@ -43,7 +44,7 @@ angular.module('app')
     })
   }
 
-  function isGuest(){
+  var isGuest =function(){
     if(!$auth.isAuthenticated()){
       guest = null; //false
       console.log('guest = null');

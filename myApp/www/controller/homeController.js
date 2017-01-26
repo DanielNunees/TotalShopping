@@ -10,8 +10,8 @@ angular.module('app')
   });
 
   productFactory.getAllProducts().
-    then(function successCallback(response){
-      $scope.product = response;
+    then(function successCallback(data){
+      $scope.product = data.data;
     },function errorCallback(response){
       console.log(response);
   });

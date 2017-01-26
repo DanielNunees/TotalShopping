@@ -2,14 +2,14 @@
   <ion-content class="padding-horizontal has-footer">
     <div>
       <ion-slide-box >
-        <ion-slide ng-repeat="image in product.product_images" >
+        <ion-slide ng-repeat="image in product.product_images track by $index" >
           <img ng-model="image.image" class="img-size" ng-src='http://127.0.1.1/prestashop{{image.image}}'>
         </ion-slide>
       </ion-slide-box>
     </div>
       <h2  class="css-selector text-center">{{::product.product_name}}</h2>
       <h3 class="css-selector text-center">{{::product.product_price | currency:"R$ "}}</h3>
-      <h4 class="css-selector">3x {{::product.product_price/3 | currency:"R$ ":2}}</h4>
+      <h4 class="css-selector">3x {{product.product_price/3 | currency:"R$ ":2}}</h4>
       <form name="myForm">
         <span ng-show="myForm.service_id.$error.required" class="form-error">Escolha um tamanho</span>
         <label class="item item-input item-select">

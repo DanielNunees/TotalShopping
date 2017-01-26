@@ -21,42 +21,46 @@
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
+    <script type="text/javascript" src='js/config/routeConfig.js'></script>
+    <script type="text/javascript" src='js/config/valueConfig.js'></script>
+    
 
     <!-- Controllers -->
-    <script type="text/javascript" src="controller/homeController.js"></script>
-    <script type="text/javascript" src="controller/productController.js"></script>
-    <script type="text/javascript" src="controller/cartController.js"></script>
-    <script type="text/javascript" src='controller/dashboardController.js'></script>
-    <script type="text/javascript" src='controller/wishlistController.js'></script>
-    <script type="text/javascript" src='controller/checkoutController.js'></script>    
-    <script type="text/javascript" src='controller/multiStoreController.js'></script>
-    <script type="text/javascript" src='controller/userController.js'></script>
+    <script type="text/javascript" src="controller/userController.js"></script>
+    <!-- LOAD BY LAZY_LOAD -->
 
 
+    <!-- INTERCEPTRO-->
+    <script type="text/javascript" src='interceptors/loadingInterceptor.js'></script>
+    <script type="text/javascript" src='js/config/interceptorConfig.js'></script>
+
+    
     <!--Factories-->
-    <script type="text/javascript" src='factory/checkoutFactory.js'></script>
+    <script type="text/javascript" src='factory/userFactory.js'></script>
+    <!--script type="text/javascript" src='factory/checkoutFactory.js'></script>
     <script type="text/javascript" src='factory/cartFactory.js'></script>
     <script type="text/javascript" src='factory/multiStoreFactory.js'></script>
     <script type="text/javascript" src='factory/productFactory.js'></script>
     <script type="text/javascript" src='factory/wishlistFactory.js'></script>
-    <script type="text/javascript" src='factory/userFactory.js'></script>
-    <script type="text/javascript" src='factory/dashboardFactory.js'></script>
+    
+    <script type="text/javascript" src='factory/dashboardFactory.js'></script-->
+    <!-- LOAD BY LAZY LOAD -->
 
     <!--Directives-->
     <script type="text/javascript" src='directives/userAddressDirective.js'></script>
     <script type="text/javascript" src='directives/paymentMethodsDirectives.js'></script>
-
+    
 
     <!-- Libs -->
-    <script type="text/javascript" src="lib/ionic/js/angular/angular-cookies.js"></script>
+     <script type="text/javascript" src='lib/oclazyload/dist/ocLazyLoad.js'></script>
     <script type="text/javascript" src="lib/ngCart/dist/ngCart.js"></script>
     <script type="text/javascript" src='lib/satellizer/satellizer.js'></script>
-    <script type="text/javascript" src="https://stc.sandbox.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js"></script>
+    
     <script type="text/javascript" src='lib/ngMask/dist/ngMask.min.js'></script>
-    <script type="text/javascript" src='lib/oclazyload/dist/ocLazyLoad.js'></script>
+   
   </head>
-  <body ng-app="app" >
 
+  <body ng-app="app" >
     <ion-nav-bar class="bar-royal">
       <ion-nav-back-button>
         <i class = "icon ion-arrow-left-c"></i> Back

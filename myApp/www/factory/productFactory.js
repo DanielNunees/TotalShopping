@@ -1,31 +1,28 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.factory('productFactory', function($http,$httpParamSerializerJQLike){
+	.factory('productFactory', function($http,$httpParamSerializerJQLike,valueConfig){
 		return {
 
 			getAllProducts: function(){
 				return $http({
 					method: 'GET',
-					url: 'http://127.0.1.1/laravel/public/home'
-				}).then(function successCallback(response){
-					return response.data;
+					url: valueConfig.baseUrl+'/home'
 				})
 			},
 
 			getProduct: function(id_product){
 				return $http({
 			        method: 'GET',
-			        url: 'http://127.0.1.1/laravel/public/product/'+id_product
-			        }).then(function(response){
-	      			return(response.data);
-			    }); 
+			        cache: true,
+			        url: valueConfig.baseUrl+'/product/'+id_product
+			        })
 			},
 
 			favoriteProduct: function(id_product,product_attribute){
 				return $http({
 					method: "POST",
-					url: 'http://127.0.1.1/laravel/public/createWishlist',
+					url: valueConfig.baseUrl+'/createWishlist',
 					dataType: 'json',
 			        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			        data: $httpParamSerializerJQLike({'id_product':id_product,

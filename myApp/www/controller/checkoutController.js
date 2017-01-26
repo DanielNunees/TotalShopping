@@ -1,15 +1,13 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','checkoutFactory','userFactory','$ionicLoading','$ionicActionSheet',  function($scope,$ionicNavBarDelegate,ngCart,cartFactory,checkoutFactory,userFactory,$ionicLoading,$ionicActionSheet){
+	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','checkoutFactory','userFactory','$ionicActionSheet',  function($scope,$ionicNavBarDelegate,ngCart,cartFactory,checkoutFactory,userFactory,$ionicActionSheet){
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
     	$ionicNavBarDelegate.showBackButton(true);
-    	$scope.showLoading();
-
+    	
     	checkoutFactory.getSession().then(function successCallback(response) {
 	  		//PagSeguroDirectPayment.setSessionId(response.data);
 	  		var SenderHash = PagSeguroDirectPayment.getSenderHash();
-	  		$scope.hideLoading();
         },function errorCallback(response) {
         	/* Tratamento de erros*/
 	      	//error 400 - No content
@@ -24,26 +22,11 @@
 	      	}
 	      	else{$scope.isEmpty=false;}
 	      	/* Fim Tratamento de erros*/
-	      	$scope.hideLoading();
          	console.log(response);
         });
   	});
 
   	$scope.method = 1;
-
-  	$scope.showLoading = function() {
-	    $ionicLoading.show({
-	      template: '<ion-spinner></ion-spinner>'
-	    }).then(function(){
-	       console.log("The loading indicator is now displayed");
-	    });
-	};
-
-  	$scope.hideLoading = function(){
-    	$ionicLoading.hide().then(function(){
-       		console.log("The loading indicator is now hidden");
-    	});
-  	};	
 
 	$scope.show = function() {
 
@@ -154,6 +137,7 @@
 		    PagSeguroDirectPayment.createCardToken(param);
   		}
 
+	var carregarDadosDoUsuario = function(){
   		userFactory.loadUserData().then(function(response) {
 			console.log(response);
 			$scope.user = {};
@@ -179,6 +163,9 @@
 	      	/* Fim Tratamento de erros*/
 	     	console.log(response.data);
 	    });
+  	}
+  	
+  	carregarDadosDoUsuario();
 		
 	}]);
 })();

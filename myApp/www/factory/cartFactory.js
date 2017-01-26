@@ -1,12 +1,12 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.factory('cartFactory', function($http,$httpParamSerializerJQLike,ngCart){
+	.factory('cartFactory', function($http,$httpParamSerializerJQLike,ngCart,valueConfig){
 		return {
 			addProduct: function(id_product,id_product_attribute,quantity){
 				return $http({
 					method: 'POST',
-					url: 'http://127.0.1.1/laravel/public/cartAddProducts',
+					url: valueConfig.baseUrl+'/cartAddProducts',
 					dataType: 'json',
 			        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			        data: $httpParamSerializerJQLike({'id_product':id_product,
@@ -21,7 +21,7 @@
 				console.log(id_product,id_product_attribute);
 				return $http({
 			        method: 'POST',
-			        url: 'http://127.0.1.1/laravel/public/cartRemoveProducts',
+			        url: valueConfig.baseUrl+'/cartRemoveProducts',
 			        dataType: 'json',
 			        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			        data: $httpParamSerializerJQLike({'id_product':id_product,
@@ -35,7 +35,7 @@
 			loadCart: function(){
 				return $http({
 			        method: 'GET',
-			        url: 'http://127.0.1.1/laravel/public/cartLoad',
+			        url: valueConfig.baseUrl+'/cartLoad',
 	      		}).then(function(response){
 	      			return response.data;
 			    }); 
