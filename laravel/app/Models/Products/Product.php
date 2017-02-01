@@ -9,12 +9,11 @@ class Product extends Model
     protected $table = 'ps_product';
     protected $primaryKey = 'id_product';
 
-    public function ProductCombinationId(){
-    	return $this->belongsToMany('App\Models\Products\ProductAttributes','ps_product_attribute_combination','id_product_attribute','id_attribute')->select('id_product_attribute');	
-    }
-
     public static function getShopId($id_product){
     	return Product::where('id_product',$id_product)->select('id_shop_default')->get();
+    }
+    public static function getAllIds(){
+    	return Product::select('id_product')->get();
     }
 
     public static function getProductsFromStore($id_store){

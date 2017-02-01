@@ -28,99 +28,71 @@ class WishlistController extends Controller
 
       return Wishlist::createWishlist($wishlist);
     }
+
     public function addProduct(Request $request){
-        $id_customer = myAuthController::getAuthenticatedUser();
-    	
+
         $this->validate($request, [
           'id_product' => 'bail|required',
           'id_product_attribute' => 'bail|required',
       	]);
 
-    	$wishlist = Wishlist::select('id_wishlist')->where('id_customer',$id_customer)->get();
-        if($wishlist->isEmpty()){
-            return response()->json(['error' => 'Wishlist not created'],400);
+    	$wishlist = WishlistController::listProducts();
+        //return $wishlist;
+        if(isset($wishlist[0]['product']))
+        foreach ($wishlist as $key => $value) {
+            if($request->id_product == $value->id_product)
+                return response()->json(['alert' => 'Product Already In Wishlist'], 200);
         }
-
-        foreach ($wishlist as $value) {
-           $value->ProductsId;
-        }
-        $wishlist = json_decode($wishlist,true);
-        //return $wishlist[0]['products_id'];
-
-        foreach($wishlist[0]['products_id'] as $id_products){
-            foreach ($id_products as $id) {
-               if($id == $request->id_product){
-                    return response()->json(['error' => 'Produto já esta na wishlist'],409);
-                }
-            }
-        }
-
-    	$new_wishlist = new WishlistProducts;
-    	$new_wishlist->id_wishlist = $wishlist[0]['id_wishlist'];
-    	$new_wishlist->id_product = $request->id_product;
-    	$new_wishlist->id_product_attribute = $request->id_product_attribute;
-    	$new_wishlist->quantity = 1;
-    	$new_wishlist->priority = 1;
-    	$new_wishlist->save();
-    	return $new_wishlist;    	
+        //return $wishlist[0]['id_wishlist'];
+    	$product = [
+    	'id_wishlist' => $wishlist[0]['id_wishlist'],
+    	'id_product' => $request->id_product,
+    	'id_product_attribute' => $request->id_product_attribute,
+    	'quantity' => 1,
+    	'priority' => 1
+    	];
+    	return WishlistProducts::addProduct($product);   	
     }
 
     public function listProducts(){
 
         $id_customer = myAuthController::getAuthenticatedUser();
-    	$wishlistProducts = Wishlist::where('id_customer',$id_customer)->select('id_wishlist')->get();
-    
-        if($wishlistProducts->isEmpty()){
-            return response()->json(['error' => 'Wishlist not created'],400);
-        }
-
-    	foreach ($wishlistProducts as $key => $value) {
-            
-            if($value->ProductsName->isEmpty()||$value->ProductsName->isEmpty()||$value->ProductsName->isEmpty()){
-                return response()->json(['error' => 'Wishlist is empty'],404);
-            }
-    		$value->ProductsName;
-            $value->ProductsPrice;
-            $value->ProductsImage;
-    	} 
+        $wishlist_id =  Wishlist::getIdWishlist($id_customer);
+        $products_id = WishlistProducts::getProducts($wishlist_id[0]['id_wishlist']);
         
-        $wishlistProducts = json_decode($wishlistProducts,true);
+        if($products_id->isEmpty())
+            return $wishlist_id; 
 
-        foreach ($wishlistProducts[0]['products_image'] as $id_image) {
-            $idImage = (string) $id_image['id_image'];            //Retriving the cover image id,
-            $image = '/img/p/';                                   //Set a path,create a new
-            for ($i = 0; $i < strlen($idImage); $i++) {           //variable 'image',insert in 
-                $image .= $idImage[$i] . '/';                     //$products array and return
-            }
-            $image .= $idImage . '.jpg';
-            $images[] = array('image'=>$image);
-        }
-        unset($wishlistProducts[0]['products_image']);
-        $a=0;
-        foreach ($wishlistProducts[0]['products_price'] as $price) {
-            $price1[] = $price;
-            $name[] = $wishlistProducts[0]['products_name'][$a];
-            $id_product[]= $wishlistProducts[0]['products_price'][$a]['pivot']['id_product'];
-            $a++;
-        }
-        $final = array('name'=>$name,'price'=>$price1,'image'=>$images,'id_product'=>$id_product);
+        foreach ($products_id as $key => $value) {
+            $product2 = ProductController::retrivingProduct($value->id_product);
 
-        return $final;
+            sort($product2['attributes']);
+           
+            $attribute = array_search($value->id_product_attribute, array_column($product2['attributes'],'id_product_attribute'));
+            $product2['attributes'] = array_slice($product2['attributes'], -(count($product2['attributes'])-$attribute),1);
+
+            $products_id[$key]->product = $product2;
+            $products_id[$key]->id_wishlist = $wishlist_id[0]['id_wishlist'];
+        }
+        return $products_id;
     }
 
     public function removeProducts(Request $request){
-        $id_customer = myAuthController::getAuthenticatedUser();
-        $this->validate($request, [
-          'id_product' => 'bail|required'
+         $this->validate($request, [
+          'id_product' => 'bail|required',
         ]);
-        $wishlistProducts = Wishlist::select('id_wishlist')->where('id_customer',$id_customer)->get();
 
-        if($wishlistProducts->isEmpty()){
-            return response()->json(['error' => 'page_not_found'], 404);
+        $wishlist = WishlistController::listProducts();
+        if(isset($wishlist[0]['product']))
+        foreach ($wishlist as $key => $value) {
+            if($request->id_product == $value->id_product){
+               WishlistProducts::deleteProduct($wishlist[0]['id_wishlist'],$value->id_product);
+               return response()->json(['Success' => 'Product removed'], 200); 
+            }
         }
         
-        $coisa = WishlistProducts::where('id_wishlist',$wishlistProducts[0]->id_wishlist)->where('id_product',$request->id_product)->delete();
+       return response()->json(['Error' => 'Product not removed'], 200);
 
-        return response()->json(['succes' => 'ok'], 200);       
+               
     }
 }

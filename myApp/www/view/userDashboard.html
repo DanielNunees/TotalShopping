@@ -1,6 +1,6 @@
 <ion-view view-title="Dashboard" >
   <ion-content class='has-footer' >
-    <div ng-if="isAuthenticated()"> <!-- If user not logged -->
+    <div ng-if="isAuthenticated"> <!-- If user not logged -->
 
       <header class="image-background-profile">
         <!--img ng-src="img/profile.jpg" class="img-circle user-image"-->
@@ -32,7 +32,7 @@
                 </ion-item>
                 <ion-item class="item-accordion" ng-repeat="product in group.items" ng-show="isGroupShown(group)">
                   <div class="list">
-                      <a class="item item-thumbnail-left" ng-href="#/product/{{product.productId}}">
+                      <a class="item item-thumbnail-left" ui-sref="product({productId: product.productId})">
                         <img ng-src="http://127.0.1.1/prestashop{{product.productImage}}">
                         <h2>{{product.productName}}</h2>
                         <p>{{product.productPrice | currency:"R$ " }}</p>

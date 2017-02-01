@@ -7,6 +7,7 @@
 			getAllProducts: function(){
 				return $http({
 					method: 'GET',
+					cache: true,
 					url: valueConfig.baseUrl+'/home'
 				})
 			},
@@ -16,7 +17,7 @@
 			        method: 'GET',
 			        cache: true,
 			        url: valueConfig.baseUrl+'/product/'+id_product
-			        })
+			        });
 			},
 
 			favoriteProduct: function(id_product,product_attribute){

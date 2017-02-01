@@ -157,7 +157,7 @@ angular.module('ngCart', ['ngCart.directives'])
                     cart.items.splice(index, 1);
                 }
             });
-            this.setCart(cart);
+            //this.setCart(cart);
             $rootScope.$broadcast('ngCart:itemRemoved', {});
             $rootScope.$broadcast('ngCart:change', {});
         };

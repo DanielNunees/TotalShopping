@@ -29,7 +29,7 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::get('/user/loadData','userController@loadData');
 	
 	/* Wishlist Routes */
-	Route::post('/createWishlist','WishlistController@addProduct');
+	Route::post('/wishlistAddProduct','WishlistController@addProduct');
 	Route::get('/wishlist','WishlistController@listProducts');
 	Route::post('/removeWishlistProduct','WishlistController@removeProducts');
 	
@@ -51,6 +51,6 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::get('/multistore/store/{id_store}','MultiStoreController@getProducts')->where('id_store', '[0-9]+');
 	
 	/* Products Routes */
-	Route::get('home', ['as' => 'home', 'uses' => 'ProductHomeController@index']);
+	Route::get('home', ['as' => 'home', 'uses' => 'homeController@index']);
 	Route::get('/product/{id_product}','ProductController@retrivingProduct')->where('id_product', '[0-9]+');
 });

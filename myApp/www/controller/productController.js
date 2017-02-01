@@ -1,68 +1,47 @@
 (function() {
   'use strict';
 angular.module('app')
-.controller('productController', ['$scope','$stateParams','$ionicPopup','$ionicNavBarDelegate','$ionicSlideBoxDelegate','productFactory','cartFactory','ngCart','$auth', function($scope,$stateParams,$ionicPopup,$ionicNavBarDelegate,$ionicSlideBoxDelegate,productFactory,cartFactory,ngCart,$auth){
+.controller('productController', ['$scope','$stateParams','$ionicNavBarDelegate','$ionicSlideBoxDelegate','productFactory','cartFactory','ngCart','alertsFactory','wishlistFactory', function($scope,$stateParams,$ionicNavBarDelegate,$ionicSlideBoxDelegate,productFactory,cartFactory,ngCart,alertsFactory,wishlistFactory){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     $ionicNavBarDelegate.showBackButton(true);
   });
-  $scope.added = false;
-  var guest;
-  
-  $scope.isAuthenticated = function() {
-    return $auth.isAuthenticated();
-  };
 
 
-  productFactory.getProduct($stateParams.productId).then(function successCallback(data){
-    console.log(data.data);
-    $scope.product = {};
-        $scope.product = {product_name: data.data['description'][0]['name'],
-                          product_id: data.data['description'][0]['id_product'],
-                          product_description: data.data['description'][0]['description'],
-                          product_price: data.data['description'][0]['product_price']['price'],
-                          product_images: data.data['images'],
-                          product_attributes: data.data['attributes']};
-        
-        $ionicSlideBoxDelegate.update();
-  })
+  var getProduct = function(){
+    productFactory.getProduct($stateParams.productId).then(function successCallback(data){
+      $scope.product = {};
+          $scope.product = {productName: data.data['description'][0]['name'],
+                            productId: data.data['description'][0]['id_product'],
+                            productDescription: data.data['description'][0]['description'],
+                            productPrice: data.data['description'][0]['product_price']['price'],
+                            productImages: data.data['images'],
+                            productAttributes: data.data['attributes']};
+          
+          $ionicSlideBoxDelegate.update();
+    });
+  }
+
+  getProduct();
 
   $scope.addProductToCart = function(product_id,product_attribute){
      var item = ngCart.getItemById(String(product_id));
       if(item === false || angular.isUndefined(product_attribute)){
-        var alertPopup = $ionicPopup.alert({
-            title: 'Selecione uma Opção',
-            template: 'Selecione o Tamanho'
-          })
+        alertsFactory.showAlert( "Selecione um Tamanho!");
         return;
       }
       var quantity = item.getQuantity();
-      isGuest();
     cartFactory.addProduct(product_id,product_attribute,quantity).then(function successCallback(data){
       console.log(data);
+      alertsFactory.showAlert( "Adicionado com sucesso!");
     },function errorCallback(data){
       console.log(data);
     })
   }
-
-  var isGuest =function(){
-    if(!$auth.isAuthenticated()){
-      guest = null; //false
-      console.log('guest = null');
-    }
-    else{
-      guest = !null; //true
-      console.log('guest = true');
-    }
-  }
   
-  $scope.favoriteProduct = function(id_product,product_attribute){
-    productFactory.favoriteProduct(id_product,product_attribute)
+  $scope.favoriteProduct = function(id_product,product_attribute,product){
+    wishlistFactory.favoriteProduct(id_product,product_attribute,product)
       .then(function successCallback(response){
-        $scope.added = true;
-          console.log(response.data);
-          var alertPopup = $ionicPopup.alert({
-            template: 'Adicionado aos favoritos!'
-          });
+          alertsFactory.showAlert( "Adicionado aos Favoritos!");
       })    
     }
     

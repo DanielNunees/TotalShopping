@@ -8,8 +8,8 @@
   $urlRouterProvider.otherwise("/home");
 
   $ocLazyLoadProvider.config({
-        'debug': true, // For debugging 'true/false'
-        'events': true, // For Event 'true/false'
+        'debug': false, // For debugging 'true/false'
+        'events': false, // For Event 'true/false'
     });
   
     // Now set up the states
@@ -32,7 +32,7 @@
       templateUrl: "view/product.html",
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
-          return $ocLazyLoad.load(['controller/productController.js','factory/productFactory.js','factory/cartFactory.js'])
+          return $ocLazyLoad.load(['controller/productController.js','factory/productFactory.js','factory/cartFactory.js','factory/wishlistFactory.js'])
         }]
       }
     })

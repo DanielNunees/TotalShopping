@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\WishlistProducts;
 
@@ -18,20 +17,12 @@ class Wishlist extends Model
     	return $this->hasMany('App\Models\WishlistProducts','id_wishlist');
     }
 
-    public function ProductsPrice(){
-    	return $this->belongsToMany('App\Models\Products\Product','ps_wishlist_product','id_wishlist','id_product')->select('price');
+    public static function getIdWishlist($id_customer){
+        return Wishlist::where('id_customer',$id_customer)->select('id_wishlist')->get();
     }
 
-    public function ProductsName(){
-    	return $this->belongsToMany('App\Models\Products\ProductLang','ps_wishlist_product','id_wishlist','id_product')->select('name')->where('id_lang',2);
-    }
-
-    public function ProductsImage(){
-    	return $this->belongsToMany('App\Models\Products\ProductImages','ps_wishlist_product','id_wishlist','id_product')->select('id_image')->where('cover',1);
-    }
-
-    public function ProductsId(){
-        return $this->hasMany('App\Models\WishlistProducts','id_wishlist')->select('id_product');
+    public function ProductCombinationId(){
+        return $this->belongsToMany('App\Models\WishlistProducts','ps_product_attribute_combination','id_product_attribute','id_attribute')->select('id_product_attribute');  
     }
 
 

@@ -1,14 +1,14 @@
 <ion-view view-title="Wishlist">
   <ion-content class="padding-horizontal has-footer">
-    <div ng-if="isAuthenticated()">
-      <div class="list" ng-repeat=" prd in product ">
-          <a class="item item-thumbnail-left" ng-href="#/product/{{prd.id_product}}">
-            <img ng-src="http://127.0.1.1/prestashop{{prd.image}}">
-            <h2>{{prd.name}}</h2>
-            <h3>{{prd.price | currency:"R$ "}}</h3>
-            <h4 class="css-selector">3x {{prd.price/3 | currency:"R$ ":2}}</h4>
+    <div ng-if="isAuthenticated">
+      <div class="list" ng-repeat=" product in products ">
+          <a class="item item-thumbnail-left" ui-sref="product({productId: product.productId})">
+            <img ng-src="http://127.0.1.1/prestashop{{product.productImages[0]['image']}}">
+            <h2>{{product.productName}}</h2>
+            <h3>{{product.productPrice | currency:"R$ "}}</h3>
+            <h4 class="css-selector">3x {{product.productPrice/3 | currency:"R$ ":2}}</h4>
           </a>
-          <button class="button button-block button-assertive button-outline" ng-click="remove($index,prd.id_product)">Remover</button>
+          <button class="button button-block button-assertive button-outline" ng-click="remove($index,product.productId)">Remover</button>
       </div>
     </div>
   </ion-content>

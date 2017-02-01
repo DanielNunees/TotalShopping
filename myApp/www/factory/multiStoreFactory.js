@@ -7,6 +7,7 @@
 			getProducts: function(idStore){
 				return $http({
 			        method: 'GET',
+			        cache: true,
 			        url: valueConfig.baseUrl+'/multistore/store/'+idStore
 	      		}).then(function(response){
 	      			return(response.data);

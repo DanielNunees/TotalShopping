@@ -18,7 +18,8 @@
 				}, function errorCallback(response){
 					console.log(response);
 				});
-		} 
+		}
+		
 		if($auth.isAuthenticated())
 		cartFactory.loadCart().then(function successCallback(response) {
 			ngCart.empty();

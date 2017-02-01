@@ -8,13 +8,16 @@ angular.module('app')
     $ionicHistory.clearHistory();
     $ionicNavBarDelegate.showBackButton(false);
   });
-
+  $scope.product = [];
   productFactory.getAllProducts().
     then(function successCallback(data){
+      console.log(data);
       $scope.product = data.data;
     },function errorCallback(response){
       console.log(response);
   });
+
+
 
 }]);
 })();

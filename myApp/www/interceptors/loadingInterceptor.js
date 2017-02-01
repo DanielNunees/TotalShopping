@@ -8,7 +8,7 @@ angular.module('app')
 			var url = config.url;
 			if(url.indexOf('127.0.1.1') > -1){ 
 				$rootScope.loading = true;
-				console.log(config.url);
+				//console.log(config.url);
 			}
 			return config;
 		},

@@ -8,6 +8,7 @@ angular.module('app')
 		loadHistoric: function(){
 			return $http({
 				method: 'GET',
+				cache: true,
 				url: valueConfig.baseUrl+'/historic/getHistoric'
 			}).then(function(data){
 				return data.data;

@@ -14,16 +14,22 @@ use Exception;
 
 class ProductController extends Controller
 {  
-    public static function retrivingProduct($id_product){
+    public static function retrivingProduct($id_product, $all = false){
             
             /* Validate if a product id exceed the quantity on DB */
+            if($all){
+                $id_product = [];
+                $ids = Product::getAllIds();
+                foreach ($ids as $key => $value) {
+                    $id_product[] = $value->id_product;
+                }
+            }
+            
             if(!is_array($id_product)){
                 if(!is_numeric($id_product)) return response()->json(['error' => 'not_numeric_id'], 500);
 
-                if($id_product==0 || $id_product>Product::max('id_product')) return response()->json(['error' => 'page_not_found'], 404);
+                if($id_product==0 || $id_product>Product::max('id_product')) return response()->json(['error' => 'product_not_found'], 404);
             }
-            
-            /* End of Validate */
 
             /*decricao do produto*/
             $description = ProductController::productDescription($id_product);

@@ -18,7 +18,6 @@
 			},
 
 			removeProduct: function(id_product,id_product_attribute){
-				console.log(id_product,id_product_attribute);
 				return $http({
 			        method: 'POST',
 			        url: valueConfig.baseUrl+'/cartRemoveProducts',
@@ -27,7 +26,7 @@
 			        data: $httpParamSerializerJQLike({'id_product':id_product,
 	                                          	      'id_product_attribute':id_product_attribute})
 	      		}).then(function(response){
-	      			ngCart.removeItemById(  parseInt(id_product));
+	      			ngCart.removeItemById(parseInt(id_product));
 	      			console.log(response.data);
 			    }); 
 			},

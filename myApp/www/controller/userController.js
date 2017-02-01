@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.controller('userController', ['$scope','$ionicNavBarDelegate','userFactory','$auth','$state','$ionicHistory','$ionicModal',  function($scope,$ionicNavBarDelegate,userFactory,$auth,$state,$ionicHistory,$ionicModal){
+	.controller('userController', ['$scope','$ionicNavBarDelegate','$auth','$state','$ionicHistory','$ionicModal','alertsFactory',  function($scope,$ionicNavBarDelegate,$auth,$state,$ionicHistory,$ionicModal,alertsFactory){
 
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
 	      $ionicNavBarDelegate.showBackButton(true);
@@ -21,10 +21,8 @@
 	        function(error){
 	          console.log(error);
 	          $scope.loginData = {};
-	           var alertPopup = $ionicPopup.alert({
-	             title: 'Failed Authenticantion',
-	             template: 'Login ou password error, if you are not registered, click in "Register now"'
-	           });
+	          alertsFactory.showAlert("Erro de Autenticação","Seu email ou senha estão errados, confira seus dados.Se caso ainda não"
+	          	+"for registrado clique no botão Registrar Agora");
 	           delete $scope.loginData;
 	        });
 	    }

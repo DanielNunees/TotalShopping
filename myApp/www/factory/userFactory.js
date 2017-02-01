@@ -7,6 +7,7 @@ angular.module('app')
 	 	loadUserData: function(){
 			return $http({
 		        method: 'GET',
+		        cache: true,
 		        url: valueConfig.baseUrl+'/user/loadData',
 		    }).then(function(result){
 

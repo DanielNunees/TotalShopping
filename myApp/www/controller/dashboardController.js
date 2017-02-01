@@ -10,9 +10,7 @@ angular.module('app')
 
 	$scope.address = {};
 
-	$scope.isAuthenticated = function() {
-	  return $auth.isAuthenticated();
-	};
+	$scope.isAuthenticated = $auth.isAuthenticated();
 
 	var CarregarHistoricoDeCompras = function(){
 		dashboardFactory.loadHistoric().then(function(data){
@@ -38,7 +36,7 @@ angular.module('app')
 		});
 	}
 
-
+	CarregarHistoricoDeCompras();
 	  /*
 	   * if given group is the selected group, deselect it
 	   * else, select the given group
@@ -71,7 +69,6 @@ angular.module('app')
 
 	var carregarDadosDoUsuario = function(){
 		userFactory.loadUserData().then(function(response) {
-			console.log(response);
 			$scope.user = {};
 			$scope.address = {};
 
@@ -113,6 +110,7 @@ angular.module('app')
 		         	console.log(response);
 	        });
 		};
+		carregarDadosDoUsuario();
 
 	$scope.updateOrCreateAddress = function(address){
 		address.address1 = address.address1+','+address.number;
