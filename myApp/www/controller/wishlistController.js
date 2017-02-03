@@ -34,7 +34,6 @@ angular.module('app')
       });
       },function errorCallback(response) {
         /* Tratamento de erros*/
-        //error 204 - No content
         console.log(response);
         if(response.status == 404){
           alertsFactory.showAlert('Error 404','Sua lista está vazia');

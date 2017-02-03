@@ -2,13 +2,12 @@
     'use strict';
 	angular.module('app')
 	.factory('productFactory', function($http,$httpParamSerializerJQLike,valueConfig){
+		var page = 1;
 		return {
-
 			getAllProducts: function(){
 				return $http({
 					method: 'GET',
-					cache: true,
-					url: valueConfig.baseUrl+'/home'
+					url: valueConfig.baseUrl+'/home/'+page
 				})
 			},
 
@@ -31,6 +30,14 @@
 			    	}).then(function(response){
 			        	return response
                     });
+			},
+
+			getPage: function(){
+				return page;
+			},
+
+			nextPage: function(){
+				return page++;
 			}
 		}
 	});

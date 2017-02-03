@@ -51,6 +51,6 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::get('/multistore/store/{id_store}','MultiStoreController@getProducts')->where('id_store', '[0-9]+');
 	
 	/* Products Routes */
-	Route::get('home', ['as' => 'home', 'uses' => 'homeController@index']);
+	Route::get('home/{page}', ['as' => 'home', 'uses' => 'homeController@index'])->where('id_product', '[0-9]+');;
 	Route::get('/product/{id_product}','ProductController@retrivingProduct')->where('id_product', '[0-9]+');
 });

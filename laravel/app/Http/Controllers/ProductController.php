@@ -14,23 +14,27 @@ use Exception;
 
 class ProductController extends Controller
 {  
-    public static function retrivingProduct($id_product, $all = false){
-            
+    public static function retrivingProduct($id_product){
             /* Validate if a product id exceed the quantity on DB */
-            if($all){
-                $id_product = [];
-                $ids = Product::getAllIds();
-                foreach ($ids as $key => $value) {
-                    $id_product[] = $value->id_product;
-                }
-            }
             
             if(!is_array($id_product)){
-                if(!is_numeric($id_product)) return response()->json(['error' => 'not_numeric_id'], 500);
-
-                if($id_product==0 || $id_product>Product::max('id_product')) return response()->json(['error' => 'product_not_found'], 404);
+                if(!is_numeric($id_product))
+                    throw new Exception('BOOM1'); 
+                if($id_product>Product::max('id_product'))
+                    throw new Exception('Id exceed');
+                if($id_product<=0 )
+                    throw new Exception("Error Processing Request", 1);                        
+            }
+            else{
+                foreach ($id_product as $key => $value) {
+                   if(!is_numeric($value) || $value<=0 || is_int($value))
+                    throw new Exception('BOOM3');
+                }
             }
 
+            
+            
+            
             /*decricao do produto*/
             $description = ProductController::productDescription($id_product);
             $attributes = ProductController::productAttributes($id_product);
@@ -39,7 +43,6 @@ class ProductController extends Controller
                 $product->ProductPrice->price;
             }
             $description = json_decode($description,true);
-
             return  array('description' => $description,'images'=>$images,'attributes'=>$attributes);
         }
 
