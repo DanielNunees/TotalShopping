@@ -19,6 +19,10 @@ class Product extends Model
     public static function getProductsFromStore($id_store){
     	return Product::where('id_shop_default',$id_store)->select('id_product')->get();
     }
+
+    public static function getCountProductsFromStore($id_store){
+        return Product::where('id_shop_default',$id_store)->count();
+    }
    
 }
  

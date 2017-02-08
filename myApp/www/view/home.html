@@ -35,8 +35,8 @@
         </div>
         <ion-infinite-scroll
 		    on-infinite="getAllProducts()"
-		    distance="1%">
+		    distance="1%"
+		    ng-if="endData">
 		  </ion-infinite-scroll>
 		</ion-content>
-    </ion-content>
 </ion-view >

@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','checkoutFactory','userFactory','$ionicActionSheet',  function($scope,$ionicNavBarDelegate,ngCart,cartFactory,checkoutFactory,userFactory,$ionicActionSheet){
+	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','checkoutFactory','userFactory','$ionicActionSheet','alertsFactory', function($scope,$ionicNavBarDelegate,ngCart,cartFactory,checkoutFactory,userFactory,$ionicActionSheet,alertsFactory){
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
     	$ionicNavBarDelegate.showBackButton(true);
     	
@@ -11,6 +11,8 @@
         },function errorCallback(response) {
         	/* Tratamento de erros*/
 	      	//error 400 - No content
+
+	      	alertsFactory.showAlert("Error 500","Server Error! The checkout will not be processed!");
 	      	if(response.status == 500){
 	            var alertPopup = $ionicPopup.alert({
 	            	title: 'Error 500',
@@ -27,6 +29,7 @@
   	});
 
   	$scope.method = 1;
+  	$scope.boletoData = {};
 
 	$scope.show = function() {
 
@@ -52,18 +55,23 @@
 	   });
 	 }; 
 
-	    $scope.boletoCheckout = function(user){
-	    	console.log('aqui foi');
-			checkoutFactory.boletoCheckout(user).then(function successCallback(response){
+	    $scope.boletoCheckout = function(boletoData){
+	    	
+	    	var SenderHash = PagSeguroDirectPayment.getSenderHash();
+	    	boletoData.SenderHash = SenderHash;
+	    	console.log(boletoData);
+			checkoutFactory.boletoCheckout(boletoData).then(function successCallback(response){
 			  ngCart.empty();
 			  delete $scope.user;
 			  checkoutFactory.resetSessionId();
-			  console.log(response.data);
+			  console.log(response);
 			  checkoutFactory.getSession().then(function successCallback(response){
 			    console.log(response);
 			  });
 
 			},function errorCallback(response){
+			  ngCart.empty();
+			  delete $scope.user;
 			  console.log(response);
 			});
 		}
@@ -100,6 +108,8 @@
 
 		        //if(Object.keys(response.errors)==1000)
 		        console.log(response);
+		        ngCart.empty();
+			  	delete $scope.user;
 		        var error = Object.keys(response.errors);
 		        
 		        switch(error[0]) {

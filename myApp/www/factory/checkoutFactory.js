@@ -24,7 +24,7 @@
 			        url: valueConfig.baseUrl+'/creditCardCheckout',
 			        dataType: 'json',
 			        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-			        data: $httpParamSerializerJQLike({'checkoutData':checkoutData})
+			        data: $httpParamSerializerJQLike(checkoutData)
 			    })
 			},
 

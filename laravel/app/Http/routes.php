@@ -48,7 +48,8 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::get('/historic/getHistoric','HistoricController@getHistoric');
 	
 	/* Multi Store Routes*/
-	Route::get('/multistore/store/{id_store}','MultiStoreController@getProducts')->where('id_store', '[0-9]+');
+	Route::get('/multistore/getStores','MultiStoreController@getStores');
+	Route::get('/multistore/store/{id_store}/{page}','MultiStoreController@getProducts')->where('id_store', '[0-9]+')->where('page', '[0-9]+');
 	
 	/* Products Routes */
 	Route::get('home/{page}', ['as' => 'home', 'uses' => 'homeController@index'])->where('id_product', '[0-9]+');;

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use App\Http\Requests;
 use App\Libraries\PagSeguroLibrary\PagSeguroLibrary;
+use App\Libraries\PagSeguroLibrary\PagSeguro;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroPaymentRequest;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroBilling;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroDirectPaymentInstallment;
@@ -27,8 +28,8 @@ use Exception;
 class boletoCheckoutController extends Controller
 {
     public static function boletoCheckout(Request $request)
-    {       
-    
+    {        
+
         // Instantiate a new payment request
         $directPaymentRequest = new PagSeguroDirectPaymentRequest();
 
@@ -47,11 +48,15 @@ class boletoCheckoutController extends Controller
         $directPaymentRequest->setCurrency("BRL");
 
         // Add an item for this payment request
+        try{
+            $cart_products = CartController::loadCart();
+        }catch(Exception $e){
+            return $e->getMessage(); 
+        }
+        
 
-        $cart_products = CartController::loadCart();
-        return gettype($cart_products);
-        if(!is_array($cart_products))
-            return response()->json(['error' => 'cart_is_empty'], 400); 
+        
+
         $price =0;
         //return $cart_products;
         foreach ($cart_products as $key => $value) {
@@ -76,11 +81,11 @@ class boletoCheckoutController extends Controller
             '27',
             '999887766',
             'CPF',
-            '156.009.442-76',
+            '156.009.442-71',
             true
         );
         
-        $directPaymentRequest->setSenderHash($request->SenderHash);
+        $directPaymentRequest->setSenderHash($request->checkoutData['SenderHash']);
 
         // Set shipping information for this payment request
         $sedexCode = PagSeguroShippingType::getCodeByType('SEDEX');
@@ -117,8 +122,9 @@ class boletoCheckoutController extends Controller
 
             // Register this payment request in PagSeguro to obtain the payment URL to redirect your customer.
             $order = OrderController::createOrder();
-            //$response = $directPaymentRequest->register($credentials);
-            return $order;
+            $response = $directPaymentRequest->register($credentials);
+            //return gettype($response);
+            //return $order;
         } catch (PagSeguroServiceException $e) {
             die($e->getMessage());
         }

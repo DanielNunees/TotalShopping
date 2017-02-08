@@ -90,7 +90,7 @@ class OrderController extends Controller
             OrderController::OrderDetail($order_id,$products[$value1]);
         }
         
-        //CartController::deleteCart();
+        CartController::createCart();
         return $order_id;
 
     }

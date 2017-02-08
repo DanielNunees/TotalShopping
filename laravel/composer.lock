@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "16c8736d95745f215ff3fb52d0d41261",
-    "content-hash": "3e1c1fc0c9b754393659281bc42ec909",
+    "hash": "3611b468e025547dba3f85ed472f81a8",
+    "content-hash": "2da5996dece001a9453fd4a3dd6c386f",
     "packages": [
         {
             "name": "barryvdh/laravel-cors",
@@ -843,38 +843,42 @@
             "time": "2016-09-16 12:04:44"
         },
         {
-            "name": "pagseguro/php",
-            "version": "2.7.1",
+            "name": "pagseguro/pagseguro-php-sdk",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pagseguro/php.git",
-                "reference": "1c956e609acdef2dd7a37ece5cb5d13e7fc672a0"
+                "url": "https://github.com/pagseguro/pagseguro-php-sdk.git",
+                "reference": "f0ca745a285fb6996c5a60e577ec6832f41a5138"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pagseguro/php/zipball/1c956e609acdef2dd7a37ece5cb5d13e7fc672a0",
-                "reference": "1c956e609acdef2dd7a37ece5cb5d13e7fc672a0",
+                "url": "https://api.github.com/repos/pagseguro/pagseguro-php-sdk/zipball/f0ca745a285fb6996c5a60e577ec6832f41a5138",
+                "reference": "f0ca745a285fb6996c5a60e577ec6832f41a5138",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "lib-curl": "*",
-                "lib-libxml": "*",
                 "lib-openssl": "*",
                 "php": ">=5.4.27"
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "source/PagSeguroLibrary"
-                ]
+                "psr-4": {
+                    "PagSeguro\\": "source/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache License 2.0"
             ],
+            "authors": [
+                {
+                    "name": "PagSeguro"
+                }
+            ],
             "description": "Biblioteca de integração com o PagSeguro",
-            "time": "2016-01-28 20:17:46"
+            "time": "2016-09-12 18:03:36"
         },
         {
             "name": "paragonie/random_compat",
@@ -2301,6 +2305,40 @@
             "time": "2016-05-22 21:52:33"
         },
         {
+            "name": "pagseguro/php",
+            "version": "2.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pagseguro/php.git",
+                "reference": "1c956e609acdef2dd7a37ece5cb5d13e7fc672a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pagseguro/php/zipball/1c956e609acdef2dd7a37ece5cb5d13e7fc672a0",
+                "reference": "1c956e609acdef2dd7a37ece5cb5d13e7fc672a0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "lib-curl": "*",
+                "lib-libxml": "*",
+                "lib-openssl": "*",
+                "php": ">=5.4.27"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "source/PagSeguroLibrary"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache License 2.0"
+            ],
+            "description": "Biblioteca de integração com o PagSeguro",
+            "time": "2016-01-28 20:17:46"
+        },
+        {
             "name": "phpdocumentor/reflection-common",
             "version": "1.0",
             "source": {
@@ -3462,9 +3500,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "pagseguro/php": 0
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

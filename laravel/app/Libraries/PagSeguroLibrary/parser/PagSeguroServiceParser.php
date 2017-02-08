@@ -36,7 +36,7 @@ class PagSeguroServiceParser
      */
     public static function readErrors($str_xml)
     {
-        return 'ok';
+        //return 'ok';
         $parser = new PagSeguroXmlParser($str_xml);
         $data = $parser->getResult('errors');
         $errors = array();

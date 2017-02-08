@@ -57,6 +57,11 @@ class WishlistController extends Controller
     public function listProducts(){
 
         $id_customer = myAuthController::getAuthenticatedUser();
+
+        if(!is_numeric($id_customer)){
+          return $id_customer; 
+        }
+
         $wishlist_id =  Wishlist::getIdWishlist($id_customer);
         $products_id = WishlistProducts::getProducts($wishlist_id[0]['id_wishlist']);
         

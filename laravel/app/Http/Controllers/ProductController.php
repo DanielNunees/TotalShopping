@@ -1,5 +1,5 @@
 <?php
-namespace  App\Http\Controllers;
+namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Models\Products\ProductStock;
@@ -19,11 +19,13 @@ class ProductController extends Controller
             
             if(!is_array($id_product)){
                 if(!is_numeric($id_product))
-                    throw new Exception('BOOM1'); 
+                    throw new Exception('Product id needs to be numeric'); 
+                
                 if($id_product>Product::max('id_product'))
-                    throw new Exception('Id exceed');
+                    throw new Exception('Id exceeded maximum');
+                
                 if($id_product<=0 )
-                    throw new Exception("Error Processing Request", 1);                        
+                    throw new Exception("Product Id Not Allowed", 400);                        
             }
             else{
                 foreach ($id_product as $key => $value) {

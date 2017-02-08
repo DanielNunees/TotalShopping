@@ -117,11 +117,11 @@
 
     .state('store', {
       url: "/store/:idStore",
-      controller: 'multiStoreController',
+      controller: 'storeController',
       templateUrl: "view/store.html",
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
-          return $ocLazyLoad.load(['controller/multiStoreController.js','factory/multiStoreFactory.js'])
+          return $ocLazyLoad.load(['controller/storeController.js','factory/multiStoreFactory.js'])
         }]
       }
     })

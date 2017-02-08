@@ -12,14 +12,15 @@ use App\Http\Requests;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\myAuthController;
+use Exception;
 
 class CartController extends Controller
 {
 
     protected $id_customer;
 
-    public static function createCart($id_customer){
-
+    public static function createCart(){
+        $id_customer = myAuthController::getAuthenticatedUser();
         if(!is_numeric($id_customer)){
             return response()->json(['error' => 'ID is not a number'], 500);
         }
@@ -73,7 +74,7 @@ class CartController extends Controller
         $order = OrderController::getOrderByCartId($cart_id['id_cart']);
 
         if(!$order->isEmpty()){
-            $cart_id['id_cart'] = CartController::createCart($id_customer);
+            $cart_id['id_cart'] = CartController::createCart();
         }
 
         $product = ProductController::productQuantityInStock($request->id_product);
@@ -97,7 +98,7 @@ class CartController extends Controller
         $address = $address[0]['id_address'];
 
         if(is_null($cart_id)){
-            $cart_id['id_cart'] = CartController::createCart($id_customer);
+            $cart_id['id_cart'] = CartController::createCart();
 
             CartController::addToCart($cart_id['id_cart'],$request,$address);
         }
@@ -144,13 +145,14 @@ class CartController extends Controller
         }
         $cart_id = Cart::RetrivingCartId($id_customer);
         $order = OrderController::getOrderByCartId($cart_id['id_cart']);
-
-        if(!$order->isEmpty()){
-            return response()->json(['error' => 'Have some order with this cart!'], 500);
-        }
-
+        
+        //return $order;
+        if(!$order->isEmpty()) 
+            throw new Exception("Have Some Order With This Cart Id", 400);
+            
         $products = CartProducts::allProductsFromCart($cart_id['id_cart']);
-        if($products->isEmpty()) return response()->json(['error' => 'cart empty'], 200);
+        if($products->isEmpty()) 
+            return response()->json(['Alert'=>'This cart Is Empty'], 200);
 
 
         foreach ($products as $key => $value) {
@@ -189,5 +191,13 @@ class CartController extends Controller
         Cart::DeleteCart($cart_id['id_cart']);
         return response()->json(['success' => 'ok'], 200);
 
+    }
+
+    public static function removeAllProducts(){
+        $id_customer = myAuthController::getAuthenticatedUser();
+        $cart_id = Cart::RetrivingCartId($id_customer);
+
+        CartProducts::removeAllProducts($cart_id['id_cart']);
+        return response()->json(['success' => 'ok'], 200);
     }
 } 

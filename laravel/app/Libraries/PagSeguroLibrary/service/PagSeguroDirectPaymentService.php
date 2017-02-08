@@ -34,7 +34,7 @@ use App\Libraries\PagSeguroLibrary\helper\PagSeguroHelper;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroHttpStatus;
 use App\Libraries\PagSeguroLibrary\exception\PagSeguroServiceException;
 use App\Libraries\PagSeguroLibrary\parser\PagSeguroTransactionParser;
-
+use Exception;
 
 
 class PagSeguroDirectPaymentService
@@ -132,8 +132,6 @@ class PagSeguroDirectPaymentService
                 break;
             case 'BAD_REQUEST':
                 $errors = PagSeguroTransactionParser::readErrors($connection->getResponse());
-                echo $connection->getResponse();
-                echo "string";
                 $errors = explode(' ',$errors);
                 $error = new PagSeguroServiceException($httpStatus, $errors);
                 LogPagSeguro::error(
