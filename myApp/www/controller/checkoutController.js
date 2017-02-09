@@ -8,6 +8,7 @@
     	checkoutFactory.getSession().then(function successCallback(response) {
 	  		//PagSeguroDirectPayment.setSessionId(response.data);
 	  		var SenderHash = PagSeguroDirectPayment.getSenderHash();
+	  		console.log(SenderHash);
         },function errorCallback(response) {
         	/* Tratamento de erros*/
 	      	//error 400 - No content
@@ -59,7 +60,6 @@
 	    	
 	    	var SenderHash = PagSeguroDirectPayment.getSenderHash();
 	    	boletoData.SenderHash = SenderHash;
-	    	console.log(boletoData);
 			checkoutFactory.boletoCheckout(boletoData).then(function successCallback(response){
 			  ngCart.empty();
 			  delete $scope.user;

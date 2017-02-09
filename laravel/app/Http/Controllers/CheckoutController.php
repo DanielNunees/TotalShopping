@@ -8,7 +8,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use App\Http\Requests;
 use PagSeguro\Library;
-use App\Libraries\PagSeguroLibrary\PagSeguroLibrary;
 
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroPaymentRequest;
 use App\Libraries\PagSeguroLibrary\domain\PagSeguroBilling;
@@ -36,7 +35,7 @@ class CheckoutController extends Controller
                 \PagSeguro\Configuration\Configure::getAccountCredentials()
             );
 
-            echo "<strong>ID de sess&atilde;o criado: </strong>{$sessionCode->getResult()}";
+            return $sessionCode->getResult();
         } catch (Exception $e) {
             die($e->getMessage());
         }

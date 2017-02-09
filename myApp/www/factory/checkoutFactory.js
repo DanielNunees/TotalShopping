@@ -22,8 +22,7 @@
 				return $http({
 			        method: 'POST',
 			        url: valueConfig.baseUrl+'/creditCardCheckout',
-			        dataType: 'json',
-			        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=ISO-8859-1'},
 			        data: $httpParamSerializerJQLike(checkoutData)
 			    })
 			},
@@ -32,8 +31,7 @@
 				return $http({
 			        method: 'POST',
 			        url: valueConfig.baseUrl+'/boletoCheckout',
-			        dataType: 'json',
-			        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=ISO-8859-1'},
 			        data: $httpParamSerializerJQLike({'checkoutData':checkoutData})
 			    })
 			},

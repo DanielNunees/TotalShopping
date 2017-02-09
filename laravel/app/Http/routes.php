@@ -54,4 +54,8 @@ Route::group(['middleware' => 'cors'], function () {
 	/* Products Routes */
 	Route::get('home/{page}', ['as' => 'home', 'uses' => 'homeController@index'])->where('id_product', '[0-9]+');;
 	Route::get('/product/{id_product}','ProductController@retrivingProduct')->where('id_product', '[0-9]+');
+
+	/* TEST ROUTES*/
+
+	Route::get('/teste','boletoTest@checkoutBoleto');
 });

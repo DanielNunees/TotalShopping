@@ -8,20 +8,16 @@ use Validator;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use App\Http\Requests;
-use PagSeguro\Library;
 
 use App\Http\Controllers\OrderController;
 use App\Models\State;
 use Exception;
 
-class boletoCheckoutController extends Controller
+class boletoController extends Controller
 {
-    public static function boletoCheckout(Request $request)
-    {        
-        Library::initialize();
-        Library::cmsVersion()->setName("Nome")->setRelease("1.0.0");
-        Library::moduleVersion()->setName("Nome")->setRelease("1.0.0");
-       //Instantiate a new Boleto Object
+    public static function boleto(Request $request)
+    { 
+        //Instantiate a new Boleto Object
         $boleto = new \PagSeguro\Domains\Requests\DirectPayment\Boleto();
 
         // Set the Payment Mode for this payment request
@@ -73,7 +69,7 @@ class boletoCheckoutController extends Controller
 
         $boleto->setSender()->setDocument()->withParameters(
             'CPF',
-            '156.009.442-76'
+            '156.009.442-71'
         );
 
         $boleto->setSender()->setHash($request->checkoutData['SenderHash']);
@@ -85,6 +81,18 @@ class boletoCheckoutController extends Controller
         $address = userController::loadData();
         //return $address['address'];
         $boleto->setShipping()->setAddress()->withParameters(
+            strstr($address['address'][0]['address1'],',',true), //Logradouro
+            substr(strrchr($address['address'][0]['address1'],','),1), //Numero
+            $address['address'][0]['address2'], //Bairro
+            $address['address'][0]['postcode'], //CEP
+            $address['address'][0]['city'], //Cidade
+            $address['address'][0]['state'],//Estado
+            'BRA'
+            $address['address'][0]['other'],//Complemento
+        );
+
+        // Set shipping information for this payment request
+        $boleto->setShipping()->setAddress()->withParameters(
             'Av. Brig. Faria Lima',
             '1384',
             'Jardim Paulistano',
@@ -95,23 +103,16 @@ class boletoCheckoutController extends Controller
             'apto. 114'
         );
 
-        // Set shipping information for this payment request
         try {
             //Get the crendentials and register the boleto payment
-
-            //$order = OrderController::createOrder();
-            
             $result = $boleto->register(
                 \PagSeguro\Configuration\Configure::getAccountCredentials()
             );
 
-            foreach ($result as $key => $value) {
-                echo( $value);
-            }
-
-            //echo "<pre>";
-            //print_r($result);
+            echo "<pre>";
+            print_r($result);
         } catch (Exception $e) {
+            echo "</br> <strong>";
             die($e->getMessage());
         }
     }
