@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use Validator;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-
+use App\Tools\Tools;
 use App\Http\Requests;
 use PagSeguro\Library;
 
@@ -17,7 +17,9 @@ use Exception;
 class boletoCheckoutController extends Controller
 {
     public static function boletoCheckout(Request $request)
-    {        
+    {   
+
+        //return $request->checkoutData;
         Library::initialize();
         Library::cmsVersion()->setName("Nome")->setRelease("1.0.0");
         Library::moduleVersion()->setName("Nome")->setRelease("1.0.0");
@@ -56,7 +58,8 @@ class boletoCheckoutController extends Controller
 
         // Set a reference code for this payment request. It is useful to identify this payment
         // in future notifications.
-        $boleto->setReference("REF123-boleto");
+        $reference = Tools::passwdGen(8,'NO_NUMERIC');
+        $boleto->setReference($reference);
 
         //set extra amount
         //$boleto->setExtraAmount(11.5);
@@ -104,11 +107,8 @@ class boletoCheckoutController extends Controller
             $result = $boleto->register(
                 \PagSeguro\Configuration\Configure::getAccountCredentials()
             );
-
-            foreach ($result as $key => $value) {
-                echo( $value);
-            }
-
+            return $order = OrderController::createOrder($reference);
+            //return ($result->getPaymentLink());
             //echo "<pre>";
             //print_r($result);
         } catch (Exception $e) {

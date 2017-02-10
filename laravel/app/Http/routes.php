@@ -56,6 +56,12 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::get('/product/{id_product}','ProductController@retrivingProduct')->where('id_product', '[0-9]+');
 
 	/* TEST ROUTES*/
+	Route::get('searchTransacion/byCode','Transactions\SearchTransactionByCode@getTransaction');
+	Route::get('searchTransacion/byDate','Transactions\SearchTransactionByDate@getTransaction');
+	Route::get('searchTransacion/byReference','Transactions\SearchTransactionByReference@getTransaction');
+	Route::get('searchTransacion/Abandoned','Transactions\SearchTransactionAbandoned@getTransaction');
+
+	/* TEST ROUTES*/
 
 	Route::get('/teste','boletoTest@checkoutBoleto');
 });

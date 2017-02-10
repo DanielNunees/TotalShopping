@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Orders;
+use App\Models\Order\Orders;
 use App\User;
 use App\Http\Requests;
 use App\Models\Address;
 use App\Tools\Tools;
 use App\Models\Cart;
-use App\Models\OrderDetail;
+use App\Models\Order\OrderDetail;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderHystoryController;
 
 class OrderController extends Controller
 {
-    public static function createOrder(){
+    public static function createOrder($reference){
         $id_customer = myAuthController::getAuthenticatedUser();
         
         $cart_products = CartController::loadCart();
@@ -30,10 +31,10 @@ class OrderController extends Controller
             number_format($value->product['description'][0]['product_price']['price'],2);
             $price = $values[$value->id_shop] + number_format($quantity *$value->product['description'][0]['product_price']['price'],2, '.', '');
             $values[$value->id_shop] = $price;
-            if(!array_search($value->id_shop, $shop_ids))
-            $shop_ids[] = $value->id_shop;
+            if(!in_array($value->id_shop, $shop_ids))
+                $shop_ids[] = $value->id_shop;
         }
-         
+
     	$today = date("Y-m-d H:i:s");
 
     	$customer_secure_key = User::getSecureKey($id_customer);
@@ -43,9 +44,9 @@ class OrderController extends Controller
         $id_cart = $id_cart['id_cart']; 	
         
         foreach($shop_ids as $key => $value1){
-            $reference = Tools::passwdGen(8,'NO_NUMERIC');
             $order_id = new Orders;
-        	$order_id = $order_id->insertGetId(['reference' => $reference,
+        	$order_id = $order_id->insertGetId(
+                ['reference' => $reference,
         		'id_shop'=>$value1,'id_shop_group'=>1,'id_carrier'=>3,
         		'id_lang'=>2,'id_customer'=>$id_customer,
         		'id_cart'=>$id_cart,
@@ -88,9 +89,11 @@ class OrderController extends Controller
         		'date_upd'=>$today]);
             
             OrderController::OrderDetail($order_id,$products[$value1]);
+            OrderHystoryController::newHistory($order_id);
         }
         
         CartController::createCart();
+        
         return $order_id;
 
     }
