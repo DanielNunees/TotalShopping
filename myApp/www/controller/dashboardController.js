@@ -14,11 +14,12 @@ angular.module('app')
 
 	var CarregarHistoricoDeCompras = function(){
 		dashboardFactory.loadHistoric().then(function(data){
+				console.log(data);
 				$scope.products = [];
 				angular.forEach(data,function(value,key){
-					//console.log(value);
+					//console.log(value[0].reference);
 					$scope.products[key] = {
-						name: value[0]['id_order_detail'],
+						name: value[0]['reference'],
 						items:[]
 					};
 					angular.forEach(value,function(value1,key1){
@@ -27,7 +28,8 @@ angular.module('app')
 										      productQuantity: value1['product_quantity'],
 										      productImage: value1['product']['images'][0]['image'],
 										      productAttribute: value1['product']['attributes'][0]['name'],
-										      productId: value1['product_id']
+										      productId: value1['product_id'],
+										      reference: value1['reference']
 										      });
 		        	})
 				})
@@ -71,15 +73,14 @@ angular.module('app')
 		userFactory.loadUserData().then(function(response) {
 			$scope.user = {};
 			$scope.address = {};
-
-			$scope.user = {firstname: response.user[0]['firstname'], lastname: response.user[0]['lastname'],
-						   birthday: response.user[0]['birthday'], email: response.user[0]['email']};
+			$scope.user = {firstname: response.user['firstname'], lastname: response.user['lastname'],
+						   birthday: response.user['birthday'], email: response.user['email']};
 			
 			if(!angular.isUndefined(response.address)){
-				$scope.address = {address: response.address[0]['address'], address1: response.address[0]['address1'],
-								  address2: response.address[0]['address2'], city: response.address[0]['city'],
-								  postcode: response.address[0]['postcode'], state: response.address[0]['state'],
-								  phoneMobile: response.address[0]['phone_mobile'] };
+				$scope.address = {address: response.address['address'], address1: response.address['address1'],
+								  address2: response.address['address2'], city: response.address['city'],
+								  postcode: response.address['postcode'], state: response.address['state'],
+								  phoneMobile: response.address['phone_mobile'] };
 			}
 
 			$scope.states = response.states;

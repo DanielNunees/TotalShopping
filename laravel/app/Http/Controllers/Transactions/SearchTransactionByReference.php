@@ -8,7 +8,7 @@ use App\Http\Requests;
 
 class SearchTransactionByReference extends Controller
 {
-    public function getTransaction(){
+    public static function getTransaction($reference){
 	
 
 	\PagSeguro\Library::initialize();
@@ -24,7 +24,7 @@ class SearchTransactionByReference extends Controller
     'initial_date' => '2017-02-01T14:55',
     ];
 
-    $reference = "UPSSFGLT";
+    //$reference = "LIBPHP000001";
 
     try {
         $response = \PagSeguro\Services\Transactions\Search\Reference::search(
@@ -34,9 +34,9 @@ class SearchTransactionByReference extends Controller
         );
 
         echo "<pre>";
-        print_r(get_class_methods($response));
-        $teste = $response->getTransactions();
-        print_r(get_class_methods($teste[0]));
+        //print_r(get_class_methods($response));
+        print_r($response->getTransactions());
+        //print_r(get_class_methods($teste[0]));
     } catch (Exception $e) {
         die($e->getMessage());
     }

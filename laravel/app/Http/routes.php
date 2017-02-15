@@ -34,9 +34,9 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::post('/removeWishlistProduct','WishlistController@removeProducts');
 	
 	/* Paymente Routes */
-	Route::post('/creditCardCheckout','creditCardCheckoutController@creditCardCheckout');
-	Route::get('/getSession','CheckoutController@getSession');
-	Route::post('/boletoCheckout','boletoCheckoutController@boletoCheckout');
+	Route::post('/creditCardCheckout','Checkout\CreditCardCheckoutController@creditCardCheckout');
+	Route::get('/getSession','Checkout\CheckoutController@getSession');
+	Route::post('/boletoCheckout','Checkout\BoletoCheckoutController@boletoCheckout');
 	Route::post('/order','OrderController@createOrder');
 	
 	/* Cart Routes */ 
@@ -55,11 +55,14 @@ Route::group(['middleware' => 'cors'], function () {
 	Route::get('home/{page}', ['as' => 'home', 'uses' => 'homeController@index'])->where('id_product', '[0-9]+');;
 	Route::get('/product/{id_product}','ProductController@retrivingProduct')->where('id_product', '[0-9]+');
 
-	/* TEST ROUTES*/
+	/* TRANSACTION ROUTES*/
 	Route::get('searchTransacion/byCode','Transactions\SearchTransactionByCode@getTransaction');
 	Route::get('searchTransacion/byDate','Transactions\SearchTransactionByDate@getTransaction');
 	Route::get('searchTransacion/byReference','Transactions\SearchTransactionByReference@getTransaction');
 	Route::get('searchTransacion/Abandoned','Transactions\SearchTransactionAbandoned@getTransaction');
+
+	/* INTALLMENTS ROUTE*/
+	Route::get('installment/getInstallments/{amount}','InstallmentsController@getInstallments')->where('amount','[0-9]+');
 
 	/* TEST ROUTES*/
 

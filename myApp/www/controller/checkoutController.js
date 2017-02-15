@@ -1,10 +1,12 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','checkoutFactory','userFactory','$ionicActionSheet','alertsFactory', function($scope,$ionicNavBarDelegate,ngCart,cartFactory,checkoutFactory,userFactory,$ionicActionSheet,alertsFactory){
+	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','checkoutFactory','userFactory','$ionicActionSheet','alertsFactory','$auth', function($scope,$ionicNavBarDelegate,ngCart,cartFactory,checkoutFactory,userFactory,$ionicActionSheet,alertsFactory,$auth){
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
     	$ionicNavBarDelegate.showBackButton(true);
-    	
+    	if($auth.isAuthenticated()){
+    		carregarDadosDoUsuario();
+    	}
     	checkoutFactory.getSession().then(function successCallback(response) {
 	  		//PagSeguroDirectPayment.setSessionId(response.data);
 	  		var SenderHash = PagSeguroDirectPayment.getSenderHash();
@@ -15,10 +17,7 @@
 
 	      	alertsFactory.showAlert("Error 500","Server Error! The checkout will not be processed!");
 	      	if(response.status == 500){
-	            var alertPopup = $ionicPopup.alert({
-	            	title: 'Error 500',
-	              	template: 'Serve Error! The checkout will not be processed!',
-	            });
+	      		alertsFactory.showAlert("Error 500",'Server Error! The checkout will not be processed!' );
           	}
 	      	if(response.status==400){
 	      		$scope.isEmpty = true;
@@ -31,6 +30,48 @@
 
   	$scope.method = 1;
   	$scope.boletoData = {};
+
+
+  	$scope.getPaymentMethods = function(){
+  		PagSeguroDirectPayment.getPaymentMethods({
+		    amount: 5.00,
+		    success: function(response) {
+		        //meios de pagamento disponíveis
+		        console.log(response);
+		    },
+		    error: function(response) {
+		        //tratamento do erro
+		        console.log(response);
+		    },
+		    complete: function(response) {
+		        //tratamento comum para todas chamadas
+		        console.log(response);
+		    }
+		});
+
+  	}
+
+
+  	$scope.getBrand = function(user){
+  		 PagSeguroDirectPayment.getBrand({
+			 cardBin: user.cardnumber.slice(0,6),
+			 success: function(response) {
+			 //brand found
+			 console.log(response);
+			 },
+			 error: function(response) {
+			 //error handling
+			 },
+			 complete: function(response) {
+			 //optional handling for both results
+			 }
+	 	});
+  	}
+  	
+
+
+
+
 
 	$scope.show = function() {
 
@@ -55,24 +96,30 @@
 	     }
 	   });
 	 }; 
+	 var x2js = new X2JS();
+
+	var convertXml2JSon = function (data) {
+	    var x2js = new X2JS();
+	    var aftCnv = x2js.xml_str2json(data);
+	    return aftCnv;
+	}
 
 	    $scope.boletoCheckout = function(boletoData){
 	    	
 	    	var SenderHash = PagSeguroDirectPayment.getSenderHash();
 	    	boletoData.SenderHash = SenderHash;
+	    	console.log(boletoData);
 			checkoutFactory.boletoCheckout(boletoData).then(function successCallback(response){
+				console.log(response.status);
 			  ngCart.empty();
 			  delete $scope.user;
 			  checkoutFactory.resetSessionId();
-			  console.log(response);
-			  checkoutFactory.getSession().then(function successCallback(response){
-			    console.log(response);
-			  });
-
+			  console.log((response.data));
 			},function errorCallback(response){
+			  console.log(convertXml2JSon(response.data));
 			  ngCart.empty();
 			  delete $scope.user;
-			  console.log(response);
+			  console.log(response.data);
 			});
 		}
 
@@ -88,8 +135,9 @@
 		        //token gerado, esse deve ser usado na chamada da API do Checkout Transparente
 		        var checkoutData = {};
 		        checkoutData.creditCardToken = response.card.token;
-		        
-		        checkoutData.cpf = '15600944276'; //valid teste cpf 15600944276
+		        console.log(checkoutData.creditCardToken);
+
+		        checkoutData.cpf = user.cpf; //valid teste cpf 15600944276
 		        checkoutData.name = user.name;
 		        checkoutData.SenderHash = PagSeguroDirectPayment.getSenderHash();
 
@@ -97,22 +145,24 @@
 		          then(function successCallback(response) {
 		          checkoutFactory.resetSessionId();
 		          ngCart.empty();
-		          delete $scope.user;
+		          //delete $scope.user;
 		          console.log(response);
 		        },function errorCallback(response) {
 		          console.log(response);
+		          console.log(convertXml2JSon(response.data));
 		      	});
 		      },
 		      error: function(response) {
 		        //tratamento do erro
-
-		        //if(Object.keys(response.errors)==1000)
 		        console.log(response);
+		        console.log(convertXml2JSon(response.data));
+		        //if(Object.keys(response.errors)==1000)
+		        //console.log(response);
 		        ngCart.empty();
-			  	delete $scope.user;
-		        var error = Object.keys(response.errors);
+			  	//delete $scope.user;
+		        //var error = Object.keys(response.errors);
 		        
-		        switch(error[0]) {
+		        /*switch(error[0]) {
 		            case '10000':
 		                 alertPopup = $ionicPopup.alert({
 		                      title: 'Error 10000',
@@ -136,7 +186,7 @@
 		                      title: 'Error 1000',
 		                      template: 'Alguma coisa deu errado',
 		              });
-		        } 
+		        } */
 		      },
 		      complete: function(response) {
 		      //tratamento comum para todas chamadas
@@ -147,20 +197,21 @@
 		    PagSeguroDirectPayment.createCardToken(param);
   		}
 
+  	if($auth.isAuthenticated())
 	var carregarDadosDoUsuario = function(){
   		userFactory.loadUserData().then(function(response) {
 			console.log(response);
 			$scope.user = {};
 			$scope.address = {};
 
-			$scope.user = {firstname: response.user[0]['firstname'], lastname: response.user[0]['lastname'],
-						   birthday: response.user[0]['birthday'], email: response.user[0]['email']};
+			$scope.user = {firstname: response.user['firstname'], lastname: response.user['lastname'],
+						   birthday: response.user['birthday'], email: response.user['email']};
 			
 			if(!angular.isUndefined(response.address)){
-				$scope.address = {address: response.address[0]['address'], address1: response.address[0]['address1'],
-								  address2: response.address[0]['address2'], city: response.address[0]['city'],
-								  postcode: response.address[0]['postcode'], state: response.address[0]['state'],
-								  phoneMobile: response.address[0]['phone_mobile'], other: response.address[0]['other'] };
+				$scope.address = {address: response.address['address'], address1: response.address['address1'],
+								  address2: response.address['address2'], city: response.address['city'],
+								  postcode: response.address['postcode'], state: response.address['state'],
+								  phoneMobile: response.address['phone_mobile'], other: response.address['other'] };
 			}
 	    $scope.isEmpty = false;
 		}, function errorCallback(response) {
@@ -175,7 +226,7 @@
 	    });
   	}
   	
-  	carregarDadosDoUsuario();
+  	
 		
 	}]);
 })();

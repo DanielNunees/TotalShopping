@@ -1,20 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Transactions;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Tools\Tools;
+use PagSeguro\Library;
 use App\Http\Requests;
-use App\Models\State;
-use App\Http\Controllers\Transactions\SearchTransactionByReference;
 
-class boletoTest extends Controller
+class TransactionController extends Controller
 {
-    public function checkoutBoleto(){
-	   
-        //$id_customer = myAuthController::getAuthenticatedUser();
-        $id_customer = 34;
-
+    public function getUserTransactionsStatus($reference){
+        
+        $id_customer = myAuthController::getAuthenticatedUser();
         if(!is_int($id_customer)){
             return $id_customer;
         }
@@ -25,6 +21,5 @@ class boletoTest extends Controller
         }
         SearchTransactionByReference::getTransaction($reference);
         //return $order;
-
     }
 }

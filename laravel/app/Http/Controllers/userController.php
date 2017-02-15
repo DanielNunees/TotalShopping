@@ -80,7 +80,7 @@ class userController extends Controller
       }
     }
 
-    $array = array('address' => $address,'user'=>$user,'states'=>$states);
+    $array = array('address' => $address[0],'user'=>$user[0],'states'=>$states);
 
     return $array;
   }

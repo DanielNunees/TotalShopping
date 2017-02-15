@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Checkout;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Validator;
@@ -9,25 +9,26 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Tools\Tools;
 use App\Http\Requests;
 use PagSeguro\Library;
-
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\userController;
+use App\Http\Controllers\myAuthController;
 use App\Http\Controllers\OrderController;
 use App\Models\State;
 use Exception;
 
-class boletoCheckoutController extends Controller
+class BoletoCheckoutController extends Controller
 {
     public static function boletoCheckout(Request $request)
     {   
 
-        //return $request->checkoutData;
+        if(!is_int(myAuthController::getAuthenticatedUser())){
+            return myAuthController::getAuthenticatedUser();
+        }
         Library::initialize();
         Library::cmsVersion()->setName("Nome")->setRelease("1.0.0");
         Library::moduleVersion()->setName("Nome")->setRelease("1.0.0");
        //Instantiate a new Boleto Object
         $boleto = new \PagSeguro\Domains\Requests\DirectPayment\Boleto();
-
-        // Set the Payment Mode for this payment request
-        $boleto->setMode('DEFAULT');
 
         /**
          * @todo Change the receiver Email
@@ -66,37 +67,56 @@ class boletoCheckoutController extends Controller
 
         // Set your customer information.
         // If you using SANDBOX you must use an email @sandbox.pagseguro.com.br
-        $boleto->setSender()->setName('Daniel Nunes');
-        $boleto->setSender()->setEmail('v30781034923906770092@sandbox.pagseguro.com.br');
+        $userData = userController::loadData();
+
+        $name = $userData['address']['firstname'].' '.$userData['address']['lastname'];
+        $cpf = Tools::CPFmask($request->checkoutData['cpf'],'###.###.###-##'); //from request
+        $area_code = str_split($userData['address']['phone_mobile'] , 2)[0];
+        $phone_mobile = substr($userData['address']['phone_mobile'],2);
+
+        $street = strstr($userData['address']['address1'],',',true);
+        $number = substr(strrchr($userData['address']['address1'],','),1);
+        $district = $userData['address']['address2'];
+        $postal_code = $userData['address']['postcode'];
+        $city = $userData['address']['city'];
+        $state = State::getIsoCode($userData['address']['id_state']);
+        $state =  $state[0]['iso_code'];
+        $complement = $userData['address']['other'];
+        $birthday = date("d/m/Y",strtotime($userData['user']['birthday']));
+
+
+
+
+
+        $boleto->setSender()->setName($name);
+        $boleto->setSender()->setEmail('v30781034923906770092@sandbox.pagseguro.com.br'); //TODO
 
         $boleto->setSender()->setPhone()->withParameters(
-            27,
-            999887766
+            $area_code,
+            $phone_mobile
         );
 
         $boleto->setSender()->setDocument()->withParameters(
             'CPF',
-            '156.009.442-76'
+            $cpf
         );
 
         $boleto->setSender()->setHash($request->checkoutData['SenderHash']);
 
-        $boleto->setSender()->setIp('127.0.0.0');
+        $boleto->setSender()->setIp('127.0.0.0'); //TODO
 
-
-
-        $address = userController::loadData();
         //return $address['address'];
         $boleto->setShipping()->setAddress()->withParameters(
-            'Av. Brig. Faria Lima',
-            '1384',
-            'Jardim Paulistano',
-            '01452002',
-            'São Paulo',
-            'SP',
+            $street,
+            $number,
+            $district,
+            $postal_code,
+            $city,
+            $state,
             'BRA',
-            'apto. 114'
+            $complement
         );
+
 
         // Set shipping information for this payment request
         try {
@@ -107,12 +127,13 @@ class boletoCheckoutController extends Controller
             $result = $boleto->register(
                 \PagSeguro\Configuration\Configure::getAccountCredentials()
             );
-            return $order = OrderController::createOrder($reference);
-            //return ($result->getPaymentLink());
+            $order = OrderController::createOrder($reference);
+            return ($result->getPaymentLink());
             //echo "<pre>";
             //print_r($result);
         } catch (Exception $e) {
-            die($e->getMessage());
+            return response()->json($e->getMessage(), $e->getCode());
+            return ($e->getCode());
         }
     }
 }

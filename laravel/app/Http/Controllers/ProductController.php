@@ -22,7 +22,7 @@ class ProductController extends Controller
                     throw new Exception('Product id needs to be numeric'); 
                 
                 if($id_product>Product::max('id_product'))
-                    throw new Exception('Id exceeded maximum');
+                    throw new Exception('Id Exceeded Maximum');
                 
                 if($id_product<=0 )
                     throw new Exception("Product Id Not Allowed", 400);                        
@@ -30,12 +30,10 @@ class ProductController extends Controller
             else{
                 foreach ($id_product as $key => $value) {
                    if(!is_numeric($value) || $value<=0 || is_int($value))
-                    throw new Exception('BOOM3');
+                    throw new Exception('Id needs to be greater than zero');
                 }
             }
 
-            
-            
             
             /*decricao do produto*/
             $description = ProductController::productDescription($id_product);
