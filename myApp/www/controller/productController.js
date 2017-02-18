@@ -9,6 +9,7 @@ angular.module('app')
 
   var getProduct = function(){
     productFactory.getProduct($stateParams.productId).then(function successCallback(data){
+      console.log(data.data);
       $scope.product = {};
           $scope.product = {productName: data.data['description'][0]['name'],
                             productId: data.data['description'][0]['id_product'],

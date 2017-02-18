@@ -37,7 +37,7 @@ class ProductController extends Controller
             
             /*decricao do produto*/
             $description = ProductController::productDescription($id_product);
-            $attributes = ProductController::productAttributes($id_product);
+             $attributes = ProductController::productAttributes($id_product);
             $images = ProductController::productImages($id_product);
             foreach ($description as $product) {
                 $product->ProductPrice->price;
@@ -54,11 +54,15 @@ class ProductController extends Controller
         }
 
         public static function productAttributes($id_product){  //$id_product pode ser um valor ou um object
-            $productAttributes = ProductStock::RetrivingAttributes($id_product);
+             $productAttributes = ProductStock::RetrivingAttributes($id_product);
+
+            //REMAKE
+
             $attributes = [];
             if(is_array($id_product)){
                 foreach ($productAttributes as $product) {
                     foreach ($product->ProductAttributeName as $value) {
+                        
                         $attributes[] = array('id_product_attribute'=>$value->pivot->id_product_attribute,'name'=>$value->name,'id_product'=>$product->id_product);
                     }
                 }
@@ -67,7 +71,7 @@ class ProductController extends Controller
 
             foreach ($productAttributes as $product) {
                 foreach ($product->ProductAttributeName as $value) {
-                    $attributes[] = array('id_product_attribute'=>$value->pivot->id_product_attribute,'name'=>$value->name);
+                    $attributes[] = array('id_product_attribute'=>$value->pivot->id_product_attribute,'name'=>$value->name,'quantity'=>$value->quantity);
                 }
             }
             $a = Tools::unique_multidim_array($attributes,'id_product_attribute');

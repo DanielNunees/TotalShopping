@@ -10,15 +10,17 @@ class HistoricController extends Controller
 {
     //
     public function getHistoric(){
-    	$id_customer = 28;
+    	
+        $id_customer = myAuthController::getAuthenticatedUser();
+
+        if(!is_numeric($id_customer)){
+            return $id_customer;
+        }
     	$order = OrderController::getOrderByCustomerId($id_customer);
         $final = [];
         if(!is_array($order))
             response()->json(['alert' => 'is_empty'], 200);
-        //$order =  $order->groupBy('reference');
-        //$order = $order->values();
 
-        //return '';
     	foreach ($order as $key => $value1) {
         		$product = OrderController::getOrderDetails($value1->id_order);
         		if(count($product)>0){

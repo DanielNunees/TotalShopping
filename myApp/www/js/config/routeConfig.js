@@ -76,7 +76,7 @@
       templateUrl: "view/userDashboard.html",
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
-          return $ocLazyLoad.load(['controller/dashboardController.js','factory/dashboardFactory.js','factory/userFactory.js'])
+          return $ocLazyLoad.load(['controller/dashboardController.js','factory/dashboardFactory.js','factory/userFactory.js','factory/transactionFactory.js'])
         }]
       }
     })
@@ -125,6 +125,29 @@
         }]
       }
     })
+
+    .state('categories', {
+      url: "/categories",
+      controller: 'categoriesController',
+      templateUrl: "view/categories.html",
+      resolve: {
+        loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
+          return $ocLazyLoad.load(['controller/categoriesController.js','factory/productCategoryFactory.js'])
+        }]
+      }
+    })
+
+    .state('category', {
+      url: "/category/:categoryId",
+      controller: 'categoryController',
+      templateUrl: "view/category.html",
+      resolve: {
+        loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
+          return $ocLazyLoad.load(['controller/categoryController.js','factory/productCategoryFactory.js'])
+        }]
+      }
+    })
+
   })
 
 })();

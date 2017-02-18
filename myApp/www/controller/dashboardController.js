@@ -1,12 +1,16 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('dashboardController', ['$scope','$auth','$state','$ionicSlideBoxDelegate','$ionicModal','$ionicNavBarDelegate','userFactory','$ionicPopup','dashboardFactory', function($scope,$auth,$state,$ionicSlideBoxDelegate,$ionicModal,$ionicNavBarDelegate,userFactory,$ionicPopup,dashboardFactory){
+.controller('dashboardController', ['$scope','$auth','$state','$ionicSlideBoxDelegate','$ionicModal','$ionicNavBarDelegate','userFactory','$ionicPopup','dashboardFactory','transactionFactory', function($scope,$auth,$state,$ionicSlideBoxDelegate,$ionicModal,$ionicNavBarDelegate,userFactory,$ionicPopup,dashboardFactory,transactionFactory){
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
 		$ionicNavBarDelegate.showBackButton(true);
 		$ionicSlideBoxDelegate.slide(0, [0]);
     	$scope.slide = 0;
   	});
+	
+	/*transactionFactory.getTransactionStatus('LWRPFSXS').then(function(data){
+		console.log(data.data);
+	});*/
 
 	$scope.address = {};
 
@@ -14,16 +18,17 @@ angular.module('app')
 
 	var CarregarHistoricoDeCompras = function(){
 		dashboardFactory.loadHistoric().then(function(data){
-				console.log(data);
 				$scope.products = [];
+				var i=0;
 				angular.forEach(data,function(value,key){
 					//console.log(value[0].reference);
-					$scope.products[key] = {
-						name: value[0]['reference'],
+					//console.log(value);
+					$scope.products[i] = {
+						name: key,
 						items:[]
 					};
 					angular.forEach(value,function(value1,key1){
-						$scope.products[key].items.push({productPrice:value1['product']['description'][0]['product_price']['price'],
+						$scope.products[i].items.push({productPrice:value1['product']['description'][0]['product_price']['price'],
 										      productName:value1['product']['description'][0]['name'],
 										      productQuantity: value1['product_quantity'],
 										      productImage: value1['product']['images'][0]['image'],
@@ -32,6 +37,7 @@ angular.module('app')
 										      reference: value1['reference']
 										      });
 		        	})
+		        	i++;
 				})
 		},function errorCallback(data){
 			console.log(data);

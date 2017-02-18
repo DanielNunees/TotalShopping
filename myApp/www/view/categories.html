@@ -1,0 +1,10 @@
+<ion-view view-title="Categories">
+	<ion-content class="has-footer">
+
+	<ul class="list" >
+	    <a ng-repeat='category in categories' class="item" ui-sref="category({categoryId: category.categoryId})">
+	      {{category.name}}
+	    </a>
+	</ul>
+	</ion-content>
+</ion-view>

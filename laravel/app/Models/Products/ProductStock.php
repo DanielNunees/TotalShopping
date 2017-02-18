@@ -15,9 +15,9 @@ class ProductStock extends Model
 
     static public function RetrivingAttributes($id_product){
         if(is_array($id_product)){
-            return ProductStock::whereIn('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute','id_product')->get();
+            return ProductStock::whereIn('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute','id_product','quantity')->get();
         }
-        return ProductStock::where('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute','id_product')->get();
+        return ProductStock::where('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute','id_product','quantity')->get();
     }
 
 

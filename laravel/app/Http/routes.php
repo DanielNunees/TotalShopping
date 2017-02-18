@@ -54,11 +54,14 @@ Route::group(['middleware' => 'cors'], function () {
 	/* Products Routes */
 	Route::get('home/{page}', ['as' => 'home', 'uses' => 'homeController@index'])->where('id_product', '[0-9]+');;
 	Route::get('/product/{id_product}','ProductController@retrivingProduct')->where('id_product', '[0-9]+');
+	Route::get('/product/category/{id_category}','ProductCategoryController@getProductsFromCategory')->where('id_category','[0-9]+');
+	Route::get('/product/categories','ProductCategoryController@getCategoriesNames');
 
 	/* TRANSACTION ROUTES*/
 	Route::get('searchTransacion/byCode','Transactions\SearchTransactionByCode@getTransaction');
 	Route::get('searchTransacion/byDate','Transactions\SearchTransactionByDate@getTransaction');
-	Route::get('searchTransacion/byReference','Transactions\SearchTransactionByReference@getTransaction');
+	Route::post('searchTransacion/byReference/status','Transactions\SearchTransactionByReference@getTransactionStatus');
+	Route::post('searchTransacion/byReference/type','Transactions\SearchTransactionByReference@getTransactionType');
 	Route::get('searchTransacion/Abandoned','Transactions\SearchTransactionAbandoned@getTransaction');
 
 	/* INTALLMENTS ROUTE*/
