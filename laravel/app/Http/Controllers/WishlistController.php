@@ -36,8 +36,14 @@ class WishlistController extends Controller
           'id_product_attribute' => 'bail|required',
       	]);
 
-    	$wishlist = WishlistController::listProducts();
-        //return $wishlist;
+        $id_customer = myAuthController::getAuthenticatedUser();
+
+        if(!is_numeric($id_customer)){
+          return $id_customer; 
+        }
+
+    	  $wishlist = WishlistController::listProducts();
+        $wishlist_id =  Wishlist::getIdWishlist($id_customer);
         if(isset($wishlist[0]['product']))
         foreach ($wishlist as $key => $value) {
             if($request->id_product == $value->id_product)
@@ -45,7 +51,7 @@ class WishlistController extends Controller
         }
         //return $wishlist[0]['id_wishlist'];
     	$product = [
-    	'id_wishlist' => $wishlist[0]['id_wishlist'],
+    	'id_wishlist' => $wishlist_id[0]['id_wishlist'],
     	'id_product' => $request->id_product,
     	'id_product_attribute' => $request->id_product_attribute,
     	'quantity' => 1,
@@ -63,23 +69,13 @@ class WishlistController extends Controller
         }
 
         $wishlist_id =  Wishlist::getIdWishlist($id_customer);
+
+        if($wishlist_id->isEmpty()) return response()->json(['Error' => 'Wishlist Not Created'], 500);  
         $products_id = WishlistProducts::getProducts($wishlist_id[0]['id_wishlist']);
-        
         if($products_id->isEmpty())
-            return $wishlist_id; 
-
-        foreach ($products_id as $key => $value) {
-            $product2 = ProductController::retrivingProduct($value->id_product);
-
-            sort($product2['attributes']);
-           
-            $attribute = array_search($value->id_product_attribute, array_column($product2['attributes'],'id_product_attribute'));
-            $product2['attributes'] = array_slice($product2['attributes'], -(count($product2['attributes'])-$attribute),1);
-
-            $products_id[$key]->product = $product2;
-            $products_id[$key]->id_wishlist = $wishlist_id[0]['id_wishlist'];
-        }
-        return $products_id;
+            return $wishlist_id;
+        $products_id = $products_id->pluck('id_product')->toArray();
+        return $product2 = ProductController::retrivingProduct($products_id);
     }
 
     public function removeProducts(Request $request){
@@ -87,11 +83,18 @@ class WishlistController extends Controller
           'id_product' => 'bail|required',
         ]);
 
+        $id_customer = myAuthController::getAuthenticatedUser();
+
+        if(!is_numeric($id_customer)){
+          return $id_customer; 
+        }
+
         $wishlist = WishlistController::listProducts();
-        if(isset($wishlist[0]['product']))
+        $wishlist_id =  Wishlist::getIdWishlist($id_customer);
+        if(isset($wishlist[0]['id_product']))
         foreach ($wishlist as $key => $value) {
             if($request->id_product == $value->id_product){
-               WishlistProducts::deleteProduct($wishlist[0]['id_wishlist'],$value->id_product);
+               WishlistProducts::deleteProduct($wishlist_id[0]['id_wishlist'],$value->id_product);
                return response()->json(['Success' => 'Product removed'], 200); 
             }
         }

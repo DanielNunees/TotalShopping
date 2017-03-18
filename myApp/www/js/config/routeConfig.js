@@ -32,7 +32,7 @@
       templateUrl: "view/product.html",
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
-          return $ocLazyLoad.load(['controller/productController.js','factory/productFactory.js','factory/cartFactory.js','factory/wishlistFactory.js'])
+          return $ocLazyLoad.load(['controller/productController.js','factory/productFactory.js','factory/cartFactory.js','factory/wishlistFactory.js','factory/cache/wishlistCacheFactory.js'])
         }]
       }
     })
@@ -54,7 +54,7 @@
       templateUrl: "view/userRegister.html",
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
-          return $ocLazyLoad.load(['controller/userController.js','factory/userFactory.js'])
+          return $ocLazyLoad.load(['factory/userFactory.js'])
         }]
       }
     })
@@ -76,6 +76,17 @@
       templateUrl: "view/userDashboard.html",
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
+          return $ocLazyLoad.load(['controller/dashboardController.js','factory/dashboardFactory.js','factory/userFactory.js','factory/transactionFactory.js','directives/userAddressDirective.js'])
+        }]
+      }
+    })
+
+    .state('Dashboard', { //test
+      url: "/user/dashboard2",
+      controller: 'dashboardController',
+      templateUrl: "view/user/dashboard.html",
+      resolve: {
+        loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
           return $ocLazyLoad.load(['controller/dashboardController.js','factory/dashboardFactory.js','factory/userFactory.js','factory/transactionFactory.js'])
         }]
       }
@@ -87,7 +98,7 @@
       templateUrl: "view/wishlist.html",
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
-          return $ocLazyLoad.load(['controller/wishlistController.js','factory/wishlistFactory.js'])
+          return $ocLazyLoad.load(['controller/wishlistController.js','factory/wishlistFactory.js','factory/cache/wishlistCacheFactory.js'])
         }]
       }
     })
@@ -99,7 +110,7 @@
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
           return $ocLazyLoad.load(['controller/checkoutController.js','factory/cartFactory.js','factory/userFactory.js','factory/checkoutFactory.js',
-                                   'lib/PagSeguro/pagseguro.directpayment.js'])
+                                   'lib/PagSeguro/pagseguro.directpayment.js','directives/paymentMethodsDirectives.js'])
         }]
       }
     })

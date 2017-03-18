@@ -16,7 +16,7 @@ class Orders extends Model
 	}
 
 	public static function getOrderIdByCustomerId($id_customer){
-		return Orders::where('id_customer',$id_customer)->select('reference','id_order')->get();
+		return Orders::where('id_customer',$id_customer)->select('reference','id_order','current_state')->get();
 	}
 
 }

@@ -122,3 +122,16 @@ a{
 .updated{
   color: black;
 }
+
+#bts{
+  text-align: center;
+  background-color: #673AB7;
+  width: auto;
+}
+
+#bts a{
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0em 1em 0em;
+  /*border-top: 6px solid white;*/
+}

@@ -1,22 +1,26 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.controller('userController', ['$scope','$ionicNavBarDelegate','$auth','$state','$ionicHistory','$ionicModal','alertsFactory',  function($scope,$ionicNavBarDelegate,$auth,$state,$ionicHistory,$ionicModal,alertsFactory){
+	.controller('userController', ['$scope','$ionicNavBarDelegate','$auth','$state','$ionicHistory','$ionicModal','alertsFactory','$ionicLoading', function($scope,$ionicNavBarDelegate,$auth,$state,$ionicHistory,$ionicModal,alertsFactory,$ionicLoading){
 
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
 	      $ionicNavBarDelegate.showBackButton(true);
+	      if($auth.isAuthenticated()){
+			$state.go('userDashboard');
+		}
 	    });
 
-	    $scope.isAuthenticated = function() {
+	    
+		$scope.isAuthenticated = function() {
       		return $auth.isAuthenticated();
     	};
 
+    	$scope.isAuth = $auth.isAuthenticated();
 		$scope.login = function(loginData){
 	      $auth.login(loginData).then(
 	        function(response){
 	          $state.go('userDashboard');
 	          delete $scope.loginData;
-	          $ionicHistory.removeBackView();
 	        },
 	        function(error){
 	          console.log(error);
@@ -25,7 +29,7 @@
 	          	+"for registrado clique no botão Registrar Agora");
 	           delete $scope.loginData;
 	        });
-	    }
+	    } 
 
 	    $scope.signup = function(user){
 	    	$auth.signup(user)
@@ -33,20 +37,14 @@
 			    // Redirect user here to login page or perhaps some other intermediate page
 			    // that requires email address verification before any other part of the site
 			    // can be accessed.
-			    $state.go('login');
+			    $state.go('userLogin');
 	          	$ionicHistory.removeBackView();
 			  })
 			  .catch(function(response) {
 			    // Handle errors here.
-			    console.log(error);
+			    console.log(response);
 			});
 	    }
-		
-		var logout = function(){
-			$auth.logout();
-			$state.go('home');
-			//$ionicHistory.removeBackView();
-		}
 
 		$ionicModal.fromTemplateUrl('view/userRegister.html', {
 	      scope: $scope,
@@ -81,8 +79,6 @@
 	      // Execute action
 	      
 	    });
-
-
 
 	}]);
 })();

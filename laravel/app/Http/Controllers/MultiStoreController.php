@@ -18,41 +18,15 @@ class MultiStoreController extends Controller
 
     public function getProducts($id_store,$page){
     	$id_product_max = Product::getCountProductsFromStore($id_store);
-        $id_product = Product::getProductsFromStore($id_store);
+        $id_product = Product::getProductsFromStore($id_store)->pluck('id_product')->values();
+        $id_product = $id_product->chunk(10);
 
-        $count = $page*10;
-        $count = $count+1;
-        $count = $count-10;
-        $limit = $count+10;
-
-        if($limit>$id_product_max)
-            $limit = $id_product_max;
-
-        if($count>$limit)
+        if($page>count($id_product))
             return response()->json(['alert' => 'All Products Are Load'], 400);
-
-        try {
-            for($i=$count-1;$i<$limit;$i++){
-            	// /echo $i;
-                $products[] = ProductController::retrivingProduct($id_product[$i]['id_product']);
-            }
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-
-        return array('max'=>$id_product_max,'products'=>$products);
-
-
-
-
-
-
-
-    	
-    	foreach ($id_product as $key => $value) {
-    		$products[] = ProductController::retrivingProduct($value['id_product']);
-    	}
-    }
+        
+        $aux = ProductController::retrivingProduct($id_product[$page-1]->values()->toArray());
+        return array('products'=>$aux,'max'=>$id_product_max);
+    }   
 }
 
 

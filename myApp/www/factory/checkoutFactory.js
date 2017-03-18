@@ -25,7 +25,7 @@
 			        url: valueConfig.baseUrl+'/creditCardCheckout',
 			        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=ISO-8859-1'},
 			        data: $httpParamSerializerJQLike({'checkoutData':checkoutData})
-			    })
+			    });
 			},
 
 			boletoCheckout: function(checkoutData){
@@ -34,7 +34,7 @@
 			        url: valueConfig.baseUrl+'/boletoCheckout',
 			        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=ISO-8859-1'},
 			        data: $httpParamSerializerJQLike({'checkoutData':checkoutData})
-			    })
+			    });
 			},
 			resetSessionId: function(){
 				session_ID = undefined;

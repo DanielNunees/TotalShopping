@@ -1,0 +1,41 @@
+<ion-view view-title="Dashboard" >
+  <ion-content class='has-footer' >
+    <div ng-if="isAuthenticated"> <!-- If user not logged -->
+
+      <header class="image-background-profile">
+        <!--img ng-src="img/profile.jpg" class="img-circle user-image"-->
+      </header>
+      <div id="bts">
+        <a class="button button-royal button-outline button-large " ng-click="slideChanged(0)" ng-class="{'active' : slide==0}"><i class="icon ion-person"></i></a>
+
+        <a class="button button-royal button-outline button-large" ng-click="slideChanged(1)" ng-class="{'active' : slide==1}"><i class="icon ion-stats-bars"></i></a>
+
+        <a class="button button-royal button-outline button-large" ng-click="slideChanged(2)" ng-class="{'active' : slide==2}"><i class="icon ion-heart"></i></a>
+      </div>
+
+      <ion-slide-box show-pager='false' on-slide-changed="slideHasChanged($index)">
+        
+        <ion-slide>
+          <div class="card">
+            <user-Address></user-Address>
+          </div>
+        </ion-slide>
+        
+        <ion-slide> <!--historic-->
+        <div class="card">
+           <h4>Segunda Aba</h4>
+        </div>
+         
+        </ion-slide><!--historic-->
+        
+        <ion-slide>
+          <div class="card">
+           <h4>Terceira Aba</h4>
+        </div>
+        </ion-slide>
+
+      </ion-slide-box>
+      <button class="button button-block button-assertive button-outline" ng-click="logout()"> Logout</button>
+    </div> <!--ng-if='isAuthenticated'--><!-- If user not logged -->
+  </ion-content>
+</ion-view>

@@ -1,38 +1,39 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('wishlistController', ['$scope','$auth','$ionicNavBarDelegate','wishlistFactory','cacheFactory','alertsFactory', function($scope,$auth,$ionicNavBarDelegate,wishlistFactory,cacheFactory,alertsFactory){
+.controller('wishlistController', ['$scope','$auth','$ionicNavBarDelegate','wishlistFactory','wishlistCacheFactory','alertsFactory','$state', function($scope,$auth,$ionicNavBarDelegate,wishlistFactory,wishlistCacheFactory,alertsFactory,$state){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
+    if(!$auth.isAuthenticated()){
+      $state.go('home');  
+    }else getWishlist();
     $ionicNavBarDelegate.showBackButton(true);
-    getWishlist();
+   
   });
 
   $scope.isAuthenticated = $auth.isAuthenticated();
 
   var getWishlist = function(){
-    var cache = cacheFactory.info();
+    var cache = wishlistCacheFactory.info();
     if(cache.size>0){
       getWishlistFromCache(cache);
       return;
     }
-      
     wishlistFactory.getWishlist().then(function successCallback(data){
+      console.log(data.data);
       $scope.products = [];
       var i=0;
-      if(data.length>0 && !angular.isUndefined(data[0]['id_product']))
-      angular.forEach(data, function(value1, key1) {
-          $scope.products.push({productPrice:value1['product']['description'][0]['product_price']['price'],
-                          productName:value1['product']['description'][0]['name'],
-                          productImages: value1['product']['images'],
+      if(data.data.length>0 && !angular.isUndefined(data.data[0]['id_product']))
+      angular.forEach(data.data, function(value1, key1) {
+          $scope.products.push({productPrice:value1['product_price']['price'],
+                          productName:value1['name'],
+                          productImages: value1['image'],
                           productId: value1['id_product']
                           });
-
-          cacheFactory.put(value1['id_product'],$scope.products[i]);
+          wishlistCacheFactory.put(value1['id_product'],$scope.products[i]);
           wishlistFactory.setKeys(value1['id_product']);
           i++;
-
       });
-      },function errorCallback(response) {
+    },function errorCallback(response) {
         /* Tratamento de erros*/
         console.log(response);
         if(response.status == 404){
@@ -49,7 +50,8 @@ angular.module('app')
       var keys = wishlistFactory.getKeys();
         $scope.products = [];
         angular.forEach(keys, function(value,key){
-          var product = cacheFactory.get(value);
+          var product = wishlistCacheFactory.get(value);
+          console.log(product);
           $scope.products.push({productPrice:product['productPrice'],
                           productName:product['productName'],
                           productImages: product['productImages'],

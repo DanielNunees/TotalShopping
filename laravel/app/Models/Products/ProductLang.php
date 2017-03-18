@@ -14,11 +14,9 @@ class ProductLang extends Model //Nome do produto
 
     static public function ProductResume($id_product){
         if(is_array($id_product)){
-            return ProductLang::whereIn('id_product',$id_product)->where('id_lang',2)->select('name','description','id_product')->distinct()->get();
+            return ProductLang::whereIn('id_product',$id_product)->where('id_lang',2)->select('name','id_product')->get();
         }
-        return ProductLang::where('id_product',$id_product)->where('id_lang',2)->select('name','description','id_product')->distinct()->get();
-        
-        
+        return ProductLang::where('id_product',$id_product)->where('id_lang',2)->select('name','description','id_product')->get();     
     }
 
   	public function ProductPrice(){ //Select price of all products

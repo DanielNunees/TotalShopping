@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 	angular.module('app').
-	factory('cacheFactory', ['$cacheFactory', function($cacheFactory) {
+	factory('wishlistCacheFactory', ['$cacheFactory', function($cacheFactory) {
     	return $cacheFactory('wishlist');
   	}]);
 })();

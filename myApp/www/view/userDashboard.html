@@ -8,7 +8,7 @@
 
       <div class="button-bar no-padding">
         <a class="button button-block button-positive button-outline" ng-click="slideChanged(0)" ng-class="{'active' : slide==0}">Perfil</a>
-        <a class="button button-block button-positive button-outline" ng-click="slideChanged(1)" ng-class="{'active' : slide==1}">Histórico</a>
+        <a class="button button-block button-positive button-outline" ng-click="slideChanged(1)" ng-class="{'active' : slide==1}">Pedidos</a>
         <a class="button button-block button-positive button-outline" ng-click="slideChanged(2)" ng-class="{'active' : slide==2}">Dados</a>
       </div>
 
@@ -20,15 +20,15 @@
           </div>
         </ion-slide>
         <ion-slide> <!--historic-->
-          <div> 
             <ion-list>
-              <div ng-repeat="group in products">
+              <div ng-repeat="group in products track by $index">
+
                 <ion-item class="item-stable"
                           ng-click="toggleGroup(group)"
                           ng-class="{active: isGroupShown(group)}">
                     <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
                   &nbsp;
-                  {{group.name}}
+                  {{group.items[0].state}}
                 </ion-item>
                 <ion-item class="item-accordion" ng-repeat="product in group.items" ng-show="isGroupShown(group)">
                   <div class="list">
@@ -42,7 +42,6 @@
                 </ion-item>
               </div>
             </ion-list>
-          </div>
         </ion-slide><!--historic-->
         <ion-slide>
           <div ng-if="isEmpty">
@@ -51,7 +50,7 @@
           <user-Address></user-Address>
         </ion-slide>
       </ion-slide-box>
-      <button class="button button-block button-assertive button-outline" ng-click="logout()"> Logout</button>
+      <button class="button button-block button-assertive button-outline" ng-click="logout  ()"> Logout</button>
     </div> <!--ng-if='isAuthenticated'--><!-- If user not logged -->
   </ion-content>
 </ion-view>

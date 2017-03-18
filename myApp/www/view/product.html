@@ -3,25 +3,31 @@
     <div>
       <ion-slide-box >
         <ion-slide ng-repeat="image in product.productImages track by $index" >
-          <img ng-model="image.image" class="img-size" ng-src='http://127.0.1.1/prestashop{{image.image}}'>
+          <img ng-model="image" class="img-size" ng-src='http://127.0.1.1/prestashop{{image}}'>
         </ion-slide>
       </ion-slide-box>
     </div>
       <h2  class="css-selector text-center">{{::product.productName}}</h2>
-      <h3 class="css-selector text-center">{{::product.productPrice | currency:"R$ "}}</h3>
-      <h4 class="css-selector">3x {{product.productPrice/3 | currency:"R$ ":2}}</h4>
-      <form name="myForm">
-        <span ng-show="myForm.service_id.$error.required" class="form-error">Escolha um tamanho</span>
-        <label class="item item-input item-select">
-          <span >
-            <select name="service_id" required ng-model="value" ng-options="value.name for (id_product_attribute,value) in product.productAttributes " ></select>
-            <option value="">Tamanho</option>
-          </span>
-        </label>
-      </form>
-      <ngcart-addtocart id="{{product.productId}}" name="{{product.productName}}" price="{{product.productPrice}}" quantity="1" quantity-max="5" data="{'image':product.productImages[0].image,size:value.name, product_attributte:value.id_product_attribute}" ng-click="addProductToCart(product.productId,value.id_product_attribute)" >Adicionar ao carrinho</ngcart-addtocart>
+      <div ng-if="!unavailable">
+        <h3 class="css-selector text-center">{{::product.productPrice | currency:"R$ "}}</h3>
+        <h4 class="css-selector">3x {{product.productPrice/3 | currency:"R$ ":2}}</h4>
+        <form name="myForm">
+          <span ng-show="myForm.service_id.$error.required" class="form-error">Escolha um tamanho</span>
+          <label class="item item-input item-select">
+            <span >
+              <select name="service_id" required ng-model="value" ng-options="value.name for (key,value) in product.productAttributes " ></select>
+              <option value="">Tamanho</option>
+            </span>
+          </label>
+        </form>
 
-      <button  ng-disabled='added' ng-click="favoriteProduct(product.productId,value.id_product_attribute,product)" class="button button-block button-assertive button-outline"><i class="icon ion-ios-heart-outline"></i>Adicionar aos Favoritos</button>
+        <ngcart-addtocart id="{{product.productId}}" name="{{product.productName}}" price="{{product.productPrice}}" quantity="1" quantity-max="5" data="{'image':product.productImages[0],size:value.name, product_attributte:value.id_product_attribute}" ng-click="addProductToCart(product.productId,value.id_product_attribute)" >Adicionar ao carrinho</ngcart-addtocart>
+
+        <button  ng-disabled='added' ng-click="favoriteProduct(product.productId,value.id_product_attribute,product)" class="button button-block button-assertive button-outline"><i class="icon ion-ios-heart-outline"></i>Adicionar aos Favoritos</button>
+      </div>
+      <div ng-if="unavailable">
+        <h3 class="text-center" style="color:red">Produto Não Está Disponível</h3>
+      </div>
     
     <p class="css-selector" ng-bind-html="product.productDescription"></p> 
   </ion-content>

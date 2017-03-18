@@ -9,12 +9,7 @@ angular.module('app')
 		        method: 'GET',
 		        cache: true,
 		        url: valueConfig.baseUrl+'/user/loadData',
-		    }).then(function(result){
-
-            // What we return here is the data that will be accessible 
-            // to us after the promise resolves
-            return result.data;
-        	});
+		    });
 		},
 
 		registerUser: function(user){
@@ -24,8 +19,6 @@ angular.module('app')
 			    dataType: 'json',
 			    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			    data: $httpParamSerializerJQLike(user)
-			}).then(function successCallBack(response){
-				return response.data;
 			})
 		},
 		

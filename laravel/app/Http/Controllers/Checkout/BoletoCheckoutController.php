@@ -44,17 +44,16 @@ class BoletoCheckoutController extends Controller
         }catch(Exception $e){
             return $e->getMessage(); 
         }
-
         $price =0;
-        //return $cart_products;
+        $cart_products = $cart_products->toArray();
         foreach ($cart_products as $key => $value) {
             $boleto->addItems()->withParameters(
-                $value['product']['description'][0]['id_product'],
-                $value['product']['description'][0]['name'].','.$value['product']['attributes'][0]['name'],
+                $value['id_product'],
+                $value['name'].','.$value['attributes'][0]['name'],
                 $quantity = $value['quantity'] ,
-                number_format($value['product']['description'][0]['product_price']['price'] ,2)
+                number_format($value['product_price']['price'] ,2)
             );
-            $price = $price + number_format($quantity * $value['product']['description'][0]['product_price']['price'],2, '.', '');
+            $price = $price + number_format($quantity * $value['product_price']['price'],2, '.', '');
         }
 
         // Set a reference code for this payment request. It is useful to identify this payment

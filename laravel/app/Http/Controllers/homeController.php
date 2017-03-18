@@ -25,8 +25,9 @@ class homeController extends Controller
 
         try {
             for($i=$count;$i<$limit;$i++){
-                $products[] = ProductController::retrivingProduct($i);
+                $products[] = $i;
             }
+            $products = ProductController::retrivingProduct($products);
         } catch (Exception $e) {
             return $e->getMessage();
         }

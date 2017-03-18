@@ -7,30 +7,34 @@
 	    });
 		$scope.ngCart = ngCart;
 		$scope.data = {};
-		var count=0;
 
 		$scope.isAuthenticated = $auth.isAuthenticated();
 
 		$scope.remove =function(id_product,id_product_attribute){
 			cartFactory.removeProduct(id_product,id_product_attribute).
 				then(function successCallback(response){
+					ngCart.removeItemById(parseInt(id_product));
 					$scope.ngCart = ngCart;
 				}, function errorCallback(response){
-					console.log(response);
+					ngCart.removeItemById(parseInt(id_product));
+					console.log(response.data);
 				});
 		}
 		
 		if($auth.isAuthenticated())
 		cartFactory.loadCart().then(function successCallback(response) {
 			ngCart.empty();
-			console.log(response);
-			if(response.length>0)
-			angular.forEach(response, function(value, key) {
-				var data={'image':value['product']['images'][0]['image'] ,'size':value['product']['attributes'][0]['name'] , 'product_attributte':value['product']['attributes'][0]['id_product_attribute']};
-				ngCart.addItem(value.id_product, value['product']['description'][0]['name'] , value['product']['description'][0]['product_price']['price'], value.quantity, data)
+			console.log(response.data);
+			if(response.data.length>0)
+			angular.forEach(response.data, function(value, key) {
+				var data={'image':value['image'][0],
+						  'size':value['attributes'][0]['name'], 
+						  'product_attributte':value['attributes'][0]['id_product_attribute']};
+
+				ngCart.addItem(value.id_product, value['name'] , value['product_price']['price'], value.quantity, data)
 			});
         },function errorCallback(response) {
-        	console.log(response);
+        	console.log(response.data);
         });
 	}]);
 })();

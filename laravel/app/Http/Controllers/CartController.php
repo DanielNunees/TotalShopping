@@ -22,7 +22,7 @@ class CartController extends Controller
     public static function createCart(){
         $id_customer = myAuthController::getAuthenticatedUser();
         if(!is_numeric($id_customer)){
-            return response()->json(['error' => 'ID is not a number'], 500);
+            return $id_customer;
         }
         if($id_customer==0){
             $customer_secure_key='';
@@ -68,12 +68,15 @@ class CartController extends Controller
         ]);
 
         $id_customer = myAuthController::getAuthenticatedUser();
+        if(!is_numeric($id_customer)){
+            return $id_customer;
+        }
 
         $cart_id = Cart::RetrivingCartId($id_customer);
 
         $order = OrderController::getOrderByCartId($cart_id['id_cart']);
 
-        if(!$order->isEmpty()){
+        if($order){
             $cart_id['id_cart'] = CartController::createCart();
         }
 
@@ -128,7 +131,11 @@ class CartController extends Controller
           'id_product' => 'bail|required|integer',
           'id_product_attribute' => 'bail|required|integer'
         ]);
+        
         $id_customer = myAuthController::getAuthenticatedUser();
+        if(!is_numeric($id_customer)){
+            return $id_customer;
+        }
         
         $cart_id = Cart::RetrivingCartId($id_customer);
 
@@ -137,35 +144,31 @@ class CartController extends Controller
     }
 
     public static function loadCart(){
-        try{
-             $id_customer = myAuthController::getAuthenticatedUser();
+        $id_customer = myAuthController::getAuthenticatedUser();
+        if(!is_numeric($id_customer)){
+            return $id_customer;
         }
-        catch(Exception $e){
-            return $e;
-        }
+
         $cart_id = Cart::RetrivingCartId($id_customer);
         $order = OrderController::getOrderByCartId($cart_id['id_cart']);
-        
-        //return $order;
-        if(!$order->isEmpty()) 
+        if($order){ 
             throw new Exception("Have Some Order With This Cart Id", 400);
-            
+        }
+
         $products = CartProducts::allProductsFromCart($cart_id['id_cart']);
+        
         if($products->isEmpty()) 
             return response()->json(['Alert'=>'This cart Is Empty'], 200);
-
-
-        foreach ($products as $key => $value) {
-            $product2 = ProductController::retrivingProduct($value->id_product);
-
-            sort($product2['attributes']);
-           
-            $attribute=  array_search($value->id_product_attribute, array_column($product2['attributes'],'id_product_attribute'));
-            $product2['attributes'] = array_slice($product2['attributes'], -(count($product2['attributes'])-$attribute),1);
-
-            $products[$key]->product = $product2;
+        
+        $id_product_attribute = $products->pluck('id_product_attribute')->toArray();
+        $id_product = $products->pluck('id_product')->toArray();
+        
+        $final = ProductController::retrivingProduct($id_product,$id_product_attribute); 
+        foreach ($final as $key => $value) {
+            $value->quantity = $products[$key]['quantity'];
+            $value->id_shop = $products[$key]['id_shop'];
         }
-        return $products;        
+        return $final;        
     }
 
     public function addToCart($cart_id,$request,$address){
@@ -186,6 +189,9 @@ class CartController extends Controller
 
     public static function deleteCart(){
         $id_customer = myAuthController::getAuthenticatedUser();
+        if(!is_numeric($id_customer)){
+            return $id_customer;
+        }
         $cart_id = Cart::RetrivingCartId($id_customer);
 
         Cart::DeleteCart($cart_id['id_cart']);
@@ -195,6 +201,9 @@ class CartController extends Controller
 
     public static function removeAllProducts(){
         $id_customer = myAuthController::getAuthenticatedUser();
+        if(!is_numeric($id_customer)){
+            return $id_customer;
+        }
         $cart_id = Cart::RetrivingCartId($id_customer);
 
         CartProducts::removeAllProducts($cart_id['id_cart']);

@@ -9,27 +9,24 @@
 
 		$scope.products = [];
 		$scope.endData = true;
-		var pageCache = [];
+		multiStoreFactory.setPage(1);
 
 		$scope.getProducts = function(){
+			console.log(multiStoreFactory.getPage());
 			multiStoreFactory.getProducts($stateParams.idStore).
 		      then(function successCallback(data){
-		      	console.log(data);
 		        multiStoreFactory.nextPage();
-		        pageCache[$stateParams.idStore] = multiStoreFactory.getPage();
-		        multiStoreFactory.setPage(pageCache[$stateParams.idStore]);
-		        console.log(multiStoreFactory.getPage());
-		        if(data['products'].length>0)
-		        angular.forEach(data['products'], function(value1, key1) {
-	            $scope.products.push({productPrice:value1['description'][0]['product_price']['price'],
-	                            productName:value1['description'][0]['name'],
-	                            productImages: value1['images'][0]['image'],
-	                            productId: value1['description'][0]['id_product']
-	                            });
+		        angular.forEach(data.data['products'], function(value1, key1) {
+	            	$scope.products.push({productPrice:value1['product_price']['price'],
+	                            		  productName:value1['name'],
+	                            		  productImages: value1['image'][0],
+	                            		  productId: value1['id_product']
+	                            		});
 	        	})
-		    console.log($scope.products.length);
-		        if($scope.products.length>=data['max'])
-		          $scope.endData = false;
+		        if($scope.products.length>=data.data.max){
+		        	$scope.endData = false;
+		        	
+		        }
 		        $scope.$broadcast('scroll.infiniteScrollComplete');
 		      },function errorCallback(response){
 		        console.log(response);

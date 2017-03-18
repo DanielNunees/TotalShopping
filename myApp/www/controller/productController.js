@@ -6,16 +6,17 @@ angular.module('app')
     $ionicNavBarDelegate.showBackButton(true);
   });
 
-
   var getProduct = function(){
     productFactory.getProduct($stateParams.productId).then(function successCallback(data){
-      console.log(data.data);
+      if(!data.data.hasOwnProperty('attributes')){
+        $scope.unavailable = true;
+      }
       $scope.product = {};
-          $scope.product = {productName: data.data['description'][0]['name'],
-                            productId: data.data['description'][0]['id_product'],
-                            productDescription: data.data['description'][0]['description'],
-                            productPrice: data.data['description'][0]['product_price']['price'],
-                            productImages: data.data['images'],
+          $scope.product = {productName: data.data['name'],
+                            productId: data.data['id_product'],
+                            productDescription: data.data['description'],
+                            productPrice: data.data['product_price']['price'],
+                            productImages: data.data['image'],
                             productAttributes: data.data['attributes']};
           
           $ionicSlideBoxDelegate.update();
@@ -43,6 +44,8 @@ angular.module('app')
     wishlistFactory.favoriteProduct(id_product,product_attribute,product)
       .then(function successCallback(response){
           alertsFactory.showAlert( "Adicionado aos Favoritos!");
+          console.log(response.data);
+          
       })    
     }
     

@@ -50,18 +50,20 @@ class CreditCardCheckoutController extends Controller
         }catch(Exception $e){
             return $e->getMessage(); 
         }
-
         $price =0;
-        //return $cart_products;
+        $cart_products = $cart_products->toArray();
         foreach ($cart_products as $key => $value) {
             $creditCard->addItems()->withParameters(
-                $value['product']['description'][0]['id_product'],
-                $value['product']['description'][0]['name'].','.$value['product']['attributes'][0]['name'],
+                $value['id_product'],
+                $value['name'].','.$value['attributes'][0]['name'],
                 $quantity = $value['quantity'] ,
-                number_format($value['product']['description'][0]['product_price']['price'] ,2)
+                number_format($value['product_price']['price'] ,2)
             );
-            $price = $price + number_format($quantity * $value['product']['description'][0]['product_price']['price'],2, '.', '');
+            $price = $price + number_format($quantity * $value['product_price']['price'],2, '.', '');
         }
+
+
+
 
         // Set your customer information.
         // If you using SANDBOX you must use an email @sandbox.pagseguro.com.br

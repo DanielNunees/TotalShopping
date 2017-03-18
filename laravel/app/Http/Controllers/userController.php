@@ -69,7 +69,7 @@ class userController extends Controller
     $states = array('Acre'=>313,'Alagoas'=>314,'Amapa'=>315,'Amazonas'=>316,'Bahia'=>317,'Ceara'=>318,'Distrito Federal'=>319,'Espirito Santo'=>320,'Goias'=>321,'Maranhao'=>322,'Mato Grosso'=>323,'Mato Grosso do Sul'=>324,'Minas Gerais'=>325,'Para'=>326,'Paraiba'=>327,'Parana'=>328,'Pernanbuco'=>329,'Piaui'=>330,'Rio de Janeiro'=>331,'Rio Grande do Norte'=>332,'Rio Grande do Sul'=>333,'Rondonia'=>334,'Roraima'=>335,'Santa Catarina'=>336,'Sao Paulo'=>337,'Sergipe'=>338,'Tocantins'=>339);
 
     if($address->isEmpty()){
-      return array('user'=>$user, 'states'=>$states);
+      return array('user'=>$user[0], 'states'=>$states);
     }
 
     $state = $address[0]->id_state;

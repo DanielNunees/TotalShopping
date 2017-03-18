@@ -32,8 +32,8 @@ class SearchTransactionByReference extends Controller
 
             $teste = $response->getTransactions();
             //print_r(get_class_methods($response));
-            print_r(get_class_methods($teste[0]));
-            //return $teste[0]->getStatus();
+            //print_r(get_class_methods($teste[0]));
+            return $teste[0]->getStatus();
         } catch (Exception $e) {
             die($e->getMessage());
         }

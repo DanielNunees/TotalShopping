@@ -2,13 +2,13 @@
     'use strict';
 	angular.module('app')
 	.factory('productFactory', function($http,$httpParamSerializerJQLike,valueConfig){
-		var page = 1;
+		var _page = 1;
 		return {
 			getAllProducts: function(){
 				return $http({
 					method: 'GET',
-					url: valueConfig.baseUrl+'/home/'+page
-				})
+					url: valueConfig.baseUrl+'/home/'+_page
+				});
 			},
 
 			getProduct: function(id_product){
@@ -27,17 +27,18 @@
 			        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			        data: $httpParamSerializerJQLike({'id_product':id_product,
                                           			  'id_product_attribute':product_attribute})
-			    	}).then(function(response){
-			        	return response
-                    });
+			    	});
 			},
 
 			getPage: function(){
-				return page;
+				return _page;
 			},
 
 			nextPage: function(){
-				return page++;
+				_page++;
+			},
+			setPage: function(page){
+				_page = page;
 			}
 		}
 	});

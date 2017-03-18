@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','checkoutFactory','userFactory','$ionicActionSheet','alertsFactory','$auth', function($scope,$ionicNavBarDelegate,ngCart,cartFactory,checkoutFactory,userFactory,$ionicActionSheet,alertsFactory,$auth){
+	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','checkoutFactory','userFactory','$ionicActionSheet','alertsFactory','$auth','loadingFactory','$state', function($scope,$ionicNavBarDelegate,ngCart,cartFactory,checkoutFactory,userFactory,$ionicActionSheet,alertsFactory,$auth,loadingFactory,$state){
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
     	$ionicNavBarDelegate.showBackButton(true);
     	if($auth.isAuthenticated()){
@@ -10,7 +10,6 @@
     	checkoutFactory.getSession().then(function successCallback(response) {
 	  		//PagSeguroDirectPayment.setSessionId(response.data);
 	  		var SenderHash = PagSeguroDirectPayment.getSenderHash();
-	  		console.log(SenderHash);
         },function errorCallback(response) {
         	/* Tratamento de erros*/
 	      	//error 400 - No content
@@ -105,21 +104,22 @@
 	}
 
 	    $scope.boletoCheckout = function(boletoData){
-	    	
+	    	loadingFactory.show();
 	    	var SenderHash = PagSeguroDirectPayment.getSenderHash();
 	    	boletoData.SenderHash = SenderHash;
-	    	console.log(boletoData);
 			checkoutFactory.boletoCheckout(boletoData).then(function successCallback(response){
-				console.log(response.status);
+			  loadingFactory.hide();
 			  ngCart.empty();
-			  delete $scope.user;
+			  delete $scope.boletoData;
 			  checkoutFactory.resetSessionId();
-			  console.log((response.data));
+			  alertsFactory.showAlert("Sucesso","Sua Compra Foi Feita Com Sucesso, A Confirmação do pagamento pode levar até 5 dias úteis!");
+			  $state.go("home");
 			},function errorCallback(response){
+		      loadingFactory.hide();
 			  console.log(convertXml2JSon(response.data));
 			  ngCart.empty();
 			  delete $scope.user;
-			  console.log(response.data);
+			  alertsFactory.showAlert("Error","Algo de Errado Aconteceu :'(");
 			});
 		}
 
@@ -200,18 +200,17 @@
   	if($auth.isAuthenticated())
 	var carregarDadosDoUsuario = function(){
   		userFactory.loadUserData().then(function(response) {
-			console.log(response);
 			$scope.user = {};
 			$scope.address = {};
 
-			$scope.user = {firstname: response.user['firstname'], lastname: response.user['lastname'],
-						   birthday: response.user['birthday'], email: response.user['email']};
+			$scope.user = {firstname: response.data.user['firstname'], lastname: response.data.user['lastname'],
+						   birthday: response.data.user['birthday'], email: response.data.user['email']};
 			
-			if(!angular.isUndefined(response.address)){
-				$scope.address = {address: response.address['address'], address1: response.address['address1'],
-								  address2: response.address['address2'], city: response.address['city'],
-								  postcode: response.address['postcode'], state: response.address['state'],
-								  phoneMobile: response.address['phone_mobile'], other: response.address['other'] };
+			if(!angular.isUndefined(response.data.address)){
+				$scope.address = {address: response.data.address['address'], address1: response.data.address['address1'],
+								  address2: response.data.address['address2'], city: response.data.address['city'],
+								  postcode: response.data.address['postcode'], state: response.data.address['state'],
+								  phoneMobile: response.data.address['phone_mobile'], other: response.data.address['other'] };
 			}
 	    $scope.isEmpty = false;
 		}, function errorCallback(response) {

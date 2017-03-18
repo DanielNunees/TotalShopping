@@ -15,11 +15,10 @@ class ProductStock extends Model
 
     static public function RetrivingAttributes($id_product){
         if(is_array($id_product)){
-            return ProductStock::whereIn('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute','id_product','quantity')->get();
+            return ProductStock::whereIn('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute','id_product','quantity')->orderBy('id_shop', 'asc')->get();
         }
-        return ProductStock::where('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute','id_product','quantity')->get();
+        return ProductStock::where('id_product',$id_product)->where('id_product_attribute','!=',0)->where('quantity','>',0)->select('id_product_attribute','id_product','quantity','id_shop')->orderBy('id_shop', 'asc')->get();
     }
-
 
 	public function ProductAttributeName(){
     	return $this->belongsToMany('App\Models\Attributes\AttributesLang','ps_product_attribute_combination','id_product_attribute','id_attribute')->select('name')->where('id_lang',2);

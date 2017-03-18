@@ -10,6 +10,7 @@ use App\Models\Address;
 use App\Tools\Tools;
 use App\Models\Cart;
 use App\Models\Order\OrderDetail;
+use App\Models\Order\OrderStateLang;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderHystoryController;
 
@@ -19,30 +20,29 @@ class OrderController extends Controller
         $id_customer = myAuthController::getAuthenticatedUser();
         
         $cart_products = CartController::loadCart();
+        $cart_products = $cart_products->toArray();
         $price = 0;
         $values = [];
         $shop_ids = [];
 
         foreach ($cart_products as $key => $value) {
-            if(!isset($values[$value->id_shop]))
-                $values[$value->id_shop] = 0;
-            $products[$value->id_shop][] = $value;
-            $quantity = $value->quantity;
-            number_format($value->product['description'][0]['product_price']['price'],2);
-            $price = $values[$value->id_shop] + number_format($quantity *$value->product['description'][0]['product_price']['price'],2, '.', '');
-            $values[$value->id_shop] = $price;
-            if(!in_array($value->id_shop, $shop_ids))
-                $shop_ids[] = $value->id_shop;
-        }
+            if(!isset($values[$value['id_shop']]))
+                $values[$value['id_shop']] = 0;
 
+            $products[$value['id_shop']][] = $value;
+            $quantity = $value['quantity'];
+            number_format($value['product_price']['price'],2);
+            $price = $values[$value['id_shop']] + number_format($quantity *$value['product_price']['price'],2, '.', '');
+            $values[$value['id_shop']] = $price;
+            if(!in_array($value['id_shop'], $shop_ids))
+                $shop_ids[] = $value['id_shop'];
+        }
     	$today = date("Y-m-d H:i:s");
 
     	$customer_secure_key = User::getSecureKey($id_customer);
     	$customer_address = Address::getIdAdressFromCustomer($id_customer);
         $id_cart = $cart_id = Cart::RetrivingCartId($id_customer);
-        
         $id_cart = $id_cart['id_cart']; 	
-        
         foreach($shop_ids as $key => $value1){
             $order_id = new Orders;
         	$order_id = $order_id->insertGetId(
@@ -87,11 +87,10 @@ class OrderController extends Controller
         		'valid'=>0,
         		'date_add'=>$today,
         		'date_upd'=>$today]);
-            
+
             OrderController::OrderDetail($order_id,$products[$value1]);
             OrderHystoryController::newHistory($order_id);
         }
-        
         CartController::createCart();
         
         return $order_id;
@@ -99,20 +98,19 @@ class OrderController extends Controller
     }
 
     public static function OrderDetail($order_id,$products){
-
         foreach($products as $key => $value){
                 $order_details[] = [
                     'id_order' => $order_id ,
-                    'id_order_invoice'=>0,'id_warehouse'=>0,'id_shop'=>$key,
+                    'id_order_invoice'=>0,'id_warehouse'=>0,'id_shop'=>$value['id_shop'],
                     'product_id'=>$value['id_product'] ,
-                    'product_attribute_id'=>$value['id_product_attribute'],
-                    'product_name'=>$value['product']['description'][0]['name'],
+                    'product_attribute_id'=>$value['attributes'][0]['id_product_attribute'],
+                    'product_name'=>$value['name'],
                     'product_quantity'=>$value['quantity'],
                     'product_quantity_in_stock'=>1,
                     'product_quantity_refunded'=>0,
                     'product_quantity_return'=>0,
                     'product_quantity_reinjected'=>0,
-                    'product_price'=>$value['product']['description'][0]['product_price']['price'],
+                    'product_price'=>$value['product_price']['price'],
                     'reduction_percent'=>0,
                     'reduction_amount'=>0,
                     'reduction_amount_tax_incl'=>0,
@@ -134,19 +132,19 @@ class OrderController extends Controller
                     'download_hash'=>0,
                     'download_nb'=>0,
                     'download_deadline'=>0,
-                    'total_price_tax_incl'=>$value['product']['description'][0]['product_price']['price'],
-                    'total_price_tax_excl'=>$value['product']['description'][0]['product_price']['price'],
-                    'unit_price_tax_incl'=>$value['product']['description'][0]['product_price']['price'],
-                    'unit_price_tax_excl'=>$value['product']['description'][0]['product_price']['price'],
+                    'total_price_tax_incl'=>$value['product_price']['price'],
+                    'total_price_tax_excl'=>$value['product_price']['price'],
+                    'unit_price_tax_incl'=>$value['product_price']['price'],
+                    'unit_price_tax_excl'=>$value['product_price']['price'],
                     'total_shipping_price_tax_incl'=>0,
                     'total_shipping_price_tax_excl'=>0,
                     'purchase_supplier_price'=>0,
-                    'original_product_price'=> $value['product']['description'][0]['product_price']['price'],
-                    'original_wholesale_price'=>$value['product']['description'][0]['product_price']['price']];
+                    'original_product_price'=> $value['product_price']['price'],
+                    'original_wholesale_price'=>$value['product_price']['price']];
 
                     ProductController::productUpdateStock(
                         $value['id_product'],
-                        $value['id_product_attribute'],
+                        $value['attributes'][0]['id_product_attribute'],
                         $value['quantity']
                     );
             }
@@ -154,14 +152,34 @@ class OrderController extends Controller
     }
 
     public static function getOrderByCartId($cart_id){
-        return Orders::getOrderByCartId($cart_id);
+        $order = Orders::getOrderByCartId($cart_id);
+        if($order->isEmpty()){
+            return false;
+        }
+        return $order;
     }
 
     public static function getOrderByCustomerId($id_customer){
-        return Orders::getOrderIdByCustomerId($id_customer);
+        $orders = Orders::getOrderIdByCustomerId($id_customer);
+        if($orders->isEmpty()){
+            return response()->json(['error' => 'User have no orders yet'], 200); 
+        }
+        return $orders;
     }
 
     public static function getOrderDetails($id_order){
-        return OrderDetail::getOrderDetail($id_order);
+        $details = OrderDetail::getOrderDetail($id_order);
+        if($details->isEmpty()){
+            return response()->json(['error' => 'User have no orders yet'], 200);
+        }
+        return $details;
+    }
+
+    public static function getOrderState($id_order_state){
+        $order_status = OrderStateLang::getOrderState($id_order_state);
+        if($order_status->isEmpty()){
+            return false;
+        }
+        return $order_status;
     }
 }

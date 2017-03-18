@@ -2,8 +2,7 @@
     'use strict';
 	angular.module('app')
 	.factory('multiStoreFactory', function($http,valueConfig){
-		var id_product;
-		var page=1;
+		var _page=1;
 		return {
 			getStores: function(){
 				return $http({
@@ -17,23 +16,20 @@
 				return $http({
 			        method: 'GET',
 			        cache: true,
-			        url: valueConfig.baseUrl+'/multistore/store/'+idStore+'/'+page
-	      		}).then(function(response){
-	      			return(response.data);
-			    }); 
+			        url: valueConfig.baseUrl+'/multistore/store/'+idStore+'/'+_page
+	      		});
 			},
 			getPage: function(){
-				return page;
+				return _page;
 			},
 
 			nextPage: function(){
-				return page++;
+				_page++;
 			},
 
 			setPage: function(page){
-				return page = page;
+				_page = page;
 			}
-
 		}
 	});
 })();

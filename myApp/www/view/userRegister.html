@@ -5,8 +5,6 @@
     </ion-header-bar>
 	<ion-content >
   		<form name='userForm' class="css-form" ng-submit="userForm.$valid && signup(userRegister)" novalidate>
-  			<input ng-model="photo" type="file" id="files" />
-			<img class=" img-circle img-size text-center" id="image">
   		   
   			<label class="item item-input item-floating-label item-stacked-label">
 			    <span class="input-label">Nome</span>
@@ -32,15 +30,14 @@
 			    <span class="input-label">Data de nascimento*</span>
 			    <input ng-model="userRegister.birth" type="date" placeholder="Data de nascimento" required>
 			</label>
-
-		    <input type="radio" ng-model="userRegister.gender" value="1" required />Masculino
-		    <input type="radio" ng-model="userRegister.gender" value="2" required />Feminino<br/>
-		    <input type="radio"  ng-model="userRegister.newsletter" value="1">Assinar nosso newsletter?</br>
-
+			<ion-list>
+			    <ion-radio ng-model="userRegister.gender" value="1" required >Masculino</ion-radio>
+			    <ion-radio ng-model="userRegister.gender" value="2" required >Feminino</ion-radio>
+			    
+			</ion-list>
+			<ion-radio  ng-model="userRegister.newsletter" value="1">Assinar nosso newsletter?</ion-radio>
 		    <div> User Form is valid? {{userForm.$valid}}</div>
 		    <input class="button button-block button-positive" type="submit" ng-disabled="userForm.$invalid" value="Register" />
 		</form>
-		<pre>user = {{userRegister | json}}</pre>
-		<pre>master = {{master | json}}</pre>
     </ion-content>
 </ion-modal-view>
