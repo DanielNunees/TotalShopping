@@ -62,9 +62,6 @@ class CreditCardCheckoutController extends Controller
             $price = $price + number_format($quantity * $value['product_price']['price'],2, '.', '');
         }
 
-
-
-
         // Set your customer information.
         // If you using SANDBOX you must use an email @sandbox.pagseguro.com.br
         $userData = userController::loadData();
@@ -84,10 +81,6 @@ class CreditCardCheckoutController extends Controller
         $complement = $userData['address']['other'];
         $birthday = date("d/m/Y",strtotime($userData['user']['birthday']));
         
-
-
-
-
         $creditCard->setSender()->setName($name);
         $creditCard->setSender()->setEmail('v30781034923906770092@sandbox.pagseguro.com.br'); //TODO
 

@@ -150,10 +150,11 @@ angular.module('ngCart', ['ngCart.directives'])
 
         };
 
-        this.removeItemById = function (id) {
+        this.removeItemById = function (id,idAttribute) {
             var cart = this.getCart();
             angular.forEach(cart.items, function (item, index) {
-                if  (item.getId() == id) {
+                if  (item.getId() == id && item._data.product_attributte==idAttribute) {
+                    console.log(item);
                     cart.items.splice(index, 1);
                 }
             });

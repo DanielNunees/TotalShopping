@@ -6,7 +6,6 @@ angular.module('app')
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
     $ionicNavBarDelegate.showBackButton(false);
-    productFactory.setPage(1);
   }); 
 
   $scope.products = [];

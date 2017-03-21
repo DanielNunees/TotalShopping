@@ -16,10 +16,13 @@ class HistoricController extends Controller
             return $id_customer;
         } 
 
-    	$orders = OrderController::getOrderByCustomerId($id_customer); //get order_id from user
-        $order_id = $orders->pluck('id_order')->toArray();             //transform to array to use whereIn query
+    	$orders = OrderController::getOrderByCustomerId($id_customer); //get order_id from user, 
+        if(!$orders){                                                  //false if have no orders
+            return;
+        }
+        $order_id = $orders->pluck('id_order')->toArray();//transform to array to use whereIn query
         
-        $state = OrderController::getOrderState($orders->pluck('current_state')->toArray());
+        $state = OrderController::getOrderState($orders->pluck('current_state')->toArray()); //current state order
 
         $order_details = OrderController::getOrderDetails($order_id);
         $order_details_id = $order_details->pluck('product_id')->unique()->values()->toArray();

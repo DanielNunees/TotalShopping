@@ -32,9 +32,11 @@ class CartController extends Controller
             $id_guest=GuestController::newGuest(0);
         }
         else{
+            $customer_address = userController::getAddress($id_customer);
+            if(!$customer_address){ 
+                $customer_address=0;
+            }
         	$customer_secure_key = User::getSecureKey($id_customer);
-        	$customer_address = Address::getIdAdressFromCustomer($id_customer);
-        	$customer_address = $customer_address[0]['id_address'];
             $customer_secure_key = $customer_secure_key[0]['secure_key'];
             $today = date("Y-m-d H:i:s");
         }
@@ -96,9 +98,10 @@ class CartController extends Controller
         if(!$find){
             return response()->json(['product_not_found' => 'error'], 400);
         }
-
-        $address = Address::getIdAdressFromCustomer($id_customer);
-        $address = $address[0]['id_address'];
+        $address = userController::getAddress($id_customer);
+        if(!$address){ 
+            $address=0;
+        }
 
         if(is_null($cart_id)){
             $cart_id['id_cart'] = CartController::createCart();

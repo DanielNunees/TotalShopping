@@ -14,7 +14,7 @@
 				C25.395,21.21,25.027,21.575,24.576,21.575L24.576,21.575z"/>
 </svg-->
     </div>
-    <div  class=" icon ion-bag col-md-6">{{ ngCart.getTotalItems() }}
+    <div>{{ ngCart.getTotalItems() }}
         <ng-pluralize count="ngCart.getTotalItems()" when="{1: 'item', 'other':'items'}"></ng-pluralize>
         <br /><!--{{ ngCart.totalCost() | currency:"R$" }}-->
     </div>

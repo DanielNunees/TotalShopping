@@ -4,7 +4,7 @@ angular.module('app')
 .controller('wishlistController', ['$scope','$auth','$ionicNavBarDelegate','wishlistFactory','wishlistCacheFactory','alertsFactory','$state', function($scope,$auth,$ionicNavBarDelegate,wishlistFactory,wishlistCacheFactory,alertsFactory,$state){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     if(!$auth.isAuthenticated()){
-      $state.go('home');  
+      $state.go('userLogin');  
     }else getWishlist();
     $ionicNavBarDelegate.showBackButton(true);
    

@@ -3,7 +3,7 @@
         	<div class="container">
 			    <div class="row" ng-repeat="product in products track by $index" ng-if="$index % 2 === 0">
 			        <div class="col col-50 box-shadow--3dp margin-left--4dp" ng-if="$index < products.length">
-				        <a ng-href="#/product/{{product.productId}}">
+				        <a ui-sref="product({productId: product.productId})">
 				            <img class="img-size" ng-src='http://127.0.1.1/prestashop{{product.productImages}}' />
 				            <h4 class="css-selector truncate">{{product.productName}}</h4>
 		                    <h4 class="css-selector">{{product.productPrice | currency:"R$ ":2}}</h4>
@@ -12,7 +12,7 @@
 		                </a>
 			        </div>
 			        <div class="col col-50 box-shadow--3dp" ng-if="$index +1 < products.length">
-				        <a ng-href="#/product/{{products[$index+1].productId}}">
+				        <a ui-sref="product({productId: products[$index+1].productId})">
 				            <img class="img-size" ng-src='http://127.0.1.1/prestashop{{products[$index+1].productImages}}' />
 				            <h4 class="css-selector truncate">{{products[$index+1].productName}}</h4>
 		                    <h4 class="css-selector">{{products[$index+1].productPrice | currency:"R$ ":2}}</h4>

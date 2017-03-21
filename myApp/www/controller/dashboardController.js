@@ -10,7 +10,7 @@ angular.module('app')
 			$ionicHistory.removeBackView();
 		}
 
-
+ 
 		$ionicNavBarDelegate.showBackButton(true);
 		$ionicSlideBoxDelegate.slide(0, [0]);
     	$scope.slide = 0;

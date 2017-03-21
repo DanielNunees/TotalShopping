@@ -4,9 +4,12 @@
 	.controller('userController', ['$scope','$ionicNavBarDelegate','$auth','$state','$ionicHistory','$ionicModal','alertsFactory','$ionicLoading', function($scope,$ionicNavBarDelegate,$auth,$state,$ionicHistory,$ionicModal,alertsFactory,$ionicLoading){
 
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
-	      $ionicNavBarDelegate.showBackButton(true);
-	      if($auth.isAuthenticated()){
-			$state.go('userDashboard');
+	    	$ionicNavBarDelegate.showBackButton(true);
+	    	if($auth.isAuthenticated()){
+				$state.go('userDashboard');
+			}
+			if($ionicHistory.backView() && $ionicHistory.backView().stateName.indexOf("wishlist")!=-1){
+			$ionicHistory.removeBackView();
 		}
 	    });
 

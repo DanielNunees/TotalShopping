@@ -119,4 +119,10 @@ class userController extends Controller
     return Address::updateOrCreateAddress($id_customer,$address);
   }
 
+  public static function getAddress($id_customer){
+    $address = Address::getIdAdressFromCustomer($id_customer);
+    if($address->isEmpty()) return false;
+    return $address = $address[0]['id_address'];
+  }
+
 }

@@ -1,7 +1,7 @@
 <ion-view view-title="Stores">
 	<ion-content class="has-footer">
 		<div ng-repeat="store in stores track by $index" class="list">
-		    <a class="item item-thumbnail-left" href="#/store/{{store.store}}">
+		    <a class="item item-thumbnail-left" ui-sref="store({idStore: store.store})">
 		      <img ng-src="img/profile.jpg">
 		      <h2>{{store.name}}</h2>
 		      <p>Resumo da loja</p>

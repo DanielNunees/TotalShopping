@@ -162,7 +162,8 @@ class OrderController extends Controller
     public static function getOrderByCustomerId($id_customer){
         $orders = Orders::getOrderIdByCustomerId($id_customer);
         if($orders->isEmpty()){
-            return response()->json(['error' => 'User have no orders yet'], 200); 
+            //response()->json(['alert' => 'User have no orders yet'], 200);
+            return false; 
         }
         return $orders;
     }
@@ -170,7 +171,8 @@ class OrderController extends Controller
     public static function getOrderDetails($id_order){
         $details = OrderDetail::getOrderDetail($id_order);
         if($details->isEmpty()){
-            return response()->json(['error' => 'User have no orders yet'], 200);
+            response()->json(['alert' => 'User have no orders yet'], 200);
+            return false;
         }
         return $details;
     }

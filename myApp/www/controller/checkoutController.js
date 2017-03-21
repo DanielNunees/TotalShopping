@@ -30,6 +30,8 @@
   	$scope.method = 1;
   	$scope.boletoData = {};
 
+  	$scope.isAuthenticated = $auth.isAuthenticated();
+
 
   	$scope.getPaymentMethods = function(){
   		PagSeguroDirectPayment.getPaymentMethods({
