@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.controller('cartController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','$auth','$ionicLoading',  function($scope,$ionicNavBarDelegate,ngCart,cartFactory,$auth,$ionicLoading){
+	.controller('cartController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','$auth','$ionicLoading','$state','alertsFactory', function($scope,$ionicNavBarDelegate,ngCart,cartFactory,$auth,$ionicLoading,$state,alertsFactory){
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
 	      $ionicNavBarDelegate.showBackButton(true);	
 	    });
@@ -12,6 +12,17 @@
 			return $auth.isAuthenticated();
 		}
 
+		$scope.finalizar = function(){
+			if($auth.isAuthenticated()){
+				if(ngCart.getTotalItems()>0)
+					$state.transitionTo('checkout');
+				else alertsFactory.showAlert("Seu Carrinho Está Vazio.")
+			}
+			else{
+				$state.transitionTo('userLogin');
+			}
+		}
+
 		$scope.remove =function(id_product,id_product_attribute){
 			if(!$auth.isAuthenticated()){
 				ngCart.removeItemById(parseInt(id_product),parseInt(id_product_attribute));
@@ -19,10 +30,10 @@
 			}
 			cartFactory.removeProduct(id_product,id_product_attribute).
 				then(function successCallback(response){
-					ngCart.removeItemById(parseInt(id_product));
+					ngCart.removeItemById(parseInt(id_product),parseInt(id_product_attribute));
 					$scope.ngCart = ngCart;
 				}, function errorCallback(response){
-					ngCart.removeItemById(parseInt(id_product));
+					ngCart.removeItemById(parseInt(id_product),parseInt(id_product_attribute));
 					console.log(response.data);
 				});
 		}

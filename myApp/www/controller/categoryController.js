@@ -9,7 +9,6 @@
 
 		productCategoryFactory.getProducts($stateParams.categoryId).then(function(response){
 			$scope.products = [];
-			console.log(response.data);
 			angular.forEach(response.data, function(value1, key1) {
 	            $scope.products.push({productPrice:value1['product_price']['price'],
 	                            productName:value1['name'],

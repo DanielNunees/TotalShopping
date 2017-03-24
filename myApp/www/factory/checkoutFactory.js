@@ -2,20 +2,19 @@
     'use strict';
 	angular.module('app')
 	.factory('checkoutFactory', function($http,$httpParamSerializerJQLike,$q,valueConfig){
-		var session_ID;
+		var _session_ID;
 		return {
 
 			getSession: function(){
-				return session_ID? $q.when(session_ID) : $http({
+				return _session_ID? $q.when(_session_ID) : $http({
 			        method: 'GET',
 			        url: valueConfig.baseUrl+'/getSession',
 			        cache: true,
-			    }).then(function(response){
+			    });
+			},
 
-			    	PagSeguroDirectPayment.setSessionId(response.data);
-			    	session_ID = response.data;
-			    	return session_ID;
-			    }); 
+			setSession: function(sessionID){
+				_session_ID = sessionID;
 			},
 
 			creditCardCheckout: function(checkoutData){
@@ -37,7 +36,7 @@
 			    });
 			},
 			resetSessionId: function(){
-				session_ID = undefined;
+				_session_ID = undefined;
 				console.log('resetSessionId');
 			}
 

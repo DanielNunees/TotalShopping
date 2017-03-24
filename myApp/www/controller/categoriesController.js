@@ -1,10 +1,10 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.controller('categoriesController', ['$scope','$ionicNavBarDelegate','$stateParams','productCategoryFactory',  function($scope,$ionicNavBarDelegate,$stateParams,productCategoryFactory){
-
+	.controller('categoriesController', ['$scope','$ionicNavBarDelegate','$stateParams','productCategoryFactory','$ionicTabsDelegate', function($scope,$ionicNavBarDelegate,$stateParams,productCategoryFactory,$ionicTabsDelegate){
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
 	      $ionicNavBarDelegate.showBackButton(true);
+	      $ionicTabsDelegate.select(4);
 	    });
 
 		productCategoryFactory.getCategories().then(function(response){

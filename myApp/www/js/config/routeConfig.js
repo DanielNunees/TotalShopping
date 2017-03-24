@@ -76,7 +76,7 @@
       templateUrl: "view/userDashboard.html",
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
-          return $ocLazyLoad.load(['controller/dashboardController.js','factory/dashboardFactory.js','factory/userFactory.js','factory/transactionFactory.js','directives/userAddressDirective.js'])
+          return $ocLazyLoad.load(['controller/dashboardController.js','factory/dashboardFactory.js','factory/userFactory.js','factory/transactionFactory.js','directives/userAddressDirective.js','factory/cache/userDataCacheFactory.js','factory/wishlistFactory.js','factory/cache/wishlistCacheFactory.js'])
         }]
       }
     })
@@ -103,14 +103,14 @@
       }
     })
 
-    .state('Checkout', {
-      url: "/user/Checkout",
+    .state('checkout', {
+      url: "/user/checkout",
       controller: 'checkoutController',
       templateUrl: "view/checkout.html",
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
           return $ocLazyLoad.load(['controller/checkoutController.js','factory/cartFactory.js','factory/userFactory.js','factory/checkoutFactory.js',
-                                   'lib/PagSeguro/pagseguro.directpayment.js','directives/paymentMethodsDirectives.js'])
+                                   'lib/PagSeguro/pagseguro.directpayment.js','directives/paymentMethodsDirectives.js','factory/cache/userDataCacheFactory.js'])
         }]
       }
     })

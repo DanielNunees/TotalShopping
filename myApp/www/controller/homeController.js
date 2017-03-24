@@ -1,11 +1,12 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('homeController', ['$scope','$ionicHistory','$ionicNavBarDelegate','productFactory','$auth', function($scope,$ionicHistory,$ionicNavBarDelegate,productFactory,$auth){
+.controller('homeController', ['$scope','$ionicHistory','$ionicNavBarDelegate','productFactory','$auth','$ionicTabsDelegate','$state', function($scope,$ionicHistory,$ionicNavBarDelegate,productFactory,$auth,$ionicTabsDelegate,$state){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
     $ionicNavBarDelegate.showBackButton(false);
+    $ionicTabsDelegate.select(0);
   }); 
 
   $scope.products = [];
@@ -13,7 +14,20 @@ angular.module('app')
 
   $scope.isAuthenticated = function(){
     return $auth.isAuthenticated();
-  }
+  };
+
+  $scope.selectTabWithIndex = function(state,index) {
+    if(state.indexOf("userDashboard")>-1&&!$auth.isAuthenticated()){ 
+      state = 'userLogin';
+    }
+
+    if(state.indexOf("wishlist")>-1&&!$auth.isAuthenticated()){ 
+      state = 'userLogin';
+    }
+    
+    $ionicTabsDelegate.select(index);
+    $state.transitionTo(state);
+  };
 
   $scope.getAllProducts = function(){
     productFactory.getAllProducts().

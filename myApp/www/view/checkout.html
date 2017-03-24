@@ -13,10 +13,9 @@
         {{address.city}}, {{address.state}}</br>
         {{address.other}}
       </div>
-      <button class="button-positive" ng-click="getPaymentMethods()">installments </button>
       <creditcard-method ng-if="method==0"></creditcard-method>
       <boleto-method ng-if="method==1"></boleto-method>
-    	<div class=" button button-clear button-positive button-block" ng-click="show()">Mudar Método de pagamento
+    	<div class="button button-positive button-block" ng-click="show()">Mudar Método de pagamento
       </div>
 
     </ion-content>

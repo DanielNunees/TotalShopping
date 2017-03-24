@@ -54,6 +54,11 @@
 
 			setKeys: function(id_product){
 				return _keys.push(id_product);
+			},
+
+			removeAll: function(){
+				_keys.length = 0;
+				wishlistCacheFactory.removeAll();
 			}
 		}
 	});

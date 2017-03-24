@@ -25,8 +25,7 @@
 		<div class="row ">
 		 	<div class="col col-50">Total: {{ ngCart.getSubTotal() | currency:"R$" }} </div>
 		</div>
-		<a ng-if="isAuthenticated()" ng-disabled='empty' class="button button-outline button-positive button-block" ui-sref='Checkout'>Finalizar Pedido</a>
-		<a ng-if="!isAuthenticated()" class="button button-outline button-positive button-block" ui-sref='userLogin'>Finalizar Pedido</a>
+		<a class="button button-outline button-positive button-block" ng-click="finalizar()">Finalizar Pedido</a>
     </ion-content>
 </ion-view >
 

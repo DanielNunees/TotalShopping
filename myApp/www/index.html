@@ -96,21 +96,21 @@
       </a>
     </div-->
     
-    <ion-tabs class="tabs-royal tabs-icon-only">
-      <ion-tab icon-on="ion-ios-home" icon-off="ion-ios-home-outline" ui-sref='home'>
+    <ion-tabs class="tabs-royal tabs-icon-only" ng-controller="homeController">
+      <ion-tab icon-on="ion-ios-home" icon-off="ion-ios-home-outline" ng-click="selectTabWithIndex('home',0)">
       </ion-tab>
 
-      <ion-tab icon-on="icon ion-ios-box" icon-off="icon ion-ios-box-outline" ui-sref='multiStore'>
+      <ion-tab icon-on="icon ion-ios-box" icon-off="icon ion-ios-box-outline" ng-click="selectTabWithIndex('multiStore',1)">
       </ion-tab>
 
       <ion-tab icon-on="icon ion-ios-person" icon-off="icon ion-ios-person-outline" 
-               href="{{isAuthenticated() ? '#user/dashboard':'#/user/login'}}">
+               ng-click="selectTabWithIndex('userDashboard',2)">
       </ion-tab>
 
-      <ion-tab icon-on="icon ion-ios-heart" icon-off="icon ion-ios-heart-outline" ui-sref="wishlist">
+      <ion-tab icon-on="icon ion-ios-heart" icon-off="icon ion-ios-heart-outline" ng-click="selectTabWithIndex('wishlist',3)">
       </ion-tab>
 
-      <ion-tab icon-on="icon ion-ios-search" icon-off="icon ion-ios-search" ui-sref='categories'>
+      <ion-tab icon-on="icon ion-search" icon-off="icon ion-ios-search" ui-sref='categories' ng-click="selectTabWithIndex('categories',4)">
       </ion-tab>
     </ion-tabs>
   </body>

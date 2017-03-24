@@ -1,13 +1,14 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('wishlistController', ['$scope','$auth','$ionicNavBarDelegate','wishlistFactory','wishlistCacheFactory','alertsFactory','$state', function($scope,$auth,$ionicNavBarDelegate,wishlistFactory,wishlistCacheFactory,alertsFactory,$state){
+.controller('wishlistController', ['$scope','$auth','$ionicNavBarDelegate','wishlistFactory','wishlistCacheFactory','alertsFactory','$state','$ionicTabsDelegate', function($scope,$auth,$ionicNavBarDelegate,wishlistFactory,wishlistCacheFactory,alertsFactory,$state,$ionicTabsDelegate){
   $scope.$on("$ionicView.beforeEnter", function(event, data){
     if(!$auth.isAuthenticated()){
       $state.go('userLogin');  
     }else getWishlist();
     $ionicNavBarDelegate.showBackButton(true);
-   
+    console.log(wishlistCacheFactory.info());
+    $ionicTabsDelegate.select(3);
   });
 
   $scope.isAuthenticated = $auth.isAuthenticated();
@@ -15,11 +16,11 @@ angular.module('app')
   var getWishlist = function(){
     var cache = wishlistCacheFactory.info();
     if(cache.size>0){
+      console.log('wishlist cache cheio');
       getWishlistFromCache(cache);
       return;
     }
     wishlistFactory.getWishlist().then(function successCallback(data){
-      console.log(data.data);
       $scope.products = [];
       var i=0;
       if(data.data.length>0 && !angular.isUndefined(data.data[0]['id_product']))
@@ -47,6 +48,7 @@ angular.module('app')
 
   var getWishlistFromCache = function(cache){
     console.log("from cache")
+    console.log(wishlistCacheFactory.info());
       var keys = wishlistFactory.getKeys();
         $scope.products = [];
         angular.forEach(keys, function(value,key){

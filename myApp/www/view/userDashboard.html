@@ -1,6 +1,5 @@
 <ion-view view-title="Dashboard" >
   <ion-content class='has-footer' >
-    <div ng-if="isAuthenticated"> <!-- If user not logged -->
 
       <header class="image-background-profile">
         <!--img ng-src="img/profile.jpg" class="img-circle user-image"-->
@@ -44,14 +43,10 @@
             </ion-list>
         </ion-slide><!--historic-->
         <ion-slide>
-          <div ng-if="isEmpty">
-            <h3>Nenhum endereço cadastrado ainda</h3>
-          </div>
-          <user-Address></user-Address>
+          <user-Address haveAddress="haveAddress" ></user-Address>
         </ion-slide>
       </ion-slide-box>
       <button class="button button-block button-assertive button-outline" ng-click="logout  ()"> Logout</button>
-    </div> <!--ng-if='isAuthenticated'--><!-- If user not logged -->
   </ion-content>
 </ion-view>
 

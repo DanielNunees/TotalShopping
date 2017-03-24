@@ -161,7 +161,7 @@ class CartController extends Controller
         $products = CartProducts::allProductsFromCart($cart_id['id_cart']);
         
         if($products->isEmpty()) 
-            return response()->json(['Alert'=>'This cart Is Empty'], 200);
+            return $products;
         
         $id_product_attribute = $products->pluck('id_product_attribute')->toArray();
         $id_product = $products->pluck('id_product')->toArray();

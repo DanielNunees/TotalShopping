@@ -4,7 +4,7 @@ angular.module('app')
 .directive('userAddress',function(){
 	return {
 		restrict:'E',
-		templateUrl: '../templates/userAddress.html'
+		templateUrl: '../templates/userAddress.html',
 	};
 });
 })();

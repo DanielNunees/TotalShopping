@@ -1,15 +1,15 @@
- <ion-view view-title="Home">
+<ion-view view-title="Home">
 	<ion-content class=" has-footer">
-        <ion-slide-box auto-play='true' does-continue='true'>
-            <ion-slide>
-            	<img class="no-padding img-size" ng-src='img/banner1.jpg'>
-            </ion-slide>
-            <ion-slide>
-            	<img class="no-padding img-size" ng-src='img/banner2.jpg'>
-            </ion-slide>
-        </ion-slide-box>
-        <div class="padding-horizontal" >
-        	<div class="container">
+	    <ion-slide-box auto-play='true' does-continue='true'>
+	        <ion-slide>
+	        	<img class="no-padding img-size" ng-src='img/banner1.jpg'>
+	        </ion-slide>
+	        <ion-slide>
+	        	<img class="no-padding img-size" ng-src='img/banner2.jpg'>
+	        </ion-slide>
+	    </ion-slide-box>
+	    <div class="padding-horizontal" >
+	    	<div class="container">
 			    <div class="row" ng-repeat="product in products track by $index" ng-if="$index % 2 === 0">
 			        <div class="col col-50 box-shadow--3dp margin-left--4dp" ng-if="$index < products.length">
 				        <a ui-sref="product({productId: product.productId})">
@@ -32,11 +32,11 @@
 			   
 			    </div>
 			</div>
-        </div>
-        <ion-infinite-scroll
+	    </div>
+	    <ion-infinite-scroll
 		    on-infinite="getAllProducts()"
 		    distance="1%"
 		    ng-if="endData">
 		  </ion-infinite-scroll>
-		</ion-content>
+	</ion-content>
 </ion-view >

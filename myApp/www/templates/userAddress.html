@@ -1,4 +1,4 @@
-<div ng-if="!isEmpty" class="list">
+<div class="list">
   <div class="item item-divider text-center">
     Dados Pessoais
   </div>
@@ -16,27 +16,31 @@
     {{user.birthday | date: 'dd/MM/yyyy'}}
   </span>
   <div class="item item-divider text-center">
-    Endereço de Entrega
+    Endereço
   </div>
-  <span class="item item-icon-left">
-    <i class="icon ion-location"></i>
-    <p>{{address.city}}, {{address.state}}</p>
-  </span>
+  <div ng-if="!haveAddress">
+    <h3 class="text-center">Nenhum Endereço Cadastrado.</h3>
+  </div>
+  <div ng-if="haveAddress">
+    <span class="item item-icon-left">
+      <i class="icon ion-location"></i>
+      <p>{{address.city}}, {{address.state}}</p>
+    </span>
 
-  <span class="item item-icon-left">
-    <i class="icon ion-map"></i>
-    <p>{{address.address1}}, {{address.address2}}</p>
-  </span>
+    <span class="item item-icon-left">
+      <i class="icon ion-map"></i>
+      <p>{{address.address1}}, {{address.address2}}</p>
+    </span>
 
-  <span class="item item-icon-left">
-    <i class="icon ion-pound"></i>
-    {{address.postcode}}
-  </span>
+    <span class="item item-icon-left">
+      <i class="icon ion-pound"></i>
+      {{address.postcode}}
+    </span>
 
-  <span class="item item-icon-left">
-    <i class="icon ion-ios-telephone"></i>
-    {{address.phoneMobile}}
-  </span>
+    <span class="item item-icon-left">
+      <i class="icon ion-ios-telephone"></i>
+      {{address.phoneMobile}}
+    </span>
+  </div>
 </div>
-<button ng-if="!isEmpty" class="button button-block button-positive button-outline" ng-click="openModal()">Editar</button>
-<button ng-if="isEmpty" class="button button-block button-positive button-outline" ng-click="openModal()">Cadastrar Novo Endereço</button>
+<button class="button button-block button-positive" ng-click="openModal()">Editar Ou Cadastrar Endereço</button>
