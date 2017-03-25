@@ -19,6 +19,11 @@ angular.module('app')
     	$scope.slide = 0;
   	});
 
+	$scope.teste = {name:'juliana'}
+  	$scope.mudar = function(){
+  		$scope.teste = {name:'daniel'};
+  	}
+
 	$scope.address = {};
 	var CarregarHistoricoDeCompras = function(){
 		dashboardFactory.loadHistoric().then(function(data){
@@ -69,15 +74,18 @@ angular.module('app')
 				$scope.haveAddress = true;
 			}
 			userDataCacheFactory.put(0,$scope.user);
+			userDataCacheFactory.put(2,response.data.states);
 			$scope.states = response.data.states;
 		}, function errorCallback(response) {
 		       	/* Tratamento de erros*/
 		         	console.log(response);
 	        });
 	};
-	var loadUserDataFromCache = function(cache){
+	var loadUserDataFromCache = function(){
 		$scope.user = {};
+		$scope.address = {};
 		$scope.user = userDataCacheFactory.get(0);
+		$scope.states = userDataCacheFactory.get(2);
 		if(!angular.isUndefined(userDataCacheFactory.get(1))){
 			$scope.address = userDataCacheFactory.get(1); 
 		}
@@ -89,9 +97,9 @@ angular.module('app')
 	   */
   	$scope.toggleGroup = function(group) {
     	if ($scope.isGroupShown(group)) {
-      	$scope.shownGroup = null;
+      		$scope.shownGroup = null;
     	} else {
-      	$scope.shownGroup = group;
+      		$scope.shownGroup = group;
     	}
   	};
   
@@ -107,6 +115,7 @@ angular.module('app')
 		$auth.logout();
 		$state.go('home');
 		ngCart.empty();
+		$scope.haveAddress = false;
 		//$ionicHistory.removeBackView();
 	}
 
@@ -124,46 +133,27 @@ angular.module('app')
 		address.address1 = address.address1+','+address.number;
 		userFactory.updateOrCreateAddress(address).then(function successCallback(response) {
 	      	console.log(response.data);
-	      	$scope.modal.hide();
 	      	$scope.address = {};
-	      	if(!angular.isUndefined(response.data.address)){
-			$scope.address = {address1: response.data.address[0]['address1'],
-							  address2: response.data.address[0]['address2'], city: response.data.address[0]['city'],
-							  postcode: response.data.address[0]['postcode'], state: response.data.address[0]['state'],
-							  phoneMobile: response.data.address[0]['phone_mobile'] };
-			}
-
+				$scope.address = {address1: response.data['address1'],
+								  address2: response.data['address2'], 
+								  city: response.data['city'],
+								  postcode: response.data['postcode'], 
+								  state: response.data['state'],
+								  phoneMobile: response.data['phone_mobile']};
+				userDataCacheFactory.put(1,$scope.address);
+				$scope.haveAddress = true;
+				$scope.modal.hide();
 	        }, function errorCallback(response) {
 		        console.log(response.data);
 	        });
+		loadUserDataFromCache();
 	} 
 
 	$ionicModal.fromTemplateUrl('view/userAddressRegisterModal.html', {
     	scope: $scope,
       	animation: 'slide-in-up',
 	}).then(function(modal) {
-	$scope.modal = modal;
-	  });
-
-	  $scope.openModal = function() {
-	    $scope.modal.show();
-	  };
-
-	  $scope.closeModal = function() {
-	    $scope.modal.hide();
-	  };
-	  // Cleanup the modal when we're done with it!
-	  $scope.$on('$destroy', function() {
-	    $scope.modal.remove();
-	  });
-	  // Execute action on hide modal
-	  $scope.$on('modal.hidden', function() {
-	    // Execute action
-	  });
-	  // Execute action on remove modal
-	  $scope.$on('modal.removed', function() {
-	    // Execute action
-	  });
-
+		$scope.modal = modal;
+	});
 }]);
 })();

@@ -76,7 +76,9 @@
       templateUrl: "view/userDashboard.html",
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
-          return $ocLazyLoad.load(['controller/dashboardController.js','factory/dashboardFactory.js','factory/userFactory.js','factory/transactionFactory.js','directives/userAddressDirective.js','factory/cache/userDataCacheFactory.js','factory/wishlistFactory.js','factory/cache/wishlistCacheFactory.js'])
+          return $ocLazyLoad.load(['controller/dashboardController.js','factory/dashboardFactory.js','factory/userFactory.js',
+                                   'factory/transactionFactory.js','directives/userAddressDirective.js','factory/cache/userDataCacheFactory.js',
+                                   'factory/wishlistFactory.js','factory/cache/wishlistCacheFactory.js'])
         }]
       }
     })

@@ -19,6 +19,7 @@
     	};
 
     	$scope.isAuth = $auth.isAuthenticated();
+    	
 		$scope.login = function(loginData){
 	      $auth.login(loginData).then(
 	        function(response){
@@ -41,6 +42,7 @@
 			    // that requires email address verification before any other part of the site
 			    // can be accessed.
 			    $state.go('userLogin');
+			    $scope.modal.hide();
 	          	$ionicHistory.removeBackView();
 			  })
 			  .catch(function(response) {

@@ -1,5 +1,5 @@
 <ion-modal-view >
-  <ion-header-bar class="bar bar-header bar-royal">
+  <ion-header-bar class="bar bar-header bar-royal" >
     <h1 class="title">Novo Endereço</h1>
     <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
   </ion-header-bar>
@@ -28,7 +28,7 @@
 
       <label class="item item-input item-stacked-label">
         <span class="input-label">CEP*</span>
-        <input ng-model="address.postcode" type="text" ui-mask='99999-999' required>
+        <input ng-model="address.postcode" type="text" restrict="reject" mask='99999-999' required>
       </label>
 
       <label class="item item-input item-select">
@@ -45,16 +45,15 @@
 
       <label class="item item-input item-stacked-label">
         <span class="input-label">Telefone Fixo</span>
-        <input ng-model="address.phone" type="text" ui-mask='(99)9999-9999'>
+        <input ng-model="address.phone" type="text" restrict="reject" mask='(99)9999-9999'>
       </label>
 
       <label class="item item-input item-stacked-label">
         <span class="input-label">Telefone Celular*</span>
-        <input ng-model="address.phoneMobile" type="text" ui-mask='(99)99999-9999' required>
+        <input ng-model="address.phoneMobile" type="text" restrict="reject" mask='(99)99999-9999' required>
       </label>
 
-      <div> User Form is valid? {{addressForm.$valid}}</div>
-      <input class="button button-block button-positive"  type="submit" ng-disabled="addressForm.$invalid" value="Registrar" >
+      <input class="button button-block button-positive" type="submit" ng-disabled="addressForm.$invalid" value="Registrar" >
     </form>
   </ion-content>
 </ion-modal-view>

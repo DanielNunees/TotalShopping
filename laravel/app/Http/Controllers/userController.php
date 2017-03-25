@@ -87,11 +87,11 @@ class userController extends Controller
 
   public function updateOrCreateAddress(Request $request){
     $this->validate($request, [
-      'postcode' => 'numeric|bail|required',
+      'postcode' => 'bail|required',
       'address1' => 'bail|required',
       'address2' => 'bail|required',
       'city' => 'bail|required',
-      'phoneMobile' =>'bail|required|numeric',
+      'phoneMobile' =>'bail|required',
       'id_state' => 'bail|required|numeric'
     ]);
     $id_customer = myAuthController::getAuthenticatedUser();
