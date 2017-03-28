@@ -18,13 +18,7 @@ angular.module('app')
 		$ionicSlideBoxDelegate.slide(0, [0]);
     	$scope.slide = 0;
   	});
-
-	$scope.teste = {name:'juliana'}
-  	$scope.mudar = function(){
-  		$scope.teste = {name:'daniel'};
-  	}
-
-	$scope.address = {};
+  	
 	var CarregarHistoricoDeCompras = function(){
 		dashboardFactory.loadHistoric().then(function(data){
 			console.log(data);
@@ -52,15 +46,16 @@ angular.module('app')
 		},function errorCallback(data){
 			console.log(data.data);
 		});
-	}
+	};
 
 	var carregarDadosDoUsuario = function(){
 		var cache = userDataCacheFactory.info();
 	    if(cache.size>0){
-	      loadUserDataFromCache(cache);
+	      loadUserDataFromCache();
 	      return;
 	    }
 		userFactory.loadUserData().then(function(response) {
+			console.log(response);
 			$scope.user = {};
 			$scope.address = {};
 			$scope.user = {firstname: response.data.user['firstname'], lastname: response.data.user['lastname'],
@@ -71,7 +66,7 @@ angular.module('app')
 								  postcode: response.data.address['postcode'], state: response.data.address['state'],
 								  phoneMobile: response.data.address['phone_mobile'] };
 				userDataCacheFactory.put(1,$scope.address);
-				$scope.haveAddress = true;
+				$scope.hasAddress = true;
 			}
 			userDataCacheFactory.put(0,$scope.user);
 			userDataCacheFactory.put(2,response.data.states);
@@ -82,12 +77,15 @@ angular.module('app')
 	        });
 	};
 	var loadUserDataFromCache = function(){
+		console.log('cache');
 		$scope.user = {};
 		$scope.address = {};
 		$scope.user = userDataCacheFactory.get(0);
 		$scope.states = userDataCacheFactory.get(2);
 		if(!angular.isUndefined(userDataCacheFactory.get(1))){
-			$scope.address = userDataCacheFactory.get(1); 
+			console.log("entrou");
+			$scope.address = userDataCacheFactory.get(1);
+			$scope.hasAddress = true; 
 		}
 	};
 	
@@ -115,9 +113,9 @@ angular.module('app')
 		$auth.logout();
 		$state.go('home');
 		ngCart.empty();
-		$scope.haveAddress = false;
+		$scope.hasAddress = false;
 		//$ionicHistory.removeBackView();
-	}
+	};
 
 	$scope.slideChanged = function(index) {
 		$ionicSlideBoxDelegate.slide(index, [300]);
@@ -127,27 +125,26 @@ angular.module('app')
 	$scope.slideHasChanged = function(index){
 		$scope.slide = $ionicSlideBoxDelegate.currentIndex();
 		$ionicScrollDelegate.scrollTop();	    
-	}
+	};
 
 	$scope.updateOrCreateAddress = function(address){
 		address.address1 = address.address1+','+address.number;
 		userFactory.updateOrCreateAddress(address).then(function successCallback(response) {
 	      	console.log(response.data);
 	      	$scope.address = {};
-				$scope.address = {address1: response.data['address1'],
-								  address2: response.data['address2'], 
-								  city: response.data['city'],
-								  postcode: response.data['postcode'], 
-								  state: response.data['state'],
-								  phoneMobile: response.data['phone_mobile']};
+			$scope.address = {address: response.data.address['address'], address1: response.data.address['address1'],
+								  address2: response.data.address['address2'], city: response.data.address['city'],
+								  postcode: response.data.address['postcode'], state: response.data.address['state'],
+								  phoneMobile: response.data.address['phone_mobile'] };
 				userDataCacheFactory.put(1,$scope.address);
-				$scope.haveAddress = true;
+				$scope.hasAddress = true;
 				$scope.modal.hide();
+				loadUserDataFromCache();
 	        }, function errorCallback(response) {
 		        console.log(response.data);
 	        });
-		loadUserDataFromCache();
-	} 
+		
+	};
 
 	$ionicModal.fromTemplateUrl('view/userAddressRegisterModal.html', {
     	scope: $scope,

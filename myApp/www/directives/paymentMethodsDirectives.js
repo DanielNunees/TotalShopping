@@ -6,9 +6,6 @@ angular.module('app')
 		restrict:'E',
 		templateUrl: '../templates/paymentMethodBoleto.html',
 		controller: 'checkoutController',
-		scope:{
-
-		}
 	};
 });
 
@@ -18,9 +15,6 @@ angular.module('app')
 		restrict:'E',
 		controller:'checkoutController',
 		templateUrl:'../templates/paymentMethodCreditCard.html',
-		scope: {
-			
-		}
 	};
 });
 

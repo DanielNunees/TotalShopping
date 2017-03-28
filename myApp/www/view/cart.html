@@ -5,7 +5,6 @@
 				<div class="item item-thumbnail-left"  >
 					<img  ng-src="http://127.0.1.1/prestashop{{item.getData().image}}">
 					{{ item.getName() }}
-					ID:{{item._id}} {{item.getData().product_attributte}}
 					<p>Tam. {{item.getData().size}}</p>
 					<h3>{{ item.getPrice() | currency:"R$"}}</h3>{{ item.getTotal() | currency:"R$"}}
 					<div class="row ">

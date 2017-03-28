@@ -59,28 +59,19 @@ class userController extends Controller
 
   public static function loadData(){
     $id_customer = myAuthController::getAuthenticatedUser();
+    if(!is_numeric($id_customer)){
+        return $id_customer;
+    }
 
     $address = Address::getAddress($id_customer);
 
     $user = User::getCustomerWithId($id_customer);
 
-    
-
-    $states = array('Acre'=>313,'Alagoas'=>314,'Amapa'=>315,'Amazonas'=>316,'Bahia'=>317,'Ceara'=>318,'Distrito Federal'=>319,'Espirito Santo'=>320,'Goias'=>321,'Maranhao'=>322,'Mato Grosso'=>323,'Mato Grosso do Sul'=>324,'Minas Gerais'=>325,'Para'=>326,'Paraiba'=>327,'Parana'=>328,'Pernanbuco'=>329,'Piaui'=>330,'Rio de Janeiro'=>331,'Rio Grande do Norte'=>332,'Rio Grande do Sul'=>333,'Rondonia'=>334,'Roraima'=>335,'Santa Catarina'=>336,'Sao Paulo'=>337,'Sergipe'=>338,'Tocantins'=>339);
-
     if($address->isEmpty()){
-      return array('user'=>$user[0], 'states'=>$states);
+      return array('user'=>$user[0], 'states'=>UserController::getStates());
     }
-
-    $state = $address[0]->id_state;
-
-    foreach ($states as $key => $value) {
-      if($state==$value){
-        $address[0]->state = $key;
-      }
-    }
-
-    $array = array('address' => $address[0],'user'=>$user[0],'states'=>$states);
+    $address[0]->state = userController::getStates($address[0]->id_state);
+    $array = array('address' => $address[0],'user'=>$user[0],'states'=>UserController::getStates());
 
     return $array;
   }
@@ -116,13 +107,27 @@ class userController extends Controller
     );
     //return $id_customer;
 
-    return Address::updateOrCreateAddress($id_customer,$address);
+    $address = Address::updateOrCreateAddress($id_customer,$address);
+    return userController::loadData();
   }
 
   public static function getAddress($id_customer){
     $address = Address::getIdAdressFromCustomer($id_customer);
     if($address->isEmpty()) return false;
     return $address = $address[0]['id_address'];
+  }
+
+  public static function getStates($state_id=0){
+    $states = array('Acre'=>313,'Alagoas'=>314,'Amapa'=>315,'Amazonas'=>316,'Bahia'=>317,'Ceara'=>318,'Distrito Federal'=>319,'Espirito Santo'=>320,'Goias'=>321,'Maranhao'=>322,'Mato Grosso'=>323,'Mato Grosso do Sul'=>324,'Minas Gerais'=>325,'Para'=>326,'Paraiba'=>327,'Parana'=>328,'Pernanbuco'=>329,'Piaui'=>330,'Rio de Janeiro'=>331,'Rio Grande do Norte'=>332,'Rio Grande do Sul'=>333,'Rondonia'=>334,'Roraima'=>335,'Santa Catarina'=>336,'Sao Paulo'=>337,'Sergipe'=>338,'Tocantins'=>339);
+      
+      foreach ($states as $key => $value) {
+        if($state_id==$value){
+          return $key;
+          break;
+        }
+        
+      }
+    return $states;
   }
 
 }

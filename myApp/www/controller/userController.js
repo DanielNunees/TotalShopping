@@ -12,13 +12,6 @@
 			$ionicHistory.removeBackView();
 		}
 	    });
-
-	    
-		$scope.isAuthenticated = function() {
-      		return $auth.isAuthenticated();
-    	};
-
-    	$scope.isAuth = $auth.isAuthenticated();
     	
 		$scope.login = function(loginData){
 	      $auth.login(loginData).then(

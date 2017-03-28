@@ -1,22 +1,14 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','cartFactory','checkoutFactory','userFactory','$ionicActionSheet','alertsFactory','$auth','loadingFactory','$state','userDataCacheFactory','$ionicModal', function($scope,$ionicNavBarDelegate,ngCart,cartFactory,checkoutFactory,userFactory,$ionicActionSheet,alertsFactory,$auth,loadingFactory,$state,userDataCacheFactory,$ionicModal){
+	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','checkoutFactory','userFactory','$ionicActionSheet','alertsFactory','$auth','loadingFactory','$state','userDataCacheFactory','$ionicModal', function($scope,$ionicNavBarDelegate,ngCart,checkoutFactory,userFactory,$ionicActionSheet,alertsFactory,$auth,loadingFactory,$state,userDataCacheFactory,$ionicModal){
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
     	$ionicNavBarDelegate.showBackButton(true);
     	loadingFactory.show();
     	if($auth.isAuthenticated()){
     		carregarDadosDoUsuario();
+    		getSession();
     	}
-    	checkoutFactory.getSession().then(function successCallback(response) {
-	  		PagSeguroDirectPayment.setSessionId(response.data);
-	  		checkoutFactory.setSession(response.data);
-	  		var SenderHash = PagSeguroDirectPayment.getSenderHash();
-	  		loadingFactory.hide();
-        },function errorCallback(response) {
-	      	alertsFactory.showAlert("Error 500","Server Error! The checkout will not be processed!");
-         	console.log(response);
-        });
   	});
 
   	$scope.method = 1;
@@ -47,15 +39,28 @@
 	   	});
 	 };
 
+	var getSession = function(){
+		checkoutFactory.getSession().then(function successCallback(response) {
+			PagSeguroDirectPayment.setSessionId(response.data);
+			checkoutFactory.setSession(response.data);
+			var SenderHash = PagSeguroDirectPayment.getSenderHash();
+			loadingFactory.hide();
+		},function errorCallback(response) {
+			alertsFactory.showAlert("Error 500","Server Error! The checkout will not be processed!");
+			console.log(response);
+		});
+	};
+
 	var x2js = new X2JS();
 	var convertXml2JSon = function (data) {
 	    var x2js = new X2JS();
 	    var aftCnv = x2js.xml_str2json(data);
 	    return aftCnv;
-	}
+	};
 
     $scope.boletoCheckout = function(boletoData){
     	if(verificacao()){
+    		console.log("passou verificacao");
 	    	loadingFactory.show();
 	    	var SenderHash = PagSeguroDirectPayment.getSenderHash();
 	    	boletoData.SenderHash = SenderHash;
@@ -74,7 +79,7 @@
 				alertsFactory.showAlert("Error","Algo de Errado Aconteceu :'(");
 			});
 		}
-	}
+	};
 
 
 	$scope.creditCardCheckout = function(user){
@@ -115,15 +120,18 @@
 	    //parâmetro opcional para qualquer chamada
 	    param.cardBin = user.cardnumber.slice(0,6);
 	    PagSeguroDirectPayment.createCardToken(param);
-	}
+	};
 
   	var carregarDadosDoUsuario = function(){
 		var cache = userDataCacheFactory.info();
 	    if(cache.size>0){
-	      loadUserDataFromCache(cache);
+	      loadUserDataFromCache();
 	      return;
 	    }
 		userFactory.loadUserData().then(function(response) {
+
+			$scope.states = response.data.states;
+
 			$scope.user = {firstname: response.data.user['firstname'], lastname: response.data.user['lastname'],
 						   birthday: response.data.user['birthday'], email: response.data.user['email']};
 			if(!angular.isUndefined(response.data.address)){
@@ -132,6 +140,7 @@
 								  postcode: response.data.address['postcode'], state: response.data.address['state'],
 								  phoneMobile: response.data.address['phone_mobile'] };
 				userDataCacheFactory.put(1,$scope.address);
+				$scope.hasAddress = true;
 			}
 
 			userDataCacheFactory.put(0,$scope.user);
@@ -143,13 +152,13 @@
 	    });
 	};
 	var loadUserDataFromCache = function(){
+		console.log('from cache');
 		$scope.user = {};
-		$scope.address = {};
 		$scope.user = userDataCacheFactory.get(0);
 		$scope.states = userDataCacheFactory.get(2);
-
 		if(!angular.isUndefined(userDataCacheFactory.get(1))){
 			$scope.address = userDataCacheFactory.get(1);
+			$scope.hasAddress = true;
 			console.log($scope.address);
 		}
 	};
@@ -158,23 +167,23 @@
 		userFactory.updateOrCreateAddress(address).then(function successCallback(response) {
 	      	console.log(response.data);
 	      	$scope.address = {};
-				$scope.address = {address1: response.data['address1'],
-								  address2: response.data['address2'], 
-								  city: response.data['city'],
-								  postcode: response.data['postcode'], 
-								  state: response.data['state'],
-								  phoneMobile: response.data['phone_mobile']};
+			$scope.address = {address: response.data.address['address'], address1: response.data.address['address1'],
+								  address2: response.data.address['address2'], city: response.data.address['city'],
+								  postcode: response.data.address['postcode'], state: response.data.address['state'],
+								  phoneMobile: response.data.address['phone_mobile'] };
 				userDataCacheFactory.put(1,$scope.address);
+				$scope.hasAddress = true;
 				$scope.modal.hide();
-	        }, function errorCallback(response) {
-		        console.log(response.data);
+				loadUserDataFromCache();
+	        },function errorCallback(response) {
+		    	console.log(response.data);
 	        });
-		loadUserDataFromCache();
-	} 
+		
+	}; 
 
 	$ionicModal.fromTemplateUrl('view/userAddressRegisterModal.html', {
     	scope: $scope,
-      	animation: 'slide-in-up'
+      	animation: 'slide-in-up',
 	}).then(function(modal) {
 		$scope.modal = modal;
 	});
@@ -186,7 +195,7 @@
 				return false;
 			}
 			else if(angular.isUndefined(userDataCacheFactory.get(1))){
-				$scope.states = userDataCacheFactory.get(2);
+				//$scope.states = userDataCacheFactory.get(2);
 				alertsFactory.showAlert("Cadastre um endereço para a entrega.");
 				$scope.modal.show();
 				return false;
@@ -197,7 +206,7 @@
 			$state.transitionTo('userLogin');
 			return false;
 		}
-	}
+	};
 
 	
 		

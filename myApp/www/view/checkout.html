@@ -13,8 +13,13 @@
         {{address.city}}, {{address.state}}</br>
         {{address.other}}
       </div>
-      <creditcard-method ng-if="method==0"></creditcard-method>
-      <boleto-method ng-if="method==1"></boleto-method>
+      <div ng-if="!hasAddress">
+        <button class="button button-positive button-block" ng-click="modal.show()">Cadastrar endereço</a>
+      </div>
+      <div ng-if="hasAddress">
+        <creditcard-method ng-if="method==0"></creditcard-method>
+        <boleto-method ng-if="method==1"></boleto-method>
+      </div>
     	<div class="button button-positive button-block" ng-click="show()">Mudar Método de pagamento
       </div>
 
