@@ -86,10 +86,13 @@ class userController extends Controller
       'id_state' => 'bail|required|numeric'
     ]);
     $id_customer = myAuthController::getAuthenticatedUser();
+    if(!is_numeric($id_customer)){
+        return $id_customer;
+    }
     $user = User::getCustomerWithId($id_customer);
 
     $today = date("Y-m-d H:i:s");
-
+    $request->phoneMobile = str_replace(array( '(', ')','-' ), '', $request->phoneMobile);
     $address =array(
       'address1' => $request->address1,
       'address2' => $request->address2,

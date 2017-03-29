@@ -21,7 +21,6 @@ angular.module('app')
   	
 	var CarregarHistoricoDeCompras = function(){
 		dashboardFactory.loadHistoric().then(function(data){
-			console.log(data);
 			$scope.products = [];
 			var i=0;
 			angular.forEach(data.data,function(value,key){

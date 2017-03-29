@@ -6,7 +6,7 @@
 			showAlert: function(title,text) {
 		    	var alertPopup = $ionicPopup.alert({
 		       	title: title,
-		       	template: text
+		       	template: text,
 			    });
 		    }
 			

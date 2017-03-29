@@ -112,7 +112,8 @@
       resolve: {
         loadCtrl: ['$ocLazyLoad', function($ocLazyLoad){
           return $ocLazyLoad.load(['controller/checkoutController.js','factory/cartFactory.js','factory/userFactory.js','factory/checkoutFactory.js',
-                                   'lib/PagSeguro/pagseguro.directpayment.js','directives/paymentMethodsDirectives.js','factory/cache/userDataCacheFactory.js'])
+                                   'lib/PagSeguro/pagseguro.directpayment.js','directives/paymentMethodsDirectives.js','factory/cache/userDataCacheFactory.js',
+                                   'factory/erros/checkoutErrosFactory.js'])
         }]
       }
     })

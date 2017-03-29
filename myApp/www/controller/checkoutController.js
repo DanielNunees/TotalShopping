@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 	angular.module('app')
-	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','checkoutFactory','userFactory','$ionicActionSheet','alertsFactory','$auth','loadingFactory','$state','userDataCacheFactory','$ionicModal', function($scope,$ionicNavBarDelegate,ngCart,checkoutFactory,userFactory,$ionicActionSheet,alertsFactory,$auth,loadingFactory,$state,userDataCacheFactory,$ionicModal){
+	.controller('checkoutController', ['$scope','$ionicNavBarDelegate','ngCart','checkoutFactory','userFactory','$ionicActionSheet','alertsFactory','$auth','loadingFactory','$state','userDataCacheFactory','$ionicModal','checkoutErrosFactory', function($scope,$ionicNavBarDelegate,ngCart,checkoutFactory,userFactory,$ionicActionSheet,alertsFactory,$auth,loadingFactory,$state,userDataCacheFactory,$ionicModal,checkoutErrosFactory){
 		$scope.$on("$ionicView.beforeEnter", function(event, data){
     	$ionicNavBarDelegate.showBackButton(true);
     	loadingFactory.show();
@@ -70,22 +70,30 @@
 				delete $scope.boletoData;
 				checkoutFactory.resetSessionId();
 				alertsFactory.showAlert("Sucesso","Sua Compra Foi Feita Com Sucesso, A Confirmação do pagamento pode levar até 5 dias úteis!");
-				$state.go("home");
+				//$state.go("home");
+				console.log(response.data);
 			},function errorCallback(response){
 		    	loadingFactory.hide();
-				console.log(convertXml2JSon(response.data));
-				ngCart.empty();
+		    	var error_code = convertXml2JSon(response.data);
+				console.log(error_code);
+				checkoutErrosFactory.error((error_code));
+				//ngCart.empty();
 				delete $scope.user;
-				alertsFactory.showAlert("Error","Algo de Errado Aconteceu :'(");
 			});
 		}
 	};
 
 
 	$scope.creditCardCheckout = function(user){
+		console.log(user.cardnumber);
+		console.log(user.cardnumber.slice(0,6));
+		console.log(user.cvv);
+		console.log(user.expirationMonth);
+		console.log(user.expirationYear);
+		loadingFactory.show();
 	    var param = {
 	    	cardNumber: user.cardnumber,
-	      	cardBin:  user.cardnumber.slice(0,6),
+	      	//cardBin:  user.cardnumber.slice(0,6),
 	      	cvv: user.cvv,
 	      	expirationMonth: user.expirationMonth,
 	      	expirationYear: user.expirationYear,
@@ -97,21 +105,25 @@
 	        	checkoutFactory.creditCardCheckout(checkoutData).
 	        	then(function successCallback(response) {
 	          		alertsFactory.showAlert("Sucesso","Sua Compra Foi Feita Com Sucesso, A Confirmação do pagamento pode levar até 5 dias úteis!");
-					$state.go("home");
+					//$state.go("home");
 	          		checkoutFactory.resetSessionId();
 	          		ngCart.empty();
-	          		//delete $scope.user;
+	          		loadingFactory.hide();
 	          		console.log(response);
 	        	},function errorCallback(response) {
 	         		console.log(response);
 	          		console.log(convertXml2JSon(response.data));
+	          		checkoutErrosFactory.error(convertXml2JSon(response.data));	
+	          		loadingFactory.hide();
 	      		});
 	      	},
 	      	error: function(response) {
 	        	//tratamento do erro
 	        	console.log(response);
-	        	console.log(convertXml2JSon(response.data));
+	        	checkoutErrosFactory.creditCardError(response);
+	        	checkoutFactory.resetSessionId();
 	        	ngCart.empty();
+	        	loadingFactory.hide();
 	      	},
 	      	complete: function(response) {
 	      	//tratamento comum para todas chamadas
