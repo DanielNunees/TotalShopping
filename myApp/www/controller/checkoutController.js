@@ -70,7 +70,7 @@
 				delete $scope.boletoData;
 				checkoutFactory.resetSessionId();
 				alertsFactory.showAlert("Sucesso","Sua Compra Foi Feita Com Sucesso, A Confirmação do pagamento pode levar até 5 dias úteis!");
-				//$state.go("home");
+				$state.go("home");
 				console.log(response.data);
 			},function errorCallback(response){
 		    	loadingFactory.hide();
@@ -105,7 +105,7 @@
 	        	checkoutFactory.creditCardCheckout(checkoutData).
 	        	then(function successCallback(response) {
 	          		alertsFactory.showAlert("Sucesso","Sua Compra Foi Feita Com Sucesso, A Confirmação do pagamento pode levar até 5 dias úteis!");
-					//$state.go("home");
+					$state.go("home");
 	          		checkoutFactory.resetSessionId();
 	          		ngCart.empty();
 	          		loadingFactory.hide();

@@ -121,7 +121,9 @@ class CartController extends Controller
                 CartController::addToCart($cart_id['id_cart'],$request,$address);
             }
             else{
+
                 CartProducts::updateQuantity($cart_id['id_cart'],$request->id_product,$request->id_product_attribute,$request->product_quantity);
+                return $cart_id['id_cart'];
             }
         }
         return response()->json(['success' => 'ok'], 200);
@@ -153,6 +155,7 @@ class CartController extends Controller
         }
 
         $cart_id = Cart::RetrivingCartId($id_customer);
+
         $order = OrderController::getOrderByCartId($cart_id['id_cart']);
         if($order){ 
             throw new Exception("Have Some Order With This Cart Id", 400);
@@ -166,7 +169,7 @@ class CartController extends Controller
         $id_product_attribute = $products->pluck('id_product_attribute')->toArray();
         $id_product = $products->pluck('id_product')->toArray();
         
-        $final = ProductController::retrivingProduct($id_product,$id_product_attribute); 
+        return $final = ProductController::retrivingProduct($id_product,$id_product_attribute); 
         foreach ($final as $key => $value) {
             $value->quantity = $products[$key]['quantity'];
             $value->id_shop = $products[$key]['id_shop'];

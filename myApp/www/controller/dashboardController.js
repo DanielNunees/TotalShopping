@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 angular.module('app')
-.controller('dashboardController', ['$scope','$auth','$state','$ionicSlideBoxDelegate','$ionicModal','$ionicNavBarDelegate','userFactory','dashboardFactory','$ionicHistory','$ionicScrollDelegate','userDataCacheFactory','wishlistFactory','$ionicTabsDelegate','ngCart', function($scope,$auth,$state,$ionicSlideBoxDelegate,$ionicModal,$ionicNavBarDelegate,userFactory,dashboardFactory,$ionicHistory,$ionicScrollDelegate,userDataCacheFactory,wishlistFactory,$ionicTabsDelegate,ngCart){
+.controller('dashboardController', ['$scope','$auth','$state','$ionicSlideBoxDelegate','$ionicModal','$ionicNavBarDelegate','userFactory','dashboardFactory','$ionicHistory','$ionicScrollDelegate','userDataCacheFactory','wishlistFactory','$ionicTabsDelegate','ngCart','historicCacheFactory', function($scope,$auth,$state,$ionicSlideBoxDelegate,$ionicModal,$ionicNavBarDelegate,userFactory,dashboardFactory,$ionicHistory,$ionicScrollDelegate,userDataCacheFactory,wishlistFactory,$ionicTabsDelegate,ngCart,historicCacheFactory){
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
 		if(!$auth.isAuthenticated()){
 			$state.go('userLogin');
@@ -109,6 +109,7 @@ angular.module('app')
 		userDataCacheFactory.removeAll();
 		wishlistFactory.removeAll();
 		console.log(userDataCacheFactory.info());
+		historicCacheFactory.removeAll();
 		$auth.logout();
 		$state.go('home');
 		ngCart.empty();

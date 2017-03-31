@@ -33,7 +33,7 @@ angular.module('app')
           alertsFactory.showAlert( "Selecione um Tamanho!");
           return;
         }
-        alertsFactory.showAlert( "Adicionado com2 sucesso!");
+        alertsFactory.showAlert( "Adicionado com sucesso!");
         return;
        }
        var item = ngCart.getItemById(String(product_id));

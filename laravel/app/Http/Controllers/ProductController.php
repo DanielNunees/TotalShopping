@@ -30,9 +30,12 @@ class ProductController extends Controller
 
         foreach ($productAttributes as $key => $value) {
             if(is_null($id_product_attribute)){
-                $attributes[$value['id_product']][] = ['id_product_attribute'=>$value['id_product_attribute'],
-                                                      'name'=>$value['product_attribute_name'][0]['name'],
-                                                      'quantity'=>$value['quantity']];
+                $attributes[$value['id_product']][]=
+                ['id_product_attribute'=>$value['id_product_attribute'],
+                 'name'=>$value['product_attribute_name'][0]['name'],
+                 'quantity'=>$value['quantity']];
+
+                 
                 $final = $description_name->where('id_product',$value['id_product'])->values();
                 $final[0]->attributes = ($attributes[$value['id_product']]);
             }

@@ -6,47 +6,31 @@
       </header>
 
       <div class="button-bar no-padding">
-        <a class="button button-block button-positive button-outline" ng-click="slideChanged(0)" ng-class="{'active' : slide==0}">Perfil</a>
-        <a class="button button-block button-positive button-outline" ng-click="slideChanged(1)" ng-class="{'active' : slide==1}">Pedidos</a>
-        <a class="button button-block button-positive button-outline" ng-click="slideChanged(2)" ng-class="{'active' : slide==2}">Dados</a>
+        <a class="button button-block button-dark button-outline" ng-click="slideChanged(0)" ng-class="{'active' : slide==0}">Perfil</a>
+        <a class="button button-block button-dark button-outline" ng-click="slideChanged(1)" ng-class="{'active' : slide==1}">Pedidos</a>
+        <a class="button button-block button-dark button-outline" ng-click="slideChanged(2)" ng-class="{'active' : slide==2}">Dados</a>
       </div>
 
       <ion-slide-box show-pager='false' on-slide-changed="slideHasChanged($index)">
         <ion-slide>
           <div>
             <h4>Primeira Aba</h4>
-            <button class="button button-positive" ng-click='mudar()'>Reload</button>
           </div>
         </ion-slide>
         <ion-slide> <!--historic-->
-            <ion-list>
-              <div ng-repeat="group in products track by $index">
-
-                <ion-item class="item-stable"
-                          ng-click="toggleGroup(group)"
-                          ng-class="{active: isGroupShown(group)}">
-                    <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
-                  &nbsp;
-                  {{group.items[0].state}}
-                </ion-item>
-                <ion-item class="item-accordion" ng-repeat="product in group.items" ng-show="isGroupShown(group)">
-                  <div class="list">
-                      <a class="item item-thumbnail-left" ui-sref="product({productId: product.productId})">
-                        <img ng-src="http://127.0.1.1/prestashop{{product.productImage}}">
-                        <h2>{{product.productName}}</h2>
-                        <p>{{product.productPrice | currency:"R$ " }}</p>
-                        <p>Tam: {{product.productAttribute}} | Qnt: {{product.productQuantity}} </p>
-                      </a>
-                  </div>
-                </ion-item>
-              </div>
-            </ion-list>
+          <ion-list>
+            <ion-item class="item item-icon-left">
+                <i class="icon ion-clock"></i>
+                  Check mail
+            </ion-item>
+          </ion-list>
+          <a class="button button-block button-dark" ui-sref="historic"> Histórico</a>
         </ion-slide><!--historic-->
         <ion-slide>
           <user-Address hasAddress="hasAddress" ></user-Address>
         </ion-slide>
       </ion-slide-box>
-      <button class="button button-block button-assertive button-outline" ng-click="logout  ()"> Logout</button>
+      <button class="button button-block button-assertive button-outline" ng-click="logout()"> Logout</button>
   </ion-content>
 </ion-view>
 

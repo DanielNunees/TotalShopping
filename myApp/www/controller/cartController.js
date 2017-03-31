@@ -55,5 +55,18 @@
 	        	console.log(response.data);
 	        });
 		}
+
+
+	$scope.updateQuantity = function(product_id,product_attribute){
+		var item = ngCart.getItemById((product_id));
+		var quantity = item.getQuantity();
+		cartFactory.addProduct(product_id,product_attribute,quantity).
+		then(function successCallback(response){
+			console.log(response.data);
+		},function errorCallback(response){
+			console.log(response.data);
+		})
+	};
+
 	}]);
 })();
