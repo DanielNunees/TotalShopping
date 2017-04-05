@@ -45,8 +45,8 @@
 				if(response.data.length>0){
 					angular.forEach(response.data, function(value, key) {
 						var data={'image':value['image'][0],
-								  'size':value['attributes'][0]['name'], 
-								  'product_attributte':value['attributes'][0]['id_product_attribute']};
+								  'size':value['attributes']['name'], 
+								  'product_attributte':value['attributes']['id_product_attribute']};
 
 						ngCart.addItem(value.id_product, value['name'] , value['product_price']['price'], value.quantity, data)
 					});

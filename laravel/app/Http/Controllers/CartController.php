@@ -158,7 +158,7 @@ class CartController extends Controller
 
         $order = OrderController::getOrderByCartId($cart_id['id_cart']);
         if($order){ 
-            throw new Exception("Have Some Order With This Cart Id", 400);
+            throw new Exception("Have Some Order With This Cart Id", 500);
         }
 
         $products = CartProducts::allProductsFromCart($cart_id['id_cart']);
@@ -169,12 +169,30 @@ class CartController extends Controller
         $id_product_attribute = $products->pluck('id_product_attribute')->toArray();
         $id_product = $products->pluck('id_product')->toArray();
         
-        return $final = ProductController::retrivingProduct($id_product,$id_product_attribute); 
-        foreach ($final as $key => $value) {
-            $value->quantity = $products[$key]['quantity'];
-            $value->id_shop = $products[$key]['id_shop'];
+        $final = ProductController::retrivingProduct($id_product,$id_product_attribute); 
+
+        $final = $final->toArray();
+        $aux = array_column($final, 'attributes');
+        $result = array_reduce($aux, 'array_merge', array());
+
+        $count = count($final[0]['attributes']);
+        $a=0;
+        foreach ($result as $key => $value) {
+            $aux = $final;
+            $aux[$a]['attributes'] = $value;
+            $needle = array_search($value['id_product_attribute'],$id_product_attribute);
+            $aux[$a]['quantity'] = $products[$needle]->quantity;
+            $new[] = $aux[$a];
+            
+            $count--;
+            if($count == 0){
+                $a++;
+                if(isset($final[$a]['attributes']))
+                    $count = count($final[$a]['attributes']);
+            }
         }
-        return $final;        
+
+        return $new;
     }
 
     public function addToCart($cart_id,$request,$address){
